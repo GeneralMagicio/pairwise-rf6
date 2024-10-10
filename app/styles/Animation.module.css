@@ -1,0 +1,43 @@
+/* AnimatedBorder.module.css */
+@keyframes rotateBorder {
+  0% {
+    border-top-color: #ff0420;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+  }
+  25% {
+    border-top-color: #ff0420;
+    border-right-color: #ff0420;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+  }
+  50% {
+    border-top-color: transparent;
+    border-right-color: #ff0420;
+    border-bottom-color: #ff0420;
+    border-left-color: transparent;
+  }
+  75% {
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: #ff0420;
+    border-left-color: #ff0420;
+  }
+  100% {
+    border-top-color: #ff0420;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+  }
+}
+
+.container {
+  width: 100px; /* Adjust size as needed */
+  height: 100px; /* Adjust size as needed */
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 50%;
+  animation: rotateBorder 1s linear infinite; /* Continuous rotation */
+}
