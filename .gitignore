@@ -2,7 +2,7 @@ node_modules
 .env
 
 # next.js
-.next/
+/.next/
 
 # misc
 .DS_Store
