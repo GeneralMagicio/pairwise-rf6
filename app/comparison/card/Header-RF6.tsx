@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
+import { PwLogo } from '@/public/assets/icon-components/PairwiseLogo';
 
 interface HeaderProps {
   progress: number;
@@ -47,10 +48,7 @@ const HeaderRF6: React.FC<HeaderProps> = ({
         {!isFirstSelection && (
           <div className="flex items-center justify-between bg-white px-4 py-2">
             <div className="flex items-center">
-              <OPCharacter />
-              <span className="ml-2 text-lg font-bold italic text-primary">
-                IMPACT = PROFIT
-              </span>
+              <PwLogo />
             </div>
           </div>
         )}
