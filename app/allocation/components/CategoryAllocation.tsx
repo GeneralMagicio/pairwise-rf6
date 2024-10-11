@@ -27,17 +27,17 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
 }) => {
   return (
     <div className="border rounded-lg p-4 flex justify-between">
-      <div className="flex max-w-[70%] space-x-4">
-        <div className="rounded-lg">
-          <Image src={imageSrc} alt={title} width={128} height={128} />
+      <div className="flex max-w-[75%] space-x-4">
+        <div className=" rounded-lg">
+          <Image src={imageSrc} alt={title} width={96} height={96}/>
         </div>
-        <div className='space-y-2'>
+        <div className='space-y-2 max-w-[70%]'>
           <h3 className="font-semibold text-lg">{title}</h3>
           <p className="text-sm text-gray-600">{description}</p>
           <p className="text-xs rounded-lg text-gray-800 mt-1 w-fit p-2 bg-gray-100">{projectCount} projects</p>
         </div>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex w-fit flex-col gap-2">
         <div className="flex items-center space-x-2">
           <div className='flex justify-center gap-6 border px-10 py-2'>
             <button className="text-gray-500 font-bold">-</button>
@@ -58,7 +58,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
         <div className='flex gap-2 my-2'>
           <button
             onClick={onScore}
-            className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium"
+            className="bg-primary text-white px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium"
           >
             Score Projects
           </button>
