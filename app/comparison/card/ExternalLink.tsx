@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { MirrorIcon } from '@/public/assets/icon-components/MirrorIcon';
-import { WarpcastIcon } from '@/public/assets/icon-components/WarpcaseIcon';
+import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { WebsiteIcon } from '@/public/assets/icon-components/WebsiteIcon';
 import { XIcon } from '@/public/assets/icon-components/XIcon';
 
