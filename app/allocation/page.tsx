@@ -1,58 +1,101 @@
-"use client"
+'use client';
 
-import HeaderRF6 from "../comparison/card/Header-RF6"
-import CategoryAllocation, { Category } from "./components/CategoryAllocation"
-import ConnectBox from "./components/ConnectBox"
+import { useState } from 'react';
 import Slider from '@mui/material/Slider';
+import HeaderRF6 from '../comparison/card/Header-RF6';
+import CategoryAllocation, { Category } from './components/CategoryAllocation';
+import ConnectBox from './components/ConnectBox';
+import { modifyPercentage, RankItem } from './utils';
 
+const Categories: Category[] = [
+  {
+    id: 1,
+    title: 'Infrastructure & Tooling',
+    description: 'Ethereum Core Contributions are infrastructure which supports, or is a dependency, of the OP Stack.',
+    imageSrc: '/assets/images/category-it.png',
+    projectCount: 20,
+  },
+  {
+    id: 2,
+    title: 'Gov Research & Analytics',
+    description: `Direct research & development contributions to the OP Stack, and contributions that
+    support protocol upgrades.`,
+    imageSrc: '/assets/images/category-gra.png',
+    projectCount: 15,
+  },
+  {
+    id: 3,
+    title: 'Governance Leadership',
+    description: 'Efforts that improve the usability and accessibility of the OP Stack through tooling enhancements.',
+    imageSrc: '/assets/images/category-gl.png',
+    projectCount: 30,
+  },
+];
 
-const Categories : Category[] = [
-  {
-    title: "Infrastructure & Tooling",
-    description: "Ethereum Core Contributions are infrastructure which supports, or is a dependency, of the OP Stack.",
-    imageSrc: "/assets/images/category-it.png",
-    projectCount: 20
-  },
-  {
-    title: "Gov Research & Analytics",
-    description: "Direct research & development contributions to the OP Stack, and contributions that support protocol upgrades.",
-    imageSrc: "/assets/images/category-gra.png",
-    projectCount: 15
-  },
-  {
-    title: "Governance Leadership",
-    description: "Efforts that improve the usability and accessibility of the OP Stack through tooling enhancements.",
-    imageSrc: "/assets/images/category-gl.png",
-    projectCount: 30
-  },
-]
+const ranks: RankItem[] = [{
+  id: 1,
+  locked: false,
+  percentage: 33.4,
+}, {
+  id: 2,
+  locked: false,
+  percentage: 33.3,
+}, {
+  id: 3,
+  locked: false,
+  percentage: 33.3,
+}];
 
 const AllocationPage = () => {
+  const [categoryRanking, setCategoryRanking] = useState(ranks);
+
+  const handleLock = (id: RankItem['id']) => () => {
+    const currValue = categoryRanking.find(el => el.id === id)!;
+    const newRanking = modifyPercentage(categoryRanking, { ...currValue, locked: !currValue.locked });
+    setCategoryRanking(newRanking);
+  };
+
+  const handleNewValue = (id: RankItem['id']) => (percentage: number) => {
+    console.log('Now is running');
+    const currValue = categoryRanking.find(el => el.id === id)!;
+    const newRanking = modifyPercentage(categoryRanking, { ...currValue, percentage });
+    setCategoryRanking(newRanking);
+  };
 
   return (
     <div>
       <HeaderRF6
         progress={30}
-        category={"category"}
+        category="category"
         question="Which project had the greatest impact on the OP Stack?"
         isFirstSelection={false}
-        />
-      <div className="flex gap-4 p-16 justify-between">
-        <div className="max-w-[65%] flex flex-col gap-3">
+      />
+      <div className="flex justify-between gap-4 p-16">
+        <div className="flex max-w-[65%] flex-col gap-3">
           <h2 className="text-3xl font-bold"> Round 6: Governance </h2>
-          <p className="text-gray-600"> Retroactive Public Goods Funding (Retro Funding) 6 will reward contributions to Optimism Governance,
-             including governance infrastructure & tooling, governance analytics, and governance leadership. </p>
-          <p className="bg-yellow-50 p-4"> Decide on the budget for this round, decide how much should go to each category, and score projects in each category using the Pairwise raking. You can also choose to delegate your decision to someone
-             on X (Twitter) or Farcaster. By connecting your X and Farcaster accounts, find out if someone delegated voting decision to you.  </p>
-          <div className="border rounded-md p-6 flex flex-col gap-6">
+          <p className="text-gray-600">
+            Retroactive Public Goods Funding (Retro Funding) 6 will reward contributions to Optimism Governance,
+            including governance infrastructure & tooling, governance analytics, and governance leadership.
+          </p>
+          <p className="bg-yellow-50 p-4">
+            Decide on the budget for this round, decide how much should go to each category,
+            and score projects in each category using the Pairwise raking.
+            You can also choose to delegate your decision to someone
+            on X (Twitter) or Farcaster. By connecting your X and Farcaster accounts, find out
+            if someone delegated voting decision to you.
+          </p>
+          <div className="flex flex-col gap-6 rounded-md border p-6">
             <div>
-              <h3 className="text-2xl font-bold w-full border-b pb-2 mb-4"> Your budget </h3>
+              <h3 className="mb-4 w-full border-b pb-2 text-2xl font-bold"> Your budget </h3>
               <div className="flex flex-col justify-between">
-                <p> Choose how much OP should be dedicated to this round, or delegate this decision to someone you trust. </p>
-                <div className="flex items-center gap-4 my-3">
+                <p>
+                  Choose how much OP should be dedicated to this round,
+                  or delegate this decision to someone you trust.
+                </p>
+                <div className="my-3 flex items-center gap-4">
                   <span> 2M </span>
                   <Slider
-                    className="max-w-[55%] my-2 text-[#aaaaaa]"
+                    className="my-2 max-w-[55%] text-[#aaaaaa]"
                     defaultValue={2}
                     shiftStep={0.25}
                     step={0.25}
@@ -61,12 +104,14 @@ const AllocationPage = () => {
                     max={8}
                   />
                   <span> 8M </span>
-                  <div className="bg-gray-50 border text-gray-500 w-fit text-sm px-[53px] py-2">
-                    {(33 * 100000).toLocaleString()} OP
+                  <div className="w-fit border bg-gray-50 px-[53px] py-2 text-sm text-gray-500">
+                    {(33 * 100000).toLocaleString()}
+                    {' '}
+                    OP
                   </div>
                   <button
                     onClick={() => {}}
-                    className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium"
+                    className="rounded-md border px-4 py-2 text-sm font-medium text-gray-700"
                   >
                     Delegate
                   </button>
@@ -75,23 +120,39 @@ const AllocationPage = () => {
               </div>
             </div>
             <div>
-              <h3 className="text-2xl font-bold w-full border-b pb-2 mb-4"> Categories </h3>
+              <h3 className="mb-4 w-full border-b pb-2 text-2xl font-bold"> Categories </h3>
               <div>
-                <p className="my-4"> Score projects in each category doing the Pairwise ranking, or delegate this decision to someone you trust. </p>
+                <p className="my-4">
+                  Score projects in each category doing the Pairwise ranking,
+                  or delegate this decision to someone you trust.
+                </p>
                 <div className="flex flex-col gap-4">
-                {Categories.map((cat) => <CategoryAllocation {...cat} onDelegate={() => {}} 
-                  onLockClick={() => {}} onScore={() => {}} allocationPercentage={33.3}/>)}
+                  {Categories.map((cat) => {
+                    const rank = categoryRanking.find(el => el.id === cat.id)!;
+                    return (
+                      <CategoryAllocation
+                        {...cat}
+                        key={cat.title}
+                        locked={rank.locked}
+                        onDelegate={() => {}}
+                        onLockClick={handleLock(cat.id)}
+                        onScore={() => {}}
+                        allocationPercentage={rank.percentage}
+                        onPercentageChange={handleNewValue(cat.id)}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="max-w-[25%] mt-28">
-          <ConnectBox onConnectFarcaster={() => {}} onConnectTwitter={() => {}} onConnectWorldID={() => {}}/>
+        <div className="mt-28 max-w-[25%]">
+          <ConnectBox onConnectFarcaster={() => {}} onConnectTwitter={() => {}} onConnectWorldID={() => {}} />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AllocationPage
+export default AllocationPage;
