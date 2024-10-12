@@ -13,7 +13,7 @@ export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): 
 
   const currIndex = values.findIndex(el => el.id === newValue.id);
 
-  if (currIndex === -1) throw new Error ('New value id not found');
+  if (currIndex === -1) throw ({ msg: 'New value id not found' });
 
   console.log(values, newValue);
 
@@ -24,7 +24,7 @@ export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): 
     else return acc + curr.percentage;
   }, 0);
 
-  if (newValueDifference > restSum) throw new Error('Modification not possible');
+  if (newValueDifference > restSum) throw ({ msg: 'Invalid modification' });
 
   const result = values.map((item) => {
     if (item.id === newValue.id) return newValue;
@@ -37,7 +37,9 @@ export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): 
 
   const sum = result.reduce((acc, curr) => acc += curr.percentage, 0);
 
-  if (sum > 100.1) throw new Error('Bigger than 100 error');
+  if (sum > 100.1) throw ({ msg: 'Bigger than 100 error' });
+
+  if (result.filter(el => !el.locked).length === 1) throw ({ msg: 'At least two categories must be unlocked' });
 
   return result;
 };
