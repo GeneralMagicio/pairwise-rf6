@@ -19,9 +19,11 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
     <div className="bg-white p-6 rounded-lg border max-w-md">
       <h2 className="text-2xl font-medium mb-4 w-full border-b pb-2">Your voting power</h2>
       
-      <div className="mb-4">
+      <div className="mb-2">
         <h3 className="text-lg font-semibold mb-2">Your badges</h3>
-        <Image src="/assets/images/badges.png" alt="Badges" width={75} height={25} />
+        <button>
+          <Image src="/assets/images/badges.svg" alt="Badges" width={64} height={16} />
+        </button>
       </div>
       
       <p className="mb-4">Increase your voting power by connecting to WorldID</p>
