@@ -3,6 +3,8 @@
 import HeaderRF6 from "../comparison/card/Header-RF6"
 import CategoryAllocation, { Category } from "./components/CategoryAllocation"
 import ConnectBox from "./components/ConnectBox"
+import Slider from '@mui/material/Slider';
+
 
 const Categories : Category[] = [
   {
@@ -45,9 +47,31 @@ const AllocationPage = () => {
           <div className="border rounded-md p-6 flex flex-col gap-6">
             <div>
               <h3 className="text-2xl font-bold w-full border-b pb-2 mb-4"> Your budget </h3>
-              <div className="flex justify-between">
-                <p> Slider Component Here </p>
+              <div className="flex flex-col justify-between">
                 <p> Choose how much OP should be dedicated to this round, or delegate this decision to someone you trust. </p>
+                <div className="flex items-center gap-4 my-3">
+                  <span> 2M </span>
+                  <Slider
+                    className="max-w-[55%] my-2 text-[#aaaaaa]"
+                    defaultValue={2}
+                    shiftStep={0.25}
+                    step={0.25}
+                    marks
+                    min={2}
+                    max={8}
+                  />
+                  <span> 8M </span>
+                  <div className="bg-gray-50 border text-gray-500 w-fit text-sm px-[53px] py-2">
+                    {(33 * 100000).toLocaleString()} OP
+                  </div>
+                  <button
+                    onClick={() => {}}
+                    className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium"
+                  >
+                    Delegate
+                  </button>
+
+                </div>
               </div>
             </div>
             <div>
@@ -62,7 +86,7 @@ const AllocationPage = () => {
             </div>
           </div>
         </div>
-        <div className="max-w-[25%]">
+        <div className="max-w-[25%] mt-28">
           <ConnectBox onConnectFarcaster={() => {}} onConnectTwitter={() => {}} onConnectWorldID={() => {}}/>
         </div>
       </div>

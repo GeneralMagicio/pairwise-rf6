@@ -10,15 +10,8 @@ interface HeaderProps {
   isFirstSelection?: boolean;
 }
 
-const OPCharacter: React.FC = () => (
-  <Image
-    src="/assets/images/op-character3.svg"
-    alt="op character"
-    width={60}
-    height={48}
-    unoptimized
-  />
-);
+const PAIRWISE_REPORT_URL =
+  'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
 
 const HeaderRF6: React.FC<HeaderProps> = ({
   category,
@@ -53,10 +46,18 @@ const HeaderRF6: React.FC<HeaderProps> = ({
           </div>
         )}
         <div className="flex items-center gap-4">
-          <span className="rounded-full bg-blue-100 px-3 py-1 text-center text-sm text-blue-link">
+          {/* <span className="rounded-full bg-blue-100 px-3 py-1 text-center text-sm text-blue-link">
             {category}
-          </span>
+          </span> */}
           <ConnectButton />
+          <button
+            className="rounded-lg border border-gray-200 p-2 text-sm mr-8"
+            onClick={() =>
+              window.open(PAIRWISE_REPORT_URL + question, '_blank')
+            }
+          >
+            Report an issue
+          </button>
         </div>
       </div>
     </div>
