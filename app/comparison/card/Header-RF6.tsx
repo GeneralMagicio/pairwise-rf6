@@ -11,7 +11,8 @@ interface HeaderProps {
 }
 
 const PAIRWISE_REPORT_URL
-  = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
+  = `https://github.com/GeneralMagicio/pairwise-rf6/issues/new?
+  assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+`;
 
 const HeaderRF6: React.FC<HeaderProps> = ({
   isFirstSelection,

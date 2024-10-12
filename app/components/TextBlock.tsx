@@ -2,20 +2,21 @@ import { FC } from 'react';
 import Image from 'next/image';
 
 const TextBlock: FC<{
-  mainText: string;
-  highlightText: string;
-  description: string;
+  mainText: string
+  highlightText: string
+  description: string
   highlightImage: {
-    src: string;
-    alt: string;
-    styles: string;
-    width: number;
-    height: number;
-    scale?: number;
-  };
+    src: string
+    alt: string
+    styles: string
+    width: number
+    height: number
+    scale?: number
+  }
 }> = ({ mainText, highlightText, description, highlightImage }) => (
   <p className="sm:w-[35%]] w-full text-start text-3xl font-bold text-dark-500 xl:text-4xl xl:leading-[3rem]">
-    {mainText}{' '}
+    {mainText}
+    {' '}
     <span className="relative inline-block">
       <Image
         src={highlightImage.src}
@@ -30,7 +31,8 @@ const TextBlock: FC<{
         }}
       />
       <span className="text-primary">{highlightText}</span>
-    </span>{' '}
+    </span>
+    {' '}
     {description}
   </p>
 );

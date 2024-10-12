@@ -2,9 +2,9 @@ import Image from 'next/image';
 import React from 'react';
 
 interface UnlockBallotProps {
-  projectCount: number;
-  category: string;
-  onUnlock: () => void;
+  projectCount: number
+  category: string
+  onUnlock: () => void
 }
 
 const FinishBallot: React.FC<UnlockBallotProps> = ({
@@ -36,7 +36,8 @@ const FinishBallot: React.FC<UnlockBallotProps> = ({
         </p>
         <button
           onClick={onUnlock}
-          className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-white transition duration-300 ease-in-out hover:bg-red-600"
+          className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-white
+          transition duration-300 ease-in-out hover:bg-red-600"
         >
           <svg
             className="mr-2 size-5"

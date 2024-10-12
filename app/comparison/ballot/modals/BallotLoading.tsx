@@ -4,7 +4,9 @@ import hourglass from '../../card/modals/hourglass.json';
 
 const BallotLoading: FC = () => {
   return (
-    <div className="mx-auto flex flex-col items-center justify-center rounded-lg bg-white bg-ballot bg-no-repeat p-6 shadow-lg">
+    <div className="mx-auto flex flex-col items-center justify-center rounded-lg
+     bg-white bg-ballot bg-no-repeat p-6 shadow-lg"
+    >
       <div className="size-32">
         <Lottie
           animationData={hourglass}

@@ -25,14 +25,23 @@ const NotBadgeHolder: React.FC = () => {
       <NotBhCharacter />
       <h2 className="mb-4 text-2xl font-bold">This is not a badgeholder</h2>
       <p className="mb-8 text-gray-600">
-        The wallet you are connecting is not included as a badgeholder. You can participate as a guest, knowing that your vote will not be used to distribute funding this time.
+        The wallet you are connecting is not included as a badgeholder.
+        You can participate as a guest, knowing that your vote will not be used to distribute funding this time.
       </p>
       <div className="flex justify-between gap-4">
-        <button onClick={handleLogout} className="flex items-center gap-4 rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100">
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-4 rounded-md border
+        border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100"
+        >
           <ArrowLeftIcon />
           <span> Back </span>
         </button>
-        <button onClick={() => { redirectToComparisonPage(); }} className="rounded-md bg-primary px-4 py-2 text-white hover:bg-red-600">
+        <button
+          onClick={() => { redirectToComparisonPage(); }}
+          className="rounded-md bg-primary px-4
+        py-2 text-white hover:bg-red-600"
+        >
           Continue as a guest →
         </button>
       </div>

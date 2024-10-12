@@ -1,3 +1,4 @@
+/* eslint-disable @stylistic/max-len */
 export const OPIcon = () => {
   return (
     <svg

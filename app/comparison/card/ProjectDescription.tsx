@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from '@/app/styles/Project.module.css';
 
 interface ProjectDescriptionProps {
-  description: string;
+  description: string
 }
 
 const ProjectDescription: React.FC<ProjectDescriptionProps> = ({ description }) => {

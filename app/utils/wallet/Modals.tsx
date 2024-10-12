@@ -12,7 +12,7 @@ import NewWalletModal from './modals/NewWalletModal';
 
 export default function Modals() {
   const path = usePathname();
-  const {address} = useAccount();
+  const { address } = useAccount();
   const { loggedToPw, loginInProgress, loginAddress, setLoginAddress, doLoginFlow, signOut } = useAuth();
 
   const notBhOpen = loggedToPw === LogginToPwBackendState.LoggedIn && !path.includes('comparison');
@@ -20,19 +20,19 @@ export default function Modals() {
   const signInModalOpen = (address ?? false) && (loggedToPw === LogginToPwBackendState.Error);
 
   const handleNewWalletCancel = () => {
-    setLoginAddress({...loginAddress, confirmed: true});
+    setLoginAddress({ ...loginAddress, confirmed: true });
   };
 
   const handleNewWalletSignIn = async () => {
     await signOut();
-    setLoginAddress({value: address, confirmed: true});
+    setLoginAddress({ value: address, confirmed: true });
     doLoginFlow();
   };
 
   return (
     <>
       <Modal isOpen={loginAddress.value !== address && loginAddress.confirmed === false} onClose={() => {}}>
-        <NewWalletModal onSignIn={handleNewWalletSignIn} onCancel={handleNewWalletCancel}/>
+        <NewWalletModal onSignIn={handleNewWalletSignIn} onCancel={handleNewWalletCancel} />
       </Modal>
       <Modal isOpen={notBhOpen} onClose={() => {}}>
         {notBhOpen && <NotBadgeHolder />}

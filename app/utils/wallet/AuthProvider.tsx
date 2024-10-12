@@ -26,8 +26,8 @@ interface AuthContextType {
   setLoggedToPw: (bool: LogginToPwBackendState) => void
   isNewUser: boolean
   setIsNewUser: (bool: boolean) => void
-  loginAddress: {value: `0x${string}` | undefined, confirmed: boolean},
-  setLoginAddress: (value: AuthContextType['loginAddress']) => void,
+  loginAddress: { value: `0x${string}` | undefined, confirmed: boolean }
+  setLoginAddress: (value: AuthContextType['loginAddress']) => void
 }
 
 const AuthContext = React.createContext<AuthContextType>({
@@ -37,7 +37,7 @@ const AuthContext = React.createContext<AuthContextType>({
   isNewUser: false,
   setLoggedToPw: () => {},
   setIsNewUser: () => {},
-  loginAddress: {value: undefined, confirmed: true},
+  loginAddress: { value: undefined, confirmed: true },
   setLoginAddress: () => {},
 });
 
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [isNewUser, setIsNewUser] = useState(false);
 
-  const [loginAddress, setLoginAddress] = useState<AuthContextType['loginAddress']>({confirmed: true, value: undefined});
+  const [loginAddress, setLoginAddress] = useState<AuthContextType['loginAddress']>({ confirmed: true, value: undefined });
 
   useAuth();
 
@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         isNewUser,
         setIsNewUser,
         loginAddress,
-        setLoginAddress
+        setLoginAddress,
       }}
     >
       {children}
@@ -96,7 +96,7 @@ export const useAuth = () => {
 
   const signOut = async (redirectToLanding: boolean = true) => {
     logoutFromPwBackend();
-    setLoginAddress({value: undefined, confirmed: true});
+    setLoginAddress({ value: undefined, confirmed: true });
     setLoggedToPw(LogginToPwBackendState.Initial);
     setIsNewUser(false);
     if (redirectToLanding) router.push('/');
@@ -104,35 +104,34 @@ export const useAuth = () => {
 
   useEffect(() => {
     const loggedInAddress = localStorage.getItem('loggedInAddress');
-    if (loggedInAddress) setLoginAddress({value: loggedInAddress as `0x${string}`, confirmed: true});
+    if (loggedInAddress) setLoginAddress({ value: loggedInAddress as `0x${string}`, confirmed: true });
   }, []);
 
   useEffect(() => {
     if (!prevAddress && !loginAddress.value && connectedAddress) {
-      setLoginAddress({value: connectedAddress, confirmed: true});
+      setLoginAddress({ value: connectedAddress, confirmed: true });
     }
     else if (prevAddress && connectedAddress !== prevAddress && !path.includes('comparison')) {
       signOut();
-    } 
+    }
     else if (prevAddress && connectedAddress !== prevAddress && path.includes('comparison')) {
-      setLoginAddress({...loginAddress, confirmed: false});
-    } 
+      setLoginAddress({ ...loginAddress, confirmed: false });
+    }
   }, [connectedAddress, prevAddress, path]);
 
   const redirectToComparisonPage = useCallback(() => {
     if (loggedToPw !== LogginToPwBackendState.LoggedIn) return;
-    router.push(`/allocation`);
+    router.push('/allocation');
   }, [loggedToPw, router]);
 
   const checkLoggedInToPw = useCallback(async () => {
-
     if (!loginAddress.value) return;
 
     const validToken = await isLoggedIn();
     if (validToken) {
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
-    } else setLoggedToPw(LogginToPwBackendState.Error);
-
+    }
+    else setLoggedToPw(LogginToPwBackendState.Error);
   }, [loginAddress.value]);
 
   useEffect(() => {
@@ -141,7 +140,7 @@ export const useAuth = () => {
 
   const doLoginFlow = useCallback(async (addressParam?: `0x${string}`) => {
     console.log('Running the check login flow');
-    const address = addressParam ?? connectedAddress; 
+    const address = addressParam ?? connectedAddress;
     if (loginInProgress || !address || !chainId) return;
     // setLoginAddress({value: connectedAddress, confirmed: false})
     let message;
@@ -156,7 +155,7 @@ export const useAuth = () => {
       }
       else {
         if (!message || !signature) {
-          const {message: val1, signature: val2} = await getMessageAndSignature(address, chainId, signMessageAsync);
+          const { message: val1, signature: val2 } = await getMessageAndSignature(address, chainId, signMessageAsync);
           message = val1;
           signature = val2;
         }
@@ -182,7 +181,6 @@ export const useAuth = () => {
     finally {
       setLoginInProgress(false);
     }
-
   }, [chainId, connectedAddress]);
 
   useEffect(() => {
