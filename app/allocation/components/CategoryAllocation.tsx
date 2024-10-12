@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { ChangeEventHandler, FC, useEffect, useRef } from 'react';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
+import { roundFractions } from '../utils';
 
 export interface Category {
   id: number
@@ -36,8 +37,18 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = debounce((event) => {
     const value = event.target.value;
-    onPercentageChange(Number(value));
+    onPercentageChange(roundFractions(Number(value), 2));
   }, 1500);
+
+  const handlePlus = debounce(() => {
+    const value = allocationPercentage;
+    onPercentageChange(Number(Math.min(value + 1, 100)));
+  }, 150);
+
+  const handleMinus = debounce(() => {
+    const value = allocationPercentage;
+    onPercentageChange(Math.max(Number(value - 1), 0));
+  }, 150);
 
   useEffect(() => {
     if (inputRef.current?.value) {
@@ -64,18 +75,18 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
       <div className="flex w-fit flex-col gap-2">
         <div className="flex items-center space-x-2">
           <div className="flex justify-center gap-6 border px-10 py-2">
-            <button className="font-bold text-gray-500">-</button>
-            <div className="flex gap-1 rounded bg-white">
+            <button onClick={handleMinus} className="font-bold text-gray-500">-</button>
+            <div className="flex gap-0 rounded bg-white">
               <input
                 onChange={handleInputChange}
                 ref={inputRef}
-                className="w-16 text-center font-semibold"
+                className="w-12 text-center font-semibold outline-none"
                 type="number"
                 defaultValue={allocationPercentage}
               />
               <span> % </span>
             </div>
-            <button className="font-bold text-gray-500">+</button>
+            <button onClick={handlePlus} className="font-bold text-gray-500">+</button>
           </div>
           <button onClick={onLockClick} className="text-gray-500">
             {locked
