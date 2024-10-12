@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import Slider from '@mui/material/Slider';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import CategoryAllocation, { Category } from './components/CategoryAllocation';
 import ConnectBox from './components/ConnectBox';
 import { modifyPercentage, RankItem } from './utils';
+import { CustomizedSlider } from './components/Slider';
 
 const Categories: Category[] = [
   {
@@ -48,6 +48,7 @@ const ranks: RankItem[] = [{
 
 const AllocationPage = () => {
   const [categoryRanking, setCategoryRanking] = useState(ranks);
+  const [totalValue, setTotalValue] = useState(2);
 
   const handleLock = (id: RankItem['id']) => () => {
     const currValue = categoryRanking.find(el => el.id === id)!;
@@ -56,10 +57,15 @@ const AllocationPage = () => {
   };
 
   const handleNewValue = (id: RankItem['id']) => (percentage: number) => {
-    console.log('Now is running');
     const currValue = categoryRanking.find(el => el.id === id)!;
     const newRanking = modifyPercentage(categoryRanking, { ...currValue, percentage });
     setCategoryRanking(newRanking);
+  };
+
+  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+    if (typeof newValue === 'number') {
+      setTotalValue(newValue);
+    }
   };
 
   return (
@@ -94,24 +100,25 @@ const AllocationPage = () => {
                 </p>
                 <div className="my-3 flex items-center gap-4">
                   <span> 2M </span>
-                  <Slider
-                    className="my-2 max-w-[55%] text-[#aaaaaa]"
-                    defaultValue={2}
-                    shiftStep={0.25}
-                    step={0.25}
+                  <CustomizedSlider
+                    className="my-2 min-w-[55%]"
+                    value={totalValue}
+                    onChange={handleSliderChange}
+                    shiftStep={0.1}
+                    step={0.1}
                     marks
                     min={2}
                     max={8}
                   />
                   <span> 8M </span>
-                  <div className="w-fit border bg-gray-50 px-[53px] py-2 text-sm text-gray-500">
-                    {(33 * 100000).toLocaleString()}
+                  <div className="w-64 whitespace-nowrap border bg-gray-50 py-2 text-center text-sm text-gray-500">
+                    {(totalValue * 1_000_000).toLocaleString()}
                     {' '}
                     OP
                   </div>
                   <button
                     onClick={() => {}}
-                    className="rounded-md border px-4 py-2 text-sm font-medium text-gray-700"
+                    className="ml-auto rounded-md border px-4 py-2 text-sm font-medium text-gray-700"
                   >
                     Delegate
                   </button>
@@ -145,7 +152,11 @@ const AllocationPage = () => {
                 </div>
               </div>
             </div>
+            <button className="w-fit self-end rounded-lg bg-primary px-4 py-3 text-white">
+              Submit your votes
+            </button>
           </div>
+
         </div>
         <div className="mt-28 max-w-[25%]">
           <ConnectBox onConnectFarcaster={() => {}} onConnectTwitter={() => {}} onConnectWorldID={() => {}} />
