@@ -9,12 +9,12 @@ interface HeaderProps {
   isFirstSelection?: boolean
 }
 
-const PAIRWISE_REPORT_URL =
-  'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
+const PAIRWISE_REPORT_URL
+  = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
 
 const HeaderRF6: React.FC<HeaderProps> = ({
-  category,
   isFirstSelection,
+  question,
 }) => {
   // const [isBarFixed, setIsBarFixed] = useState(false);
 
@@ -48,12 +48,14 @@ const HeaderRF6: React.FC<HeaderProps> = ({
           {/* <span className="rounded-full bg-blue-100 px-3 py-1 text-center text-sm text-blue-link">
             {category}
           </span> */}
+          <button>
+            <Image src="/assets/images/badges.svg" alt="Badges" width={64} height={16} />
+          </button>
           <ConnectButton />
           <button
-            className="rounded-lg border border-gray-200 p-2 text-sm mr-8"
+            className="mr-8 rounded-lg border border-gray-200 p-2 text-sm"
             onClick={() =>
-              window.open(PAIRWISE_REPORT_URL + question, '_blank')
-            }
+              window.open(PAIRWISE_REPORT_URL + question, '_blank')}
           >
             Report an issue
           </button>
