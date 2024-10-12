@@ -1,6 +1,8 @@
 import debounce from 'lodash.debounce';
 import Image from 'next/image';
 import { ChangeEventHandler, FC, useEffect, useRef } from 'react';
+import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
+import { LockIcon } from '@/public/assets/icon-components/Lock';
 
 export interface Category {
   id: number
@@ -78,34 +80,10 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
           <button onClick={onLockClick} className="text-gray-500">
             {locked
               ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="size-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0
-                     01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <LockIcon />
                 )
               : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="size-5"
-                    viewBox="0 0 20 20"
-                    fill="red"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0
-                     01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <UnlockIcon />
                 )}
           </button>
         </div>
