@@ -32,7 +32,7 @@ import { IProject } from '../utils/types';
 import FinishBallot from '../ballot/modals/FinishBallotModal';
 import BallotSuccessModal from '../ballot/modals/BallotSuccessModal';
 import BallotLoading from '../ballot/modals/BallotLoading';
-import { ballotSuccessPost, getBallot } from '../ballot/useGetBallot';
+import { ballotSuccessPost } from '../ballot/useGetBallot';
 import BallotError from '../ballot/modals/BallotError';
 import { mockProject1, mockProject2 } from '../card/mockData';
 import IntroView from './IntroView';
@@ -120,7 +120,8 @@ export default function Home() {
     if (bypassPrevProgress && data) {
       setProgress(data.progress);
       setBypassPrevProgress(false);
-    } else {
+    }
+    else {
       setProgress(getBiggerNumber(prevProgress, data?.progress));
     }
   }, [data]);
@@ -162,14 +163,14 @@ export default function Home() {
 
     // observe if first rated project is rated good >= 4
     if (
-      (rating1 &&
-        rating1 >= 4 &&
-        rating2 === initialRating2 &&
-        rating1 !== initialRating1) ||
-      (rating2 &&
-        rating2 >= 4 &&
-        rating1 === initialRating1 &&
-        rating2 !== initialRating2)
+      (rating1
+      && rating1 >= 4
+      && rating2 === initialRating2
+      && rating1 !== initialRating1)
+      || (rating2
+      && rating2 >= 4
+      && rating1 === initialRating1
+      && rating2 !== initialRating2)
     ) {
       setShowGoodRatingModal(!getGetStarted().goodRating);
     }
@@ -195,13 +196,14 @@ export default function Home() {
 
     if (data?.votedPairs) {
       markAsVisited();
-    } else {
+    }
+    else {
       checkFirstTimeVisit();
-      //show the post rating modal if the user has already rated the projects
+      // show the post rating modal if the user has already rated the projects
       if (getGetStarted().postRating) {
         setShowPostRatingModal(false);
       }
-      //show the good rating modal if the user has already rated the projects
+      // show the good rating modal if the user has already rated the projects
       if (getGetStarted().goodRating) {
         setShowGoodRatingModal(false);
       }
@@ -215,23 +217,23 @@ export default function Home() {
   };
 
   const isAnyModalOpen = () =>
-    showFinishBallot ||
-    showSuccessBallot ||
-    ballotLoading ||
-    ballotError ||
-    showLowRateModal ||
-    revertingBack ||
-    showPostRatingModal ||
-    showGoodRatingModal;
+    showFinishBallot
+    || showSuccessBallot
+    || ballotLoading
+    || ballotError
+    || showLowRateModal
+    || revertingBack
+    || showPostRatingModal
+    || showGoodRatingModal;
 
-  const dispatchAction =
-    (initiator: AutoScrollAction['initiator']) =>
-    (
-      section: AutoScrollAction['section'],
-      action: AutoScrollAction['action']
-    ) => {
-      setLastAction({ section, initiator, action });
-    };
+  const dispatchAction
+    = (initiator: AutoScrollAction['initiator']) =>
+      (
+        section: AutoScrollAction['section'],
+        action: AutoScrollAction['action']
+      ) => {
+        setLastAction({ section, initiator, action });
+      };
 
   const confirmCoI1 = async (id1: number, id2: number) => {
     await markProjectCoI({ data: { pid: id1 } });
@@ -239,9 +241,10 @@ export default function Home() {
     setCoiLoading1(true);
     try {
       const pair = await getPairwisePairsForProject(cid, id2);
-      setProject1(pair.pairs[0].find((project) => project.id !== id2)!);
-      setRating1(pair.pairs[0].find((project) => project.id === id2)!.rating);
-    } catch (e) {
+      setProject1(pair.pairs[0].find(project => project.id !== id2)!);
+      setRating1(pair.pairs[0].find(project => project.id === id2)!.rating);
+    }
+    catch (e) {
       queryClient.refetchQueries({
         queryKey: ['pairwise-pairs', cid],
       });
@@ -263,9 +266,10 @@ export default function Home() {
     setCoiLoading2(true);
     try {
       const pair = await getPairwisePairsForProject(cid, id1);
-      setProject2(pair.pairs[0].find((project) => project.id !== id1)!);
-      setRating2(pair.pairs[0].find((project) => project.id === id1)!.rating);
-    } catch (e) {
+      setProject2(pair.pairs[0].find(project => project.id !== id1)!);
+      setRating2(pair.pairs[0].find(project => project.id === id1)!.rating);
+    }
+    catch (e) {
       queryClient.refetchQueries({
         queryKey: ['pairwise-pairs', cid],
       });
@@ -300,9 +304,11 @@ export default function Home() {
       await ballotSuccessPost();
       localStorage.setItem(getSuccessBalootLSKey(address), 'true');
       setShowSuccessBallot(true);
-    } catch (e) {
+    }
+    catch (e) {
       setBallotError(true);
-    } finally {
+    }
+    finally {
       setBallotLoading(false);
     }
   };
@@ -318,8 +324,8 @@ export default function Home() {
     if (!rating1 || !rating2) return false;
 
     if (
-      isLowRatedProjectSelected(project1!.id, rating1, rating2) ||
-      isLowRatedProjectSelected(project2!.id, rating2, rating1)
+      isLowRatedProjectSelected(project1!.id, rating1, rating2)
+      || isLowRatedProjectSelected(project2!.id, rating2, rating1)
     ) {
       setSelectedProjectId(chosenId);
       setShowLowRateModal(true);
@@ -364,9 +370,9 @@ export default function Home() {
     lowRate,
     postRating,
   }: {
-    goodRating?: boolean;
-    lowRate?: boolean;
-    postRating?: boolean;
+    goodRating?: boolean
+    lowRate?: boolean
+    postRating?: boolean
   }) {
     if (!address || !chainId) return;
 
@@ -414,14 +420,14 @@ export default function Home() {
       <Modals />
       <Modal
         isOpen={
-          showFinishBallot ||
-          showSuccessBallot ||
-          ballotLoading ||
-          ballotError ||
-          showLowRateModal ||
-          revertingBack ||
-          showPostRatingModal ||
-          showGoodRatingModal
+          showFinishBallot
+          || showSuccessBallot
+          || ballotLoading
+          || ballotError
+          || showLowRateModal
+          || revertingBack
+          || showPostRatingModal
+          || showGoodRatingModal
         }
         onClose={() => {}}
       >
@@ -476,82 +482,88 @@ export default function Home() {
         question="Which project had the greatest impact on the OP Stack?"
         isFirstSelection={isInitialVisit}
       />
-      {isInitialVisit ? (
-        <IntroView setUserAsVisited={setUserAsVisited} />
-      ) : (
-        <div className="relative flex w-full items-center justify-between gap-8 px-8 py-2">
-          <div className="relative w-[49%]">
-            {aiMode1 ? (
-              <ProjectCardAI
-                key={project1.RPGF5Id}
-                aiMode={aiMode1}
-                setAi={toggleAiMode}
-                key1={project1.RPGF5Id}
-                key2={project2.RPGF5Id}
-                coiLoading={coiLoading1}
-                summaryData={project1.aiSummary}
-                coi={coi1}
-                project={{ ...project1.metadata, ...project1 } as any}
-                onCoICancel={cancelCoI1}
-                onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
-              />
-            ) : (
-              <ProjectCard
-                key={project1.RPGF5Id}
-                aiMode={aiMode1}
-                setAi={toggleAiMode}
-                sectionExpanded={sectionExpanded1}
-                setSectionExpanded={setSectionExpanded1}
-                name="card1"
-                action={lastAction}
-                dispatchAction={dispatchAction('card1')}
-                key1={project1.RPGF5Id}
-                key2={project2.RPGF5Id}
-                coiLoading={coiLoading2}
-                coi={coi1}
-                project={{ ...project1.metadata, ...project1 } as any}
-                onCoICancel={cancelCoI1}
-                onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
-              />
-            )}
-          </div>
-          <div className="relative w-[49%]">
-            {aiMode2 ? (
-              <ProjectCardAI
-                key={project2.RPGF5Id}
-                aiMode={aiMode2}
-                setAi={toggleAiMode}
-                key1={project2.RPGF5Id}
-                key2={project1.RPGF5Id}
-                coiLoading={coiLoading2}
-                coi={coi2}
-                summaryData={project2.aiSummary}
-                onCoICancel={cancelCoI2}
-                onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
-                project={{ ...project2.metadata, ...project2 } as any}
-              />
-            ) : (
-              <ProjectCard
-                key={project2.RPGF5Id}
-                aiMode={aiMode2}
-                setAi={toggleAiMode}
-                sectionExpanded={sectionExpanded2}
-                setSectionExpanded={setSectionExpanded2}
-                name="card2"
-                action={lastAction}
-                dispatchAction={dispatchAction('card2')}
-                key1={project2.RPGF5Id}
-                key2={project1.RPGF5Id}
-                coiLoading={coiLoading2}
-                coi={coi2}
-                onCoICancel={cancelCoI2}
-                onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
-                project={{ ...project2.metadata, ...project2 } as any}
-              />
-            )}
-          </div>
-        </div>
-      )}
+      {isInitialVisit
+        ? (
+            <IntroView setUserAsVisited={setUserAsVisited} />
+          )
+        : (
+            <div className="relative flex w-full items-center justify-between gap-8 px-8 py-2">
+              <div className="relative w-[49%]">
+                {aiMode1
+                  ? (
+                      <ProjectCardAI
+                        key={project1.RPGF5Id}
+                        aiMode={aiMode1}
+                        setAi={toggleAiMode}
+                        key1={project1.RPGF5Id}
+                        key2={project2.RPGF5Id}
+                        coiLoading={coiLoading1}
+                        summaryData={project1.aiSummary}
+                        coi={coi1}
+                        project={{ ...project1.metadata, ...project1 } as any}
+                        onCoICancel={cancelCoI1}
+                        onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
+                      />
+                    )
+                  : (
+                      <ProjectCard
+                        key={project1.RPGF5Id}
+                        aiMode={aiMode1}
+                        setAi={toggleAiMode}
+                        sectionExpanded={sectionExpanded1}
+                        setSectionExpanded={setSectionExpanded1}
+                        name="card1"
+                        action={lastAction}
+                        dispatchAction={dispatchAction('card1')}
+                        key1={project1.RPGF5Id}
+                        key2={project2.RPGF5Id}
+                        coiLoading={coiLoading2}
+                        coi={coi1}
+                        project={{ ...project1.metadata, ...project1 } as any}
+                        onCoICancel={cancelCoI1}
+                        onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
+                      />
+                    )}
+              </div>
+              <div className="relative w-[49%]">
+                {aiMode2
+                  ? (
+                      <ProjectCardAI
+                        key={project2.RPGF5Id}
+                        aiMode={aiMode2}
+                        setAi={toggleAiMode}
+                        key1={project2.RPGF5Id}
+                        key2={project1.RPGF5Id}
+                        coiLoading={coiLoading2}
+                        coi={coi2}
+                        summaryData={project2.aiSummary}
+                        onCoICancel={cancelCoI2}
+                        onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
+                        project={{ ...project2.metadata, ...project2 } as any}
+                      />
+                    )
+                  : (
+                      <ProjectCard
+                        key={project2.RPGF5Id}
+                        aiMode={aiMode2}
+                        setAi={toggleAiMode}
+                        sectionExpanded={sectionExpanded2}
+                        setSectionExpanded={setSectionExpanded2}
+                        name="card2"
+                        action={lastAction}
+                        dispatchAction={dispatchAction('card2')}
+                        key1={project2.RPGF5Id}
+                        key2={project1.RPGF5Id}
+                        coiLoading={coiLoading2}
+                        coi={coi2}
+                        onCoICancel={cancelCoI2}
+                        onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
+                        project={{ ...project2.metadata, ...project2 } as any}
+                      />
+                    )}
+              </div>
+            </div>
+          )}
 
       {!isInitialVisit && (
         <footer className="sticky bottom-0 z-50 flex w-full items-center justify-around gap-4 bg-white py-8 shadow-inner">
@@ -563,9 +575,8 @@ export default function Home() {
             />
             <VoteButton
               onClick={() =>
-                !checkLowRatedProjectSelected(project1.id) &&
-                handleVote(project1.id)
-              }
+                !checkLowRatedProjectSelected(project1.id)
+                && handleVote(project1.id)}
               disabled={coiLoading1 || isAnyModalOpen()}
             />
             <ConflictButton
@@ -587,9 +598,8 @@ export default function Home() {
             />
             <VoteButton
               onClick={() =>
-                !checkLowRatedProjectSelected(project2.id) &&
-                handleVote(project2.id)
-              }
+                !checkLowRatedProjectSelected(project2.id)
+                && handleVote(project2.id)}
               disabled={coiLoading2 || isAnyModalOpen()}
             />
             <ConflictButton

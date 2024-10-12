@@ -21,7 +21,6 @@ export const ballotSuccessPost = async () => {
   return data;
 };
 
-
 export const useGetBallot = (cid: number) => {
   return useQuery({
     queryKey: ['ballot', cid],

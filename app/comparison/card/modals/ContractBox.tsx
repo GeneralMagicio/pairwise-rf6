@@ -5,9 +5,9 @@ import { ArrowDownIcon } from '@/public/assets/icon-components/ArrowDown';
 import { ArrowUpIcon } from '@/public/assets/icon-components/ArrowUp';
 
 interface IContractBoxProps {
-  address: string;
-  chainId: number;
-  description: string;
+  address: string
+  chainId: number
+  description: string
 }
 
 export const ContractBox = ({
@@ -18,7 +18,7 @@ export const ContractBox = ({
   const { isExpanded, getToggleProps, getCollapseProps } = useCollapse();
 
   const chain = [optimism, base, mode, zora, fraxtal].find(
-    (c) => c.id === Number(chainId)
+    c => c.id === Number(chainId)
   );
   const { name, blockExplorers } = chain ?? {};
   const { url } = blockExplorers?.default ?? {};
@@ -35,7 +35,7 @@ export const ContractBox = ({
         target="_blank"
         rel="noopener noreferrer"
         className="break-all text-gray-700 hover:underline"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {title}
       </a>

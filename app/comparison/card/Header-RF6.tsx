@@ -12,15 +12,9 @@ interface HeaderProps {
   isFirstSelection?: boolean;
 }
 
-const OPCharacter: React.FC = () => (
-  <Image
-    src="/assets/images/op-character3.svg"
-    alt="op character"
-    width={60}
-    height={48}
-    unoptimized
-  />
-);
+const PAIRWISE_REPORT_URL
+  = `https://github.com/GeneralMagicio/pairwise-rf6/issues/new?
+  assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+`;
 
 const HeaderRF6: React.FC<HeaderProps> = ({
   progress,

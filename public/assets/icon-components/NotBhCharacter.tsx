@@ -1,3 +1,4 @@
+/* eslint-disable @stylistic/max-len */
 export const NotBhCharacter = () => {
   return (
     <svg width="86" height="86" viewBox="0 0 86 86" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">

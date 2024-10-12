@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/app/utils/axiosInstance';
 
 export interface IProjectsRankingResponse {
-  ranking: {  rank: number
+  ranking: { rank: number
     star: number
     name: string
     share: number

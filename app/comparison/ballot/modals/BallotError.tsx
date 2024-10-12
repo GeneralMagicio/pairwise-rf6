@@ -2,11 +2,12 @@ import Image from 'next/image';
 import React from 'react';
 
 interface UnlockBallotProps {
-  onClick: () => void;
+  onClick: () => void
 }
 
-const BALLOT_REPPORT_URL =
-  'https://github.com/GeneralMagicio/pairwise-rpgf5/issues/new?assignees=MoeNick&labels=P0&projects=&template=report-error-on-updating-ballot.md&title=%5BError+updating+ballot%5D+';
+const BALLOT_REPPORT_URL
+  = `https://github.com/GeneralMagicio/pairwise-rpgf5/issues/new?assignees=MoeNick&labels=P0&projects=&
+  template=report-error-on-updating-ballot.md&title=%5BError+updating+ballot%5D+`;
 
 const BallotError: React.FC<UnlockBallotProps> = ({ onClick }) => {
   return (
@@ -27,13 +28,15 @@ const BallotError: React.FC<UnlockBallotProps> = ({ onClick }) => {
         </p>
         <button
           onClick={onClick}
-          className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-white transition duration-300 ease-in-out hover:bg-red-600"
+          className="flex w-full items-center justify-center rounded-lg bg-primary px-4
+          py-3 text-white transition duration-300 ease-in-out hover:bg-red-600"
         >
           Retry ballot update
         </button>
         <button
           onClick={() => window.open(BALLOT_REPPORT_URL, '_blank')}
-          className="mt-4 flex w-full items-center justify-center rounded-lg bg-white px-4 py-3 font-semibold text-primary transition duration-300 ease-in-out"
+          className="mt-4 flex w-full items-center justify-center rounded-lg bg-white px-4
+          py-3 font-semibold text-primary transition duration-300 ease-in-out"
         >
           Report an issue
         </button>
