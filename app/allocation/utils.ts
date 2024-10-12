@@ -4,7 +4,7 @@ export interface RankItem {
   locked: boolean
 }
 
-const roundFractions = (value: number, fractions: number) => {
+export const roundFractions = (value: number, fractions: number) => {
   return Math.round(value * Math.pow(10, fractions)) / Math.pow(10, fractions);
 };
 
