@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { axios } from "@/app/lib/axios";
-import { Address } from "viem";
 
 export type MedalTypes =
 	| 'Bronze'
@@ -56,4 +55,4 @@ export const useGetPublicBadges = (address: string) => {
       queryKey: ['publicBadges', address],
       queryFn: () => getPublicBadges(address),
     });
-  };
+};
