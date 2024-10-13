@@ -49,16 +49,17 @@ const ranks: RankItem[] = [{
 const AllocationPage = () => {
   const [categoryRanking, setCategoryRanking] = useState(ranks);
   const [totalValue, setTotalValue] = useState(2);
-  const [percentageError, setPercentageError] = useState<string>()
+  const [percentageError, setPercentageError] = useState<string>();
 
   const handleLock = (id: RankItem['id']) => () => {
     try {
       const currValue = categoryRanking.find(el => el.id === id)!;
       const newRanking = modifyPercentage(categoryRanking, { ...currValue, locked: !currValue.locked });
       setCategoryRanking(newRanking);
-      setPercentageError(undefined)
-    } catch (e: any) {
-      setPercentageError(e.msg)
+      setPercentageError(undefined);
+    }
+    catch (e: any) {
+      setPercentageError(e.msg);
     }
   };
 
@@ -67,14 +68,15 @@ const AllocationPage = () => {
       const currValue = categoryRanking.find(el => el.id === id)!;
       const newRanking = modifyPercentage(categoryRanking, { ...currValue, percentage });
       setCategoryRanking(newRanking);
-      setPercentageError(undefined)
-    } catch (e: any) {
-      console.log(e)
-      setPercentageError(e.msg)
+      setPercentageError(undefined);
+    }
+    catch (e: any) {
+      console.log(e);
+      setPercentageError(e.msg);
     }
   };
 
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
+  const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     if (typeof newValue === 'number') {
       setTotalValue(newValue);
     }
@@ -164,7 +166,11 @@ const AllocationPage = () => {
                 </div>
               </div>
             </div>
-            <span className='className="w-fit h-4 self-end text-primary'> {percentageError ? `Error: ${percentageError}` : ""} </span>
+            <span className='className="w-fit h-4 self-end text-primary'>
+              {' '}
+              {percentageError ? `Error: ${percentageError}` : ''}
+              {' '}
+            </span>
             <button className="w-fit self-end rounded-lg bg-primary px-4 py-3 text-white">
               Submit your votes
             </button>
