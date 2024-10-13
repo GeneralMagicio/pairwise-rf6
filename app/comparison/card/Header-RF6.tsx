@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
-
-const PAIRWISE_REPPORT_URL =
-  'https://github.com/GeneralMagicio/pairwise-rpgf5/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
 
 interface HeaderProps {
   progress: number;
@@ -23,28 +20,26 @@ const OPCharacter: React.FC = () => (
 );
 
 const HeaderRF6: React.FC<HeaderProps> = ({
-  progress,
   category,
-  question,
   isFirstSelection,
 }) => {
-  const [isBarFixed, setIsBarFixed] = useState(false);
+  // const [isBarFixed, setIsBarFixed] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setIsBarFixed(true);
-      } else {
-        setIsBarFixed(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     if (window.scrollY > 100) {
+  //       setIsBarFixed(true);
+  //     } else {
+  //       setIsBarFixed(false);
+  //     }
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
+  //   window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, []);
 
   return (
     <div className="relative z-40 w-full bg-white border-b">
