@@ -4,7 +4,7 @@ import TextBlock from '../components/TextBlock';
 export const LandingPart3 = () => {
   return (
     <div className="flex h-[calc(0.65*100vh)] min-h-[calc(0.85*760px)] w-full flex-col items-center justify-center gap-20 md:flex-row md:justify-between md:gap-0">
-      <div className="font-inter flex max-w-[400px] flex-col gap-2 text-4xl font-bold xl:max-w-[600px] sl:text-2xl">
+      <div className="flex max-w-[400px] flex-col gap-2 text-4xl font-bold xl:max-w-[600px] sl:text-2xl">
         <TextBlock
           mainText="After completion you will be redirected back to the Optimism website, and your Pairwise ranked projects will be updated on your"
           highlightText="Ballot"

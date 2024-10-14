@@ -142,7 +142,7 @@ export const ProjectCardAI: React.FC<Props> = ({
                     {project.name}
                   </h1>
                   {project.organization && (
-                    <div className="font-inter flex items-center gap-1 font-medium leading-6 text-slate-600">
+                    <div className="flex items-center gap-1 font-medium leading-6 text-slate-600">
                       <p>By</p>
                       {project.organization.organizationAvatarUrl && (
                         <Image

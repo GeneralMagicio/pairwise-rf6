@@ -4,7 +4,7 @@ import TextBlock from '../components/TextBlock';
 export const LandingPart1 = () => {
   return (
     <div className="flex h-[calc(0.65*100vh)] min-h-[calc(0.85*760px)] flex-col justify-center gap-20 md:flex-row md:justify-between md:gap-0">
-      <div className="font-inter flex max-w-[400px] flex-col justify-center text-4xl font-bold md:max-w-[400px] sl:text-3xl">
+      <div className="flex max-w-[400px] flex-col justify-center text-4xl font-bold md:max-w-[400px] sl:text-3xl">
         <TextBlock
           mainText="Use the"
           highlightText="Stars"

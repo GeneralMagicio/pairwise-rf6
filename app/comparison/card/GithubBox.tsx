@@ -27,7 +27,7 @@ const GithubBox: FC<Props> = ({ repo }) => {
   return (
     <div
       {...getToggleProps()}
-      className="font-inter max-w-full cursor-pointer rounded-lg border border-gray-200 bg-gray-50 p-2 py-[12px]"
+      className="max-w-full cursor-pointer rounded-lg border border-gray-200 bg-gray-50 p-2 py-[12px]"
     >
       <div
         className={`flex items-center justify-between ${
@@ -67,7 +67,7 @@ const GithubBox: FC<Props> = ({ repo }) => {
         <p className="mb-4 text-gray-600">{repo.description}</p>
         {'metrics' in repo && repo.metrics ? (
           <>
-            <div className="font-inter mb-2 grid grid-cols-3 gap-2 text-sm font-normal leading-5">
+            <div className="mb-2 grid grid-cols-3 gap-2 text-sm font-normal leading-5">
               <div className="flex items-center gap-2 rounded-md bg-gray-100 p-2">
                 <TimeIcon />
                 <span className="text-sm">{`${
