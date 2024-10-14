@@ -55,7 +55,6 @@ const AllocationPage = () => {
   const [percentageError, setPercentageError] = useState<string>();
   const [showLoginModal, setShowLoginModal] = useState(true);
 
-
   const handleLock = (id: RankItem['id']) => () => {
     try {
       const currValue = categoryRanking.find(el => el.id === id)!;
