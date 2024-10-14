@@ -1,7 +1,7 @@
 type TIconProps = {
   size?: string
   color?: string
-}
+};
 
 export const BackArrowIcon = ({ size, color }: TIconProps) => {
   return (

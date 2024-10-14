@@ -34,17 +34,17 @@ export type TOTPData = {
   loading: boolean
   otpStatus: OtpStatus
   sentAt?: number
-}
+};
 
 export type TOAuthData = {
   email: string
   loading: boolean
   error: string
-}
+};
 
 type TEmailLoginModalProps = {
   closeModal: () => void
-}
+};
 
 const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
   const [otpData, setOtpData] = useState<TOTPData>({
@@ -105,9 +105,7 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
           <div className="flex w-1/2 flex-col gap-4 px-4 py-8">
             <h2 className="text-2xl font-bold text-dark-500">Why you need to log in with Email?</h2>
             <p className="text-gray-600">
-              Pairwise allows for 
-{' '}
-<strong className="text-dark-500">anonymous voting</strong>, letting you express your views
+              Pairwise allows for <strong className="text-dark-500">anonymous voting</strong>, letting you express your views
               without any fear of judgment.
             </p>
             <p className="text-lg font-bold text-dark-500">How it works?</p>
@@ -115,17 +113,13 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
               <li className="flex gap-2">
                 <span>1. </span>
                 <span>
-                  Web2 login creates an 
-{' '}
-<strong>AA wallet</strong>
+                  Web2 login creates an <strong>AA wallet</strong>
                 </span>
               </li>
               <li className="flex gap-2">
                 <span>2. </span>
                 <span>
-                  Using a 
-{' '}
-<strong>zk proof</strong> your new AA wallet connects to your existing OP mainnet address
+                  Using a <strong>zk proof</strong> your new AA wallet connects to your existing OP mainnet address
                 </span>
               </li>
               <li className="flex gap-2">

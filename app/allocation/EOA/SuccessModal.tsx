@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 type TSuccessModalProps = {
   closeModal: () => void
-}
+};
 
 const SuccessModal = ({ closeModal }: TSuccessModalProps) => {
   return (

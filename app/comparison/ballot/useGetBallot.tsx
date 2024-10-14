@@ -7,7 +7,7 @@ export type AgoraBallotPost = {
     allocation: string
     impact: number
   }[]
-}
+};
 
 export const getBallot = async (cid: number): Promise<AgoraBallotPost> => {
   const { data } = await axiosInstance.get(`flow/ballot?cid=${cid}`);

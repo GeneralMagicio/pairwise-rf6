@@ -5,7 +5,7 @@ type Data = {
   data: {
     pid: number // project ID
   }
-}
+};
 
 export const markCoi = async ({ data }: Data) => {
   console.log(data);
