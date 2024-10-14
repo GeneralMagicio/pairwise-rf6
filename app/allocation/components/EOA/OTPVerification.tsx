@@ -187,6 +187,7 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
               : 'bg-gray-300 text-gray-500'
           } transition duration-300`}
           onClick={() => handleEmailLogin()}
+          disabled={!otpCodeFilled}
         >
           Submit
         </button>

@@ -1,14 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { useActiveWallet } from 'thirdweb/react';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import Modal from '../utils/Modal';
-import EmailLoginModal from './EOA/EmailLoginModal';
+import EmailLoginModal from './components/EOA/EmailLoginModal';
 
 import CategoryAllocation, { Category } from './components/CategoryAllocation';
 import ConnectBox from './components/ConnectBox';
 import { modifyPercentage, RankItem } from './utils';
 import { CustomizedSlider } from './components/Slider';
+
 
 const Categories: Category[] = [
   {
@@ -56,10 +58,11 @@ const ranks: RankItem[] = [
 ];
 
 const AllocationPage = () => {
+  const wallet = useActiveWallet();
   const [categoryRanking, setCategoryRanking] = useState(ranks);
   const [totalValue, setTotalValue] = useState(2);
   const [percentageError, setPercentageError] = useState<string>();
-  const [showLoginModal, setShowLoginModal] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleLock = (id: RankItem['id']) => () => {
     try {
@@ -98,9 +101,17 @@ const AllocationPage = () => {
     }
   };
 
+  const handleScoreProjects = () => {
+    console.log('wallet :>> ', wallet);
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+  }
+
   return (
     <div>
-      <Modal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
+      <Modal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} showCloseButton={true}>
         <EmailLoginModal closeModal={() => setShowLoginModal(false)} />
       </Modal>
       <HeaderRF6
@@ -188,7 +199,7 @@ const AllocationPage = () => {
                         locked={rank.locked}
                         onDelegate={() => {}}
                         onLockClick={handleLock(cat.id)}
-                        onScore={() => {}}
+                        onScore={handleScoreProjects}
                         allocationPercentage={rank.percentage}
                         onPercentageChange={handleNewValue(cat.id)}
                       />
