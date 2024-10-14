@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       fontSize: {
-        mxl: ['1,375rem','2.125rem']
+        mxl: ['1,375rem', '2.125rem'],
       },
       colors: {
         primary: '#FF0420',

@@ -52,8 +52,8 @@ const AllocationPage = () => {
   const [categoryRanking, setCategoryRanking] = useState(ranks);
   const [totalValue, setTotalValue] = useState(2);
   const [percentageError, setPercentageError] = useState<string>();
-  const [ isOpenFarcasterModal, setIsOpenFarcasterModal ] = useState(false);
-  const [ isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal ] = useState(false);
+  const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
+  const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal] = useState(false);
 
   const handleLock = (id: RankItem['id']) => () => {
     try {
@@ -94,12 +94,18 @@ const AllocationPage = () => {
         question="Which project had the greatest impact on the OP Stack?"
         isFirstSelection={false}
       />
-      <WorldIdSignInSuccessModal isOpen={isWorldIdSignSuccessModal} onClose={()=>{
-        setIsWorldIdSignSuccessModal(false);
-      }}/>
-      <FarcasterModal isOpen={isOpenFarcasterModal} onClose={()=>{
-        setIsOpenFarcasterModal(false)
-      }}/>
+      <WorldIdSignInSuccessModal
+        isOpen={isWorldIdSignSuccessModal}
+        onClose={() => {
+          setIsWorldIdSignSuccessModal(false);
+        }}
+      />
+      <FarcasterModal
+        isOpen={isOpenFarcasterModal}
+        onClose={() => {
+          setIsOpenFarcasterModal(false);
+        }}
+      />
       <div className="flex justify-between gap-4 p-16">
         <div className="flex max-w-[65%] flex-col gap-3">
           <h2 className="text-3xl font-bold"> Round 6: Governance </h2>
@@ -188,11 +194,15 @@ const AllocationPage = () => {
 
         </div>
         <div className="mt-28 max-w-[25%]">
-          <ConnectBox onConnectFarcaster={() => {
-            setIsOpenFarcasterModal(true);
-          }} onConnectTwitter={() => {}} onConnectWorldID={() => {
-            setIsWorldIdSignSuccessModal(true)
-          }} />
+          <ConnectBox
+            onConnectFarcaster={() => {
+              setIsOpenFarcasterModal(true);
+            }}
+            onConnectTwitter={() => {}}
+            onConnectWorldID={() => {
+              setIsWorldIdSignSuccessModal(true);
+            }}
+          />
         </div>
       </div>
     </div>

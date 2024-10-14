@@ -1,9 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
+import { IDKitWidget, ISuccessResult, VerificationLevel } from '@worldcoin/idkit';
 import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
 import { XIcon } from '@/public/assets/icon-components/XIcon';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
-import { IDKitWidget, ISuccessResult, VerificationLevel } from '@worldcoin/idkit';
 import { actionId, appId } from '@/app/lib/constants';
 
 interface ConnectBoxProps {
@@ -18,16 +18,16 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectFarcaster,
 }) => {
   const handleVerify = async (proof: ISuccessResult) => {
-    const res = await fetch("/api/verifyWorldCoin", {
-      method: "POST",
+    const res = await fetch('/api/verifyWorldCoin', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({proof}),
+      body: JSON.stringify({ proof }),
     });
     console.log(res);
     if (!res.ok) {
-      throw new Error("Verification failed!");
+      throw new Error('Verification failed!');
     }
   };
   return (
@@ -44,25 +44,24 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
       <p className="mb-4">Increase your voting power by connecting to WorldID</p>
 
       <IDKitWidget
-                app_id={appId}
-                action={actionId}
-                onSuccess={() => {
-                  onConnectWorldID();
-                }}
-                handleVerify={handleVerify}
-                verification_level={VerificationLevel.Device}
-            >
-              {({ open }) => (
-                <button
-                onClick={open}
-                className="mb-4 flex w-full items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-gray-800"
-              >
-                <WorldIdIcon />
-                Connect with WorldID
-              </button>
-              )}
-            </IDKitWidget>
-      
+        app_id={appId}
+        action={actionId}
+        onSuccess={() => {
+          onConnectWorldID();
+        }}
+        handleVerify={handleVerify}
+        verification_level={VerificationLevel.Device}
+      >
+        {({ open }) => (
+          <button
+            onClick={open}
+            className="mb-4 flex w-full items-center justify-center gap-2 rounded-md bg-gray-100 px-4 py-2 text-gray-800"
+          >
+            <WorldIdIcon />
+            Connect with WorldID
+          </button>
+        )}
+      </IDKitWidget>
 
       <p className="mb-4 w-full border-t pt-4">
         Check who delegated their voting power

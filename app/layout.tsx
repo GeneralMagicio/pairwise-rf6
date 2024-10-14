@@ -2,9 +2,9 @@ import { ReactNode } from 'react';
 import '@smastrom/react-rating/style.css';
 import { Inter } from 'next/font/google';
 import AppKitProvider from './utils/wallet/provider';
+import FarcasterProvider from '@/app/utils/FarcasterProvider';
 import type { Metadata } from 'next';
 import './globals.css';
-import FarcasterProvider from '@/app/utils/FarcasterProvider';
 
 const inter = Inter({
   subsets: ['latin'],
