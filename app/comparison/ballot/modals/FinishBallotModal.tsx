@@ -23,9 +23,7 @@ const FinishBallot: FC<UnlockBallotProps> = ({
           className="mx-auto mb-6"
         />
         <h2 className="mb-4 text-xl font-medium text-dark-500">
-          {
-            'Nice work! You\'re ready to unlock your ballot and distribute rewards'
-          }
+          Nice work! You're ready to unlock your ballot and distribute rewards
         </h2>
         <p className="mb-6 px-4 text-gray-400">
           {`You've ranked all
@@ -38,7 +36,7 @@ const FinishBallot: FC<UnlockBallotProps> = ({
           onClick={onUnlock}
           className="flex w-full items-center justify-center gap-x-2 rounded-lg bg-primary px-4 py-3 text-white transition duration-300 ease-in-out hover:bg-red-600"
         >
-          <UnlockIcon size={20} />
+          <UnlockIcon size={20} color="#fff" />
           Unlock Ballot
         </button>
       </div>
