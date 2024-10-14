@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 
-interface   IPostRatingModalProps {
-  confirm: () => void;
+interface IPostRatingModalProps {
+  confirm: () => void
 }
 
 const PostRatingModal: FC<IPostRatingModalProps> = ({ confirm }) => {

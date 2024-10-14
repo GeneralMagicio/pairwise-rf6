@@ -4,8 +4,8 @@ import { ArrowUpIcon } from '@/public/assets/icon-components/ArrowUp';
 import { PowerIcon } from '@/public/assets/icon-components/Power';
 
 interface Props {
-  wallet: string;
-  onLogout: () => void;
+  wallet: string
+  onLogout: () => void
 }
 
 export function shortenWalletAddress(

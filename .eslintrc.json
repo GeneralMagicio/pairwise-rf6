@@ -2,13 +2,16 @@
 	"extends": [
 		"next/core-web-vitals",
 		"eslint:recommended",
-		"plugin:tailwindcss/recommended"
+		"plugin:tailwindcss/recommended",
+		"plugin:@stylistic/recommended-extends"
 	],
 	"plugins": [
 		"@stylistic",
 		"unused-imports"
 	],
 	"rules": {
+		"@stylistic/max-len": ["error", {"code": 125}],
+		"@stylistic/semi": "off",
 		"no-unused-vars": "off",
 		"react/no-unescaped-entities": "warn",
 		"import/order": [

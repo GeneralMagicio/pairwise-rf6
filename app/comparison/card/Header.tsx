@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
 
-const PAIRWISE_REPPORT_URL =
-  'https://github.com/GeneralMagicio/pairwise-rpgf5/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
+const PAIRWISE_REPPORT_URL
+  = `https://github.com/GeneralMagicio/pairwise-rpgf5/issues/new?
+  assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+`;
 
 interface HeaderProps {
-  progress: number;
-  category: string;
-  question: string;
-  isFirstSelection?: boolean;
+  progress: number
+  category: string
+  question: string
+  isFirstSelection?: boolean
 }
 
 const OPCharacter: React.FC = () => (
@@ -34,7 +35,8 @@ const Header: React.FC<HeaderProps> = ({
     const handleScroll = () => {
       if (window.scrollY > 100) {
         setIsBarFixed(true);
-      } else {
+      }
+      else {
         setIsBarFixed(false);
       }
     };
@@ -70,8 +72,7 @@ const Header: React.FC<HeaderProps> = ({
           <button
             className="rounded-lg border border-gray-200 p-2 text-sm"
             onClick={() =>
-              window.open(PAIRWISE_REPPORT_URL + question, '_blank')
-            }
+              window.open(PAIRWISE_REPPORT_URL + question, '_blank')}
           >
             Report an issue
           </button>
@@ -86,7 +87,8 @@ const Header: React.FC<HeaderProps> = ({
         <div
           className="h-full bg-primary"
           style={{ width: `${progress}%` }}
-        ></div>
+        >
+        </div>
       </div>
     </div>
   );

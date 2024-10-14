@@ -40,7 +40,8 @@ const LowRateModal: FC<ILowRateModalProps> = ({
 
       <button
         onClick={cancelSelection}
-        className="w-full rounded-md border border-gray-200 bg-gray-50 py-2 text-gray-600 transition duration-300 hover:bg-gray-300"
+        className="w-full rounded-md border border-gray-200 bg-gray-50 py-2 text-gray-600
+         transition duration-300 hover:bg-gray-300"
       >
         Cancel
       </button>

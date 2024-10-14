@@ -3,12 +3,12 @@ import Image from 'next/image';
 import { StarIcon } from '@/public/assets/icon-components/Star';
 
 interface IGoodRatingModalProps {
-  confirm: () => void;
+  confirm: () => void
 }
 
 interface IStarRatingProps {
-  color: string;
-  numRated: number;
+  color: string
+  numRated: number
 }
 
 const StarRating: FC<IStarRatingProps> = ({ color, numRated }) => (

@@ -3,7 +3,9 @@ import TextBlock from '../components/TextBlock';
 
 export const LandingPart2 = () => {
   return (
-    <div className="flex h-[calc(0.65*100vh)] min-h-[calc(0.85*760px)] w-full flex-col-reverse items-center justify-center gap-20 md:flex-row md:justify-between md:gap-0">
+    <div className="flex h-[calc(0.65*100vh)] min-h-[calc(0.85*760px)] w-full flex-col-reverse
+     items-center justify-center gap-20 md:flex-row md:justify-between md:gap-0"
+    >
       <div className="relative h-[360px] w-full md:h-[540px]">
         <Image src="assets/images/landing-p2.svg" alt="landing part 2" width={700} height={540} />
       </div>

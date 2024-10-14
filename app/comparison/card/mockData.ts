@@ -1,3 +1,4 @@
+/* eslint-disable @stylistic/max-len */
 import { IProject } from '../utils/types';
 
 export const mockProject1: IProject = {
@@ -145,21 +146,21 @@ export const mockProject1: IProject = {
         'Research which informs Ethereum core development',
       ],
       statement: {
-        create:  [
-        {
-          answer:
+        create: [
+          {
+            answer:
               'Lodestar provides ongoing research, development and implementation of core infrastructure relied upon by OP Stack for consensus on Layer 1. Most notably, EIP-4844 (Shard Blob Transactions) has allowed for scaling Ethereum to allow L2s such as OP to utilize blob transactions instead of calldata for efficiencies in cost for utilizing Ethereum settlement. By contributing to the Typescript implementation, testing infrastructure and maintaining other libraries required for its success (such as nodeJS bindings for c-kzg), we were able to deliver this feature for the benefit of OP. In addition, EIPs such as EIP-4788 allows for embedding L1 beacon block roots into Layer 2 to reduce trust assumptions relating to Ethereum\'s consensus state. ',
-          question:
+            question:
               'How does your project support, or is a dependency of, the OP Stack?',
-        },
-        {
-          answer:
+          },
+          {
+            answer:
               'Without the impact of Lodestar and its efforts to Ethereum protocol R&D, the specification would lack input from engineers familiar with the consensus specifications and how it impacts protocol implementation on a Typescript-based client. We regularly contribute to research, spec design, devnets, testnets and provide continuous infrastructure to support a increasingly larger network which requires more than one entity to provide stability and reliability, especially for networks where nothing is actually at stake (e.g. public testnets). ',
-          question:
+            question:
               'How would it impact the OP Stack if your project ceased to exist?',
-        },
-      ],
-    }},
+          },
+        ],
+      } },
     testimonials: 'https://www.metricsgarden.xyz/projects/Lodestar',
 
   },
@@ -342,21 +343,21 @@ export const mockProject2: IProject = {
       category: 'ETHEREUM_CORE_CONTRIBUTIONS',
       subcategory: ['Ethereum client implementations'],
       statement: {
-        create: 
+        create:
         [
-        {
-          answer:
+          {
+            answer:
             'The application of formal methods is widely recognized as one of the most effective techniques for ensuring correctness in software development. Symbolic execution is generally considered a best practice within smart contract development, as well as in traditional high assurance domains.\n\nhevm is a cutting edge symbolic execution engine for the EVM. Its library interface allows developers to build and experiment with new symbolic analysis tooling. It can be used to analyze programs deployed to any EVM based blockchain.\n\nhevm has been under active development since 2017. Since October 2023 we have made the following improvements:\n\n- Significant performance optimizations\n- Improved ux and documentation\n- A fully symbolic model for addresses\n- An abstract gas model\n- Support for the Cancun hardfork (WIP)\n- Expanded support for testing specific features ("cheat-codes")\n\nThese improvements make hevm faster, easier to use, and expand the range of programs that can be analyzed.',
-          question:
+            question:
             'How does your project support, or is a dependency of, the OP Stack?',
-        },
-        {
-          answer:
+          },
+          {
+            answer:
             'OP stack developers would lose access to a powerful and cutting edge symbolic EVM implementation. Development of analysis tooling for the OP stack would become harder. Application developers targeting the OP stack would lose access to tools checking for safety and correctness.',
-          question:
+            question:
             'How would it impact the OP Stack if your project ceased to exist?',
-        },
-      ]},
+          },
+        ] },
     },
     testimonials: 'https://www.metricsgarden.xyz/projects/hevm',
   },

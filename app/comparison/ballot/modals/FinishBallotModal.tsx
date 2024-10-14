@@ -2,9 +2,9 @@ import { FC } from 'react';
 import Image from 'next/image';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
 interface UnlockBallotProps {
-  projectCount: number;
-  category: string;
-  onUnlock: () => void;
+  projectCount: number
+  category: string
+  onUnlock: () => void
 }
 
 const FinishBallot: FC<UnlockBallotProps> = ({

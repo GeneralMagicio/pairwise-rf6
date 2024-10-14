@@ -23,7 +23,8 @@ const createMessage: SIWEConfig['createMessage'] = ({ address, chainId }) =>
     chainId,
   }).prepareMessage();
 
-export const getMessageAndSignature = async (address: `0x${string}`, chainId: number, signFunc: ({ message }: { message: string }) => Promise<`0x${string}`>) => {
+export const getMessageAndSignature = async (address: `0x${string}`, chainId: number,
+  signFunc: ({ message }: { message: string }) => Promise<`0x${string}`>) => {
   const message = await createMessage({
     address,
     chainId,
@@ -32,7 +33,7 @@ export const getMessageAndSignature = async (address: `0x${string}`, chainId: nu
 
   const signature = await signFunc({ message });
 
-  return {message, signature};
+  return { message, signature };
 };
 
 export const loginToPwBackend = async (

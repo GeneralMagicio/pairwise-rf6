@@ -15,7 +15,7 @@ const AllocationPage = () => {
       </Modal>
       <HeaderRF6
         progress={30}
-        category={'category'}
+        category="category"
         question="Which project had the greatest impact on the OP Stack?"
         isFirstSelection={false}
       />
