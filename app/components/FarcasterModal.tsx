@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Modal from "../utils/Modal";
 import { useSignIn, QRCode } from '@farcaster/auth-kit';
 import Image from "next/image"
+import Spinner from "./Spinner";
 
 interface FarcasterModalProps {
     isOpen: boolean;
@@ -23,7 +24,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
 
     useEffect(() => {
         if (isOpen) {
-            connect(); // Establish the relay connection when modal opens
+            connect();
         }
     }, [isOpen, connect]);
 
@@ -32,6 +33,14 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
             signIn();
         }
     }, [isConnected, signIn]);
+
+    useEffect(()=>{
+        if (data && data.username) {
+            setTimeout(()=>{
+                setIsLoading(true);
+            },2000)
+        }
+    }, [data])
 
     const handleCopyLink = async () => {
         try {
@@ -79,8 +88,33 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
                     </button>
                 </div>
             )}
-            {data?.username && isLoading && (
-                <p>Welcome, {data.username}!</p>
+            {data?.username && (
+                isLoading?
+                <div className="flex flex-col w-full items-center justify-center gap-6 px-[170px]">
+                    
+                    <div className="flex flex-col w-full items-center justify-center gap-2">
+                        <Spinner/>
+                        <div className="text-lg text-[#05060B]"></div>
+                    </div>
+                </div>:
+                <div>
+                    <div className="flex flex-col w-full items-center justify-center gap-6 px-4 py-10">
+                        <Image src="assets/images/world-star-success.svg" width={100} height={100} alt=""/>
+                        <div className="gap-2 flex flex-col items-center">
+                            <div className="text-sm text-[#232634]">
+                                <div>Successfully connected to your Farcaster account</div>
+                                <div>@{data.username}</div>
+                            </div>
+                            <p className="font-semibold text-mxl text-wrap">You currently don’t have any delegations to your Farcaster account</p>
+                            <p className="text-[#636779] text-sm text-wrap">You can always check back later if someone has delegated you voting power</p>
+                        </div>
+                        <div className="text-[#FF0420] font-semibold w-full text-center">
+                            <div className="text-base ">Your current voting power</div>
+                            <div className="text-5xl font-bold text-[#FF0420] p-3">{20000}</div>
+                        </div>
+                        <button className="bg-[#FF0420] w-full text-white py-2.5 px-5 rounded-lg" onClick={onClose}><p className="p-0.5">Done</p></button>
+                    </div>
+                </div>
             )}
         </Modal>
     );
