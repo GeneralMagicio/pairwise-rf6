@@ -25,8 +25,9 @@ const NotBadgeHolder: React.FC = () => {
       <NotBhCharacter />
       <h2 className="mb-4 text-2xl font-bold">This is not a badgeholder</h2>
       <p className="mb-8 text-gray-600">
-        The wallet you are connecting is not included as a badgeholder.
-        You can participate as a guest, knowing that your vote will not be used to distribute funding this time.
+        The wallet you are connecting is not included as a badgeholder. You can
+        participate as a guest, knowing that your vote will not be used to
+        distribute funding this time.
       </p>
       <div className="flex justify-between gap-4">
         <button
@@ -38,7 +39,9 @@ const NotBadgeHolder: React.FC = () => {
           <span> Back </span>
         </button>
         <button
-          onClick={() => { redirectToComparisonPage(); }}
+          onClick={() => {
+            redirectToComparisonPage();
+          }}
           className="rounded-md bg-primary px-4
         py-2 text-white hover:bg-red-600"
         >

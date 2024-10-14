@@ -23,8 +23,11 @@ const createMessage: SIWEConfig['createMessage'] = ({ address, chainId }) =>
     chainId,
   }).prepareMessage();
 
-export const getMessageAndSignature = async (address: `0x${string}`, chainId: number,
-  signFunc: ({ message }: { message: string }) => Promise<`0x${string}`>) => {
+export const getMessageAndSignature = async (
+  address: `0x${string}`,
+  chainId: number,
+  signFunc: ({ message }: { message: string }) => Promise<`0x${string}`>
+) => {
   const message = await createMessage({
     address,
     chainId,
@@ -40,7 +43,7 @@ export const loginToPwBackend = async (
   chainId: number,
   address: string,
   message: string,
-  signature: `0x${string}`,
+  signature: `0x${string}`
 ) => {
   // const nonce = await fetchNonce()
   // const nonce = generateRandomString(16
@@ -48,12 +51,12 @@ export const loginToPwBackend = async (
   // const message = 'Sign in to Agora with Ethereum';
 
   // Verify signature
-  const { data } = await axiosInstance.post<{ token: string, isNewUser: boolean }>(
-    '/auth/login',
-    {
-      ...{ message, signature: `${signature}`, address, chainId },
-    },
-  );
+  const { data } = await axiosInstance.post<{
+    token: string
+    isNewUser: boolean
+  }>('/auth/login', {
+    ...{ message, signature: `${signature}`, address, chainId },
+  });
 
   const token = data.token;
   window.localStorage.setItem('auth', token);

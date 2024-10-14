@@ -19,9 +19,12 @@ const NewWalletModal: React.FC<Props> = ({ onCancel, onSignIn }) => {
         height={100}
       />
       <h2 className="my-4 text-xl font-medium">New Wallet Detected</h2>
-      <h3 className="mb-4 text-lg font-bold text-gray-400">{address ? shortenWalletAddress(address) : ''}</h3>
+      <h3 className="mb-4 text-lg font-bold text-gray-400">
+        {address ? shortenWalletAddress(address) : ''}
+      </h3>
       <p className="mb-8 text-gray-400">
-        Looks like you’re connected with a different wallet. Please sign in with the connected wallet to continue.
+        Looks like you’re connected with a different wallet. Please sign in with
+        the connected wallet to continue.
       </p>
       <div className="flex w-full justify-between gap-4">
         <button
@@ -31,7 +34,10 @@ const NewWalletModal: React.FC<Props> = ({ onCancel, onSignIn }) => {
         >
           Cancel
         </button>
-        <button onClick={onSignIn} className="w-full rounded-md bg-primary py-2 text-white hover:bg-red-600">
+        <button
+          onClick={onSignIn}
+          className="w-full rounded-md bg-primary py-2 text-white hover:bg-red-600"
+        >
           Sign in
         </button>
       </div>
