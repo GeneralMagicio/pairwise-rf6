@@ -14,7 +14,8 @@ const Categories: Category[] = [
   {
     id: 1,
     title: 'Infrastructure & Tooling',
-    description: 'Ethereum Core Contributions are infrastructure which supports, or is a dependency, of the OP Stack.',
+    description:
+      'Ethereum Core Contributions are infrastructure which supports, or is a dependency, of the OP Stack.',
     imageSrc: '/assets/images/category-it.png',
     projectCount: 20,
   },
@@ -29,25 +30,30 @@ const Categories: Category[] = [
   {
     id: 3,
     title: 'Governance Leadership',
-    description: 'Efforts that improve the usability and accessibility of the OP Stack through tooling enhancements.',
+    description:
+      'Efforts that improve the usability and accessibility of the OP Stack through tooling enhancements.',
     imageSrc: '/assets/images/category-gl.png',
     projectCount: 30,
   },
 ];
 
-const ranks: RankItem[] = [{
-  id: 1,
-  locked: false,
-  percentage: 33.4,
-}, {
-  id: 2,
-  locked: false,
-  percentage: 33.3,
-}, {
-  id: 3,
-  locked: false,
-  percentage: 33.3,
-}];
+const ranks: RankItem[] = [
+  {
+    id: 1,
+    locked: false,
+    percentage: 33.4,
+  },
+  {
+    id: 2,
+    locked: false,
+    percentage: 33.3,
+  },
+  {
+    id: 3,
+    locked: false,
+    percentage: 33.3,
+  },
+];
 
 const AllocationPage = () => {
   const [categoryRanking, setCategoryRanking] = useState(ranks);
@@ -58,7 +64,10 @@ const AllocationPage = () => {
   const handleLock = (id: RankItem['id']) => () => {
     try {
       const currValue = categoryRanking.find(el => el.id === id)!;
-      const newRanking = modifyPercentage(categoryRanking, { ...currValue, locked: !currValue.locked });
+      const newRanking = modifyPercentage(categoryRanking, {
+        ...currValue,
+        locked: !currValue.locked,
+      });
       setCategoryRanking(newRanking);
       setPercentageError(undefined);
     }
@@ -70,7 +79,10 @@ const AllocationPage = () => {
   const handleNewValue = (id: RankItem['id']) => (percentage: number) => {
     try {
       const currValue = categoryRanking.find(el => el.id === id)!;
-      const newRanking = modifyPercentage(categoryRanking, { ...currValue, percentage });
+      const newRanking = modifyPercentage(categoryRanking, {
+        ...currValue,
+        percentage,
+      });
       setCategoryRanking(newRanking);
       setPercentageError(undefined);
     }
@@ -101,23 +113,30 @@ const AllocationPage = () => {
         <div className="flex max-w-[65%] flex-col gap-3">
           <h2 className="text-3xl font-bold"> Round 6: Governance </h2>
           <p className="text-gray-600">
-            Retroactive Public Goods Funding (Retro Funding) 6 will reward contributions to Optimism Governance,
-            including governance infrastructure & tooling, governance analytics, and governance leadership.
+            Retroactive Public Goods Funding (Retro Funding) 6 will reward
+            contributions to Optimism Governance, including governance
+            infrastructure & tooling, governance analytics, and governance
+            leadership.
           </p>
           <p className="bg-yellow-50 p-4">
-            Decide on the budget for this round, decide how much should go to each category,
-            and score projects in each category using the Pairwise raking.
-            You can also choose to delegate your decision to someone
-            on X (Twitter) or Farcaster. By connecting your X and Farcaster accounts, find out
-            if someone delegated voting decision to you.
+            Decide on the budget for this round, decide how much should go to
+            each category, and score projects in each category using the
+            Pairwise raking. You can also choose to delegate your decision to
+            someone on X (Twitter) or Farcaster. By connecting your X and
+            Farcaster accounts, find out if someone delegated voting decision to
+            you.
           </p>
           <div className="flex flex-col gap-6 rounded-md border p-6">
             <div>
-              <h3 className="mb-4 w-full border-b pb-2 text-2xl font-bold"> Your budget </h3>
+              <h3 className="mb-4 w-full border-b pb-2 text-2xl font-bold">
+                {' '}
+                Your budget
+                {' '}
+              </h3>
               <div className="flex flex-col justify-between">
                 <p>
-                  Choose how much OP should be dedicated to this round,
-                  or delegate this decision to someone you trust.
+                  Choose how much OP should be dedicated to this round, or
+                  delegate this decision to someone you trust.
                 </p>
                 <div className="my-3 flex items-center gap-4">
                   <span> 2M </span>
@@ -143,20 +162,25 @@ const AllocationPage = () => {
                   >
                     Delegate
                   </button>
-
                 </div>
               </div>
             </div>
             <div>
-              <h3 className="mb-4 w-full border-b pb-2 text-2xl font-bold"> Categories </h3>
+              <h3 className="mb-4 w-full border-b pb-2 text-2xl font-bold">
+                {' '}
+                Categories
+                {' '}
+              </h3>
               <div>
                 <p className="my-4">
-                  Score projects in each category doing the Pairwise ranking,
-                  or delegate this decision to someone you trust.
+                  Score projects in each category doing the Pairwise ranking, or
+                  delegate this decision to someone you trust.
                 </p>
                 <div className="flex flex-col gap-4">
                   {Categories.map((cat) => {
-                    const rank = categoryRanking.find(el => el.id === cat.id)!;
+                    const rank = categoryRanking.find(
+                      el => el.id === cat.id
+                    )!;
                     return (
                       <CategoryAllocation
                         {...cat}
@@ -182,10 +206,13 @@ const AllocationPage = () => {
               Submit your votes
             </button>
           </div>
-
         </div>
         <div className="mt-28 max-w-[25%]">
-          <ConnectBox onConnectFarcaster={() => {}} onConnectTwitter={() => {}} onConnectWorldID={() => {}} />
+          <ConnectBox
+            onConnectFarcaster={() => {}}
+            onConnectTwitter={() => {}}
+            onConnectWorldID={() => {}}
+          />
         </div>
       </div>
     </div>
