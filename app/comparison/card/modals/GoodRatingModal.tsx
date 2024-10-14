@@ -32,8 +32,8 @@ const ratingOptions = [
 ];
 
 const GoodRatingModal: FC<IGoodRatingModalProps> = ({ confirm }) => (
-  <div className="mx-auto rounded-lg bg-white bg-good-rating bg-no-repeat p-6 shadow-lg">
-    <div className="mb-4 flex justify-center">
+  <div className="mx-auto w-[300px] rounded-lg bg-white bg-good-rating bg-no-repeat p-6 shadow-lg md:w-[420px]">
+    <div className="mb-6 flex justify-center">
       <div className="rounded-full p-2">
         <Image
           src="/assets/images/op-character5.svg"

@@ -4,13 +4,9 @@ import hourglass from '@/public/assets/json/hourglass.json';
 
 const BallotLoading: FC = () => {
   return (
-    <div className="mx-auto flex flex-col items-center justify-center rounded-lg bg-white bg-ballot bg-no-repeat p-6 shadow-lg">
+    <div className="mx-auto flex w-[300px] flex-col items-center justify-center rounded-lg bg-white bg-ballot bg-no-repeat p-6 shadow-lg md:w-[500px]">
       <div className="size-32">
-        <Lottie
-          animationData={hourglass}
-          loop={true}
-          autoplay={true}
-        />
+        <Lottie animationData={hourglass} loop={true} autoplay={true} />
       </div>
 
       <p className="mt-2 text-center text-dark-500">

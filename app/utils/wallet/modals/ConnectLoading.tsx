@@ -4,7 +4,7 @@ import spinner from './spinner-animation.json';
 
 const ConnectLoading: React.FC = () => {
   return (
-    <div className="relative flex flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-md">
+    <div className="relative flex w-[300px] flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-md md:w-[420px]">
       {/* <Image
         src="assets/images/vector3.svg"
         alt="vector"

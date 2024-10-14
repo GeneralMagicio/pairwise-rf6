@@ -11,7 +11,7 @@ interface Props {
 const NewWalletModal: React.FC<Props> = ({onCancel, onSignIn}) => {
   const { address } = useAccount();
   return (
-    <div className="relative flex flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-md">
+    <div className="relative flex w-[300px] flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-md md:w-[420px]">
       <Image
         src="/assets/images/op-character4.svg"
         alt="vector"
