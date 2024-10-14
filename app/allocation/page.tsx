@@ -8,7 +8,6 @@ import {
   badgeTypeMapping,
   useGetPublicBadges,
 } from "../features/badges/getBadges";
-import { useSignIn } from '@farcaster/auth-kit';
 import { actionId, appId } from "../lib/constants";
 import { IDKitWidget, ISuccessResult, VerificationLevel } from "@worldcoin/idkit";
 import { useState } from "react";
@@ -17,9 +16,6 @@ import WorldIdSignInSuccessModal from "../components/WorldIdSignInSuccessModal";
 
 const AllocationPage = () => {
   const { address } = useAccount();
-  const {
-    signIn,
-  } = useSignIn({});
   const [ isOpenFarcasterModal, setIsOpenFarcasterModal ] = useState(false);
   const [ isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal ] = useState(false);
   const numOfBadgesFunc = (publicBadges: BadgeData) =>
@@ -61,7 +57,9 @@ const AllocationPage = () => {
       <WorldIdSignInSuccessModal isOpen={isWorldIdSignSuccessModal} onClose={()=>{
         setIsWorldIdSignSuccessModal(false);
       }}/>
-      <FarcasterModal isOpen={isOpenFarcasterModal} onClose={()=>{}}/>
+      <FarcasterModal isOpen={isOpenFarcasterModal} onClose={()=>{
+        setIsOpenFarcasterModal(false)
+      }}/>
       <p className="mt-8 p-4"> Allocation page... </p>
       <div className="flex flex-wrap space-x-4 p-4">
         <div className="flex-grow">Box 1</div>
@@ -153,7 +151,6 @@ const AllocationPage = () => {
           <button className="flex flex-row items-center p-2.5 px-12 gap-2 rounded-md border-t border border-opacity-0 w-full h-11 text-base font-medium justify-center space-x-1"
               onClick={()=>{
                 setIsOpenFarcasterModal(true);
-                signIn();
               }}
             >
             <Image src="/assets/images/farcaster-icon.svg" width={24} height={24} alt=""/>
