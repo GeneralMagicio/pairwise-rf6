@@ -11,7 +11,6 @@ import ConnectBox from './components/ConnectBox';
 import { modifyPercentage, RankItem } from './utils';
 import { CustomizedSlider } from './components/Slider';
 
-
 const Categories: Category[] = [
   {
     id: 1,
@@ -107,7 +106,7 @@ const AllocationPage = () => {
       setShowLoginModal(true);
       return;
     }
-  }
+  };
 
   return (
     <div>

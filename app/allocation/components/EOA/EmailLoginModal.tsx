@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { Wallet } from "thirdweb/wallets";
-import { preAuthenticate } from "thirdweb/wallets/in-app";
-import { ExternalLinkIcon } from "@/public/assets/icon-components/ExternalLink";
-import { brandColor } from "@/app/lib/constants";
-import { Strategy } from "@/app/lib/third-web/methods";
-import { MethodSelection } from "./MethodSelection";
-import { client } from "@/app/utils/wallet/provider";
-import { OTPVerification } from "./OTPVerification";
-import SuccessModal from "./SuccessModal";
-import ConnectEOAModal from "./ConnectEOAModal";
-import VerificationLoading from "./VerificationLoading";
+import React, { useState } from 'react';
+import { Wallet } from 'thirdweb/wallets';
+import { preAuthenticate } from 'thirdweb/wallets/in-app';
+import { ExternalLinkIcon } from '@/public/assets/icon-components/ExternalLink';
+import { brandColor } from '@/app/lib/constants';
+import { Strategy } from '@/app/lib/third-web/methods';
+import { MethodSelection } from './MethodSelection';
+import { client } from '@/app/utils/wallet/provider';
+import { OTPVerification } from './OTPVerification';
+import SuccessModal from './SuccessModal';
+import ConnectEOAModal from './ConnectEOAModal';
+import VerificationLoading from './VerificationLoading';
 
 export enum OtpStatus {
   SENT,
@@ -28,47 +28,47 @@ export enum Step {
 }
 
 export type TOTPData = {
-  email: string;
-  emailError: string;
-  verificationCode: string;
-  loading: boolean;
-  otpStatus: OtpStatus;
-  sentAt?: number;
+  email: string
+  emailError: string
+  verificationCode: string
+  loading: boolean
+  otpStatus: OtpStatus
+  sentAt?: number
 };
 
 export type TOAuthData = {
-  email: string;
-  loading: boolean;
-  error: string;
+  email: string
+  loading: boolean
+  error: string
 };
 
 type TEmailLoginModalProps = {
-  closeModal: () => void;
+  closeModal: () => void
 };
 
 const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
   const [otpData, setOtpData] = useState<TOTPData>({
-    email: "",
-    emailError: "",
-    verificationCode: "",
+    email: '',
+    emailError: '',
+    verificationCode: '',
     loading: false,
     otpStatus: OtpStatus.SENT,
     sentAt: 0,
   });
   const [oAuthData, setOAuthData] = useState<TOAuthData>({
-    email: "",
+    email: '',
     loading: false,
-    error: "",
+    error: '',
   });
   const [step, setStep] = useState<Step>(Step.EMAIL);
   const [eoaWallet, setEoaWallet] = useState<Wallet | null>(null);
-  const [pickedMethod, setPickedMethod] = useState<Strategy | "email" | null>(
+  const [pickedMethod, setPickedMethod] = useState<Strategy | 'email' | null>(
     null
   );
 
   const goBack = () => {
     setStep(otpData.otpStatus !== OtpStatus.VERIFIED ? Step.EMAIL : Step.OTP);
-    setPickedMethod("email");
+    setPickedMethod('email');
   };
 
   const sendOTP = async () => {
@@ -79,7 +79,7 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
     try {
       await preAuthenticate({
         client,
-        strategy: "email",
+        strategy: 'email',
         email: otpData.email,
       });
 
@@ -89,7 +89,8 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
         otpStatus: OtpStatus.SENT,
         sentAt: Date.now(),
       });
-    } catch (e) {
+    }
+    catch (e) {
       setOtpData({
         ...otpData,
         loading: false,
@@ -108,8 +109,10 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
               Why you need to log in with Email?
             </h2>
             <p className="text-gray-600">
-              Pairwise allows for{" "}
-              <strong className="text-dark-500">anonymous voting</strong>,
+              Pairwise allows for
+              {' '}
+              <strong className="text-dark-500">anonymous voting</strong>
+              ,
               letting you express your views without any fear of judgment.
             </p>
             <p className="text-lg font-bold text-dark-500">How it works?</p>
@@ -117,13 +120,19 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
               <li className="flex gap-2">
                 <span>1. </span>
                 <span>
-                  Web2 login creates an <strong>AA wallet</strong>
+                  Web2 login creates an
+                  {' '}
+                  <strong>AA wallet</strong>
                 </span>
               </li>
               <li className="flex gap-2">
                 <span>2. </span>
                 <span>
-                  Using a <strong>zk proof</strong> your new AA wallet connects
+                  Using a
+                  {' '}
+                  <strong>zk proof</strong>
+                  {' '}
+                  your new AA wallet connects
                   to your existing OP mainnet address
                 </span>
               </li>
@@ -131,7 +140,9 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
                 <span>3. </span>
                 <span>
                   Your AA wallet is used to create votes as attestations, and
-                  your OP mainnet address is <strong>never used again</strong>
+                  your OP mainnet address is
+                  {' '}
+                  <strong>never used again</strong>
                 </span>
               </li>
             </ul>
@@ -141,10 +152,9 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
                 className="flex items-center gap-1 font-medium text-primary"
                 onClick={() =>
                   window.open(
-                    "https://pairwise.vote/blog/2021/09/15/why-we-need-anonymous-voting/",
-                    "_blank"
-                  )
-                }
+                    'https://pairwise.vote/blog/2021/09/15/why-we-need-anonymous-voting/',
+                    '_blank'
+                  )}
               >
                 Read full blog post
                 <ExternalLinkIcon size={16} color={brandColor.primary} />
@@ -153,27 +163,29 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
           </div>
           <div className="border-l-2 border-gray-100"></div>
           <div className="flex w-1/2 flex-col items-center justify-center gap-2">
-            {step === Step.EMAIL ? (
-              <MethodSelection
-                otpData={otpData}
-                oAuthData={oAuthData}
-                pickedMethod={pickedMethod}
-                setOtpData={setOtpData}
-                setPickedMethod={setPickedMethod}
-                setEoaWallet={setEoaWallet}
-                setOAuthData={setOAuthData}
-                sendOTP={sendOTP}
-                setStep={setStep}
-              />
-            ) : (
-              <OTPVerification
-                otpData={otpData}
-                setOtpData={setOtpData}
-                handleGoBack={goBack}
-                setEoaWallet={setEoaWallet}
-                setStep={setStep}
-              />
-            )}
+            {step === Step.EMAIL
+              ? (
+                  <MethodSelection
+                    otpData={otpData}
+                    oAuthData={oAuthData}
+                    pickedMethod={pickedMethod}
+                    setOtpData={setOtpData}
+                    setPickedMethod={setPickedMethod}
+                    setEoaWallet={setEoaWallet}
+                    setOAuthData={setOAuthData}
+                    sendOTP={sendOTP}
+                    setStep={setStep}
+                  />
+                )
+              : (
+                  <OTPVerification
+                    otpData={otpData}
+                    setOtpData={setOtpData}
+                    handleGoBack={goBack}
+                    setEoaWallet={setEoaWallet}
+                    setStep={setStep}
+                  />
+                )}
           </div>
         </div>
       </div>

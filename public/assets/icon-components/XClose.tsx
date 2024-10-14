@@ -1,11 +1,11 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 type TIconProps = {
-  size?: number;
-  color?: string;
+  size?: number
+  color?: string
 };
 
-export const XCloseIcon: FC<TIconProps> = ({ size = 24, color = "black" }) => {
+export const XCloseIcon: FC<TIconProps> = ({ size = 24, color = 'black' }) => {
   return (
     <svg
       width={size}
