@@ -13,3 +13,7 @@ export const starHoverColor = {
   4: '#B2E6B4',
   5: '#479F7899',
 };
+
+export const brandColor = {
+  primary: '#FF0420',
+};

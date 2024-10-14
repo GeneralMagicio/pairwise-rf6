@@ -9,6 +9,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { State, WagmiProvider } from 'wagmi';
 import { config, projectId, metadata } from './config';
 import { AuthProvider } from './AuthProvider';
+import { Thirdweb5Provider } from '@/app/lib/third-web/provider';
+
 // import { siweProviderConfig } from "./SiweProviderConfig";
 
 // Setup queryClient
@@ -40,16 +42,16 @@ export default function AppKitProvider({
   children,
   initialState,
 }: {
-  children: ReactNode
-  initialState?: State
+  children: ReactNode;
+  initialState?: State;
 }) {
   return (
     <WagmiProvider config={config} initialState={initialState}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
-      </QueryClientProvider>
+      <Thirdweb5Provider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>{children}</AuthProvider>
+        </QueryClientProvider>
+      </Thirdweb5Provider>
     </WagmiProvider>
   );
 }

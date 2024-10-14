@@ -32,7 +32,7 @@ import { IProject } from '../utils/types';
 import FinishBallot from '../ballot/modals/FinishBallotModal';
 import BallotSuccessModal from '../ballot/modals/BallotSuccessModal';
 import BallotLoading from '../ballot/modals/BallotLoading';
-import { ballotSuccessPost, getBallot } from '../ballot/useGetBallot';
+import { ballotSuccessPost } from '../ballot/useGetBallot';
 import BallotError from '../ballot/modals/BallotError';
 import { mockProject1, mockProject2 } from '../card/mockData';
 import IntroView from './IntroView';

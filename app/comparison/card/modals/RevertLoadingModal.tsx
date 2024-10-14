@@ -1,6 +1,6 @@
 import Lottie from 'lottie-react';
 import React, { FC } from 'react';
-import back from './back.json';
+import back from '@/public/assets/json/back.json';
 import styles from '@/app/styles/Animation.module.css';
 
 const RevertLoadingModal: FC = () => {

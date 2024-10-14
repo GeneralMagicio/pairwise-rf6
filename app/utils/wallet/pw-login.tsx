@@ -1,6 +1,6 @@
-import { axiosInstance } from '../axiosInstance';
 import { SIWEConfig } from 'connectkit';
 import { SiweMessage } from 'siwe';
+import { axiosInstance } from '../axiosInstance';
 
 export const isLoggedIn = async () => {
   if (!localStorage.getItem('auth')) return false;
@@ -18,7 +18,7 @@ const createMessage: SIWEConfig['createMessage'] = ({ address, chainId }) =>
     version: '1',
     domain: window.location.host,
     uri: window.location.origin,
-    statement: "Sign in to Pairwise",
+    statement: 'Sign in to Pairwise',
     address,
     chainId,
   }).prepareMessage();
@@ -27,7 +27,7 @@ export const getMessageAndSignature = async (address: `0x${string}`, chainId: nu
   const message = await createMessage({
     address,
     chainId,
-    nonce: ""
+    nonce: ''
   });
 
   const signature = await signFunc({ message });

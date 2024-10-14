@@ -10,7 +10,6 @@ import React, {
 import { useAccount, useSignMessage } from 'wagmi';
 import { usePathname, useRouter } from 'next/navigation';
 import { getMessageAndSignature, isLoggedIn, loginToPwBackend, logoutFromPwBackend } from './pw-login';
-import { JWTPayload } from './types';
 import { axiosInstance } from '../axiosInstance';
 import { usePrevious } from '../methods';
 
@@ -122,7 +121,7 @@ export const useAuth = () => {
 
   const redirectToComparisonPage = useCallback(() => {
     if (loggedToPw !== LogginToPwBackendState.LoggedIn) return;
-    router.push(`/allocation`);
+    router.push('/allocation');
   }, [loggedToPw, router]);
 
   const checkLoggedInToPw = useCallback(async () => {

@@ -48,7 +48,7 @@ const GoodRatingModal: FC<IGoodRatingModalProps> = ({ confirm }) => (
       How would you rate the second project?
     </h2>
 
-    <div className="mb-8 flex flex-col justify-center gap-6 px-2 font-inter text-sm font-normal text-gray-400">
+    <div className="font-inter mb-8 flex flex-col justify-center gap-6 px-2 text-sm font-normal text-gray-400">
       {ratingOptions.map(({ color, numRated, label }, index) => (
         <div
           key={index}

@@ -27,6 +27,7 @@
     "react-dom": "^18",
     "react-switch": "^7.0.0",
     "siwe": "^2.3.2",
+    "thirdweb": "^5.61.5",
     "viem": "^2.16.1",
     "wagmi": "^2.11.3"
   },

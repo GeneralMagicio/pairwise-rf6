@@ -1,6 +1,6 @@
 import Lottie from 'lottie-react';
 import React, { FC } from 'react';
-import hourglass from '../../card/modals/hourglass.json';
+import hourglass from '@/public/assets/json/hourglass.json';
 
 const BallotLoading: FC = () => {
   return (
