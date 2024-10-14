@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 interface ModalProps {
@@ -10,7 +10,11 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  const modalNode = document.getElementById('modal-root');
+  const [modalNode, setModalNode] = useState<Element | null>(null);
+
+  useEffect(() => {
+    setModalNode(document.getElementById('modal-root'));
+  }, []);
 
   useEffect(() => {
     // Optional: Handle escape key press to close modal

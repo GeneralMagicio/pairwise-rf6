@@ -26,8 +26,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
   });
 
   const [delegates, setDelegateAmount] = useState< IDelegates[] | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
-  console.log(isSuccess);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
@@ -53,7 +52,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
           points: 300,
         },
       ]);
-      setIsLoading(true);
+      setIsLoading(false);
     }
   }, [isSuccess]);
 
@@ -65,16 +64,6 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
       console.error('Failed to copy: ', err);
     }
   };
-  useEffect(() => {
-    if (data && data.username) {
-      setIsLoading(false);
-      setDelegateAmount([
-        { username: 'username1', points: 200 },
-        { username: 'username2', points: 300 },
-      ]);
-      setIsLoading(true);
-    }
-  }, [data?.username]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -82,10 +71,10 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
         <div className="relative flex flex-col items-center space-y-4 p-2 text-center">
           <button
             onClick={onClose}
-            className="absolute right-2 top-2 rounded-full bg-gray-100 p-2 text-sm text-gray-500 shadow-md hover:bg-gray-200"
+            className="absolute right-2 top-2 size-8 rounded-full text-sm text-gray-500 shadow-md hover:bg-gray-200"
             aria-label="Close"
           >
-            <span>&times;</span>
+            <span className="flex size-full items-center justify-center">&times;</span>
           </button>
 
           <div className="relative size-auto">
@@ -136,10 +125,10 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
                           {data.username}
                         </div>
                       </div>
-                      <p className="text-wrap text-mxl font-semibold">
+                      <p className="text-wrap text-center text-mxl font-semibold">
                         You currently don’t have any delegations to your Farcaster account
                       </p>
-                      <p className="text-wrap text-sm text-[#636779]">
+                      <p className="text-wrap text-center text-sm text-[#636779]">
                         You can always check back later if someone has delegated you voting power
                       </p>
                     </div>
@@ -162,12 +151,12 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
                           {data.username}
                         </div>
                       </div>
-                      <p className="text-wrap text-mxl font-semibold">
+                      <p className="text-wrap text-center text-mxl font-semibold">
                         You have been delegated voting power from the users below
                       </p>
                       {delegates.map(({ username, points }) => (
                         <div key={username} className="w-full gap-1 text-wrap text-center text-base text-[#636779]">
-                          <span className="text-sm text-primary">{points.toString()}</span>
+                          <span className="text-sm font-bold text-primary">{points.toString()}</span>
                           {' '}
                           from @
                           {username}
