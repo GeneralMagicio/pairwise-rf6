@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
 import { PwLogo } from '@/public/assets/icon-components/PairwiseLogo';
 
