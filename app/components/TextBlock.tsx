@@ -16,7 +16,7 @@ const TextBlock: FC<{
 }> = ({ mainText, highlightText, description, highlightImage }) => (
   <p className="sm:w-[35%]] w-full text-start text-3xl font-bold text-dark-500 xl:text-4xl xl:leading-[3rem]">
     {mainText}
-{' '}
+    {' '}
     <span className="relative inline-block">
       <Image
         src={highlightImage.src}
@@ -30,7 +30,7 @@ const TextBlock: FC<{
       />
       <span className="text-primary">{highlightText}</span>
     </span>
-{' '}
+    {' '}
     {description}
   </p>
 );

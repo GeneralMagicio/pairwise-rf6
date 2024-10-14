@@ -97,7 +97,7 @@ export type ProjectMetadata =
     }
     testimonials: string
   }
-    | {
+  | {
     id: string
     applicationId: string
     projectId: string
@@ -208,7 +208,7 @@ export type ProjectMetadata =
     }
     testimonials: string
   }
-    | {
+  | {
     id: string
     applicationId: string
     projectId: string
@@ -275,22 +275,22 @@ export type ProjectMetadata =
       }[]
       revenue: null
       grants: (
-          | {
-              grant: string
+        | {
+          grant: string
           link: null
-              amount: string
+          amount: string
           date: string
           details: null
           fundingRound: string
         }
-          | {
-              grant: string
+        | {
+          grant: string
           link: string
           amount: string
           date: string
           details: string
           fundingRound: null
-            }
+        }
       )[]
     }
     pricingModel: {
@@ -309,7 +309,7 @@ export type ProjectMetadata =
     }
     testimonials: string
   }
-    | {
+  | {
     id: string
     applicationId: string
     projectId: string
@@ -396,7 +396,7 @@ export type ProjectMetadata =
     }
     testimonials: string
   }
-    | {
+  | {
     id: string
     applicationId: string
     projectId: string
@@ -490,13 +490,13 @@ export type ProjectMetadata =
       }[]
       revenue: null
       grants: (
-          | {
-              grant: string
-              link: null
+        | {
+          grant: string
+          link: null
           amount: string
-              date: string
+          date: string
           details: null
-              fundingRound: string
+          fundingRound: string
         }
           | {
           grant: string
@@ -524,7 +524,7 @@ export type ProjectMetadata =
     }
     testimonials: string
   }
-    | {
+  | {
     id: string
     applicationId: string
     projectId: string
@@ -664,32 +664,32 @@ export type ProjectMetadata =
     }[]
     github: (
         | {
-            id: string
+        id: string
         type: string
         url: string
         name: null
-            description: null
+        description: null
         verified: boolean
         openSource: boolean
         containsContracts: boolean
         createdAt: string
-            updatedAt: string
+        updatedAt: string
         projectId: string
         metrics?: undefined
       }
-          | {
-            id: string
+        | {
+        id: string
         type: string
         url: string
         name: string
-            description: string
+        description: string
         verified: boolean
         openSource: boolean
         containsContracts: boolean
-            createdAt: string
+        createdAt: string
         updatedAt: string
         projectId: string
-            metrics: {
+        metrics: {
           artifact_url: string
           num_contributors: string
           num_trusted_contributors: string
@@ -697,13 +697,13 @@ export type ProjectMetadata =
           num_stars: string
           num_trusted_stars: string
           trust_weighted_stars: string
-              num_forks: string
+          num_forks: string
           num_trusted_forks: string
           trust_weighted_forks: string
           trust_rank_for_repo_in_category: string
           age_of_project_years: string
           license: string
-            }
+        }
       }
     )[]
     packages: {
@@ -914,12 +914,12 @@ export type ProjectMetadata =
       revenue: null
       grants: (
           | {
-              grant: string
-              link: null
+          grant: string
+          link: null
           amount: string
-              date: string
+          date: string
           details: null
-              fundingRound: string
+          fundingRound: string
         }
           | {
           grant: string
@@ -1116,21 +1116,21 @@ export type ProjectMetadata =
     }[]
     github: (
         | {
-            id: string
+        id: string
         type: string
-            url: string
+        url: string
         name: null
         description: null
-            verified: boolean
+        verified: boolean
         openSource: boolean
         containsContracts: boolean
         createdAt: string
-            updatedAt: string
+        updatedAt: string
         projectId: string
         metrics?: undefined
       }
-          | {
-            id: string
+        | {
+        id: string
         type: string
         url: string
         name: string
@@ -1141,21 +1141,21 @@ export type ProjectMetadata =
         createdAt: string
         updatedAt: string
         projectId: string
-            metrics: {
+        metrics: {
           artifact_url: string
           num_contributors: string
           num_trusted_contributors: string
           num_contributors_last_6_months: string
-              num_stars: string
+          num_stars: string
           num_trusted_stars: string
           trust_weighted_stars: string
-              num_forks: string
+          num_forks: string
           num_trusted_forks: string
           trust_weighted_forks: string
           trust_rank_for_repo_in_category: string
-              age_of_project_years: string
+          age_of_project_years: string
           license: string
-            }
+        }
       }
     )[]
     packages: {
@@ -1174,11 +1174,11 @@ export type ProjectMetadata =
       revenue: null
       grants: (
           | {
-              grant: string
-              link: null
+          grant: string
+          link: null
           amount: string
           date: string
-              details: null
+          details: null
           fundingRound: string
         }
           | {

@@ -28,7 +28,7 @@ export const ConnectButton = () => {
     try {
       open();
     }
- catch (_e) {
+    catch (_e) {
       open();
     }
   }

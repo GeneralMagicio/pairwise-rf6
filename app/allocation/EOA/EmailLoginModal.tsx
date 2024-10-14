@@ -88,7 +88,7 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
         sentAt: Date.now(),
       });
     }
- catch (e) {
+    catch (e) {
       setOtpData({
         ...otpData,
         loading: false,
@@ -105,9 +105,10 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
           <div className="flex w-1/2 flex-col gap-4 px-4 py-8">
             <h2 className="text-2xl font-bold text-dark-500">Why you need to log in with Email?</h2>
             <p className="text-gray-600">
-              Pairwise allows for 
-{' '}
-<strong className="text-dark-500">anonymous voting</strong>, letting you express your views
+              Pairwise allows for
+              {' '}
+              <strong className="text-dark-500">anonymous voting</strong>
+              , letting you express your views
               without any fear of judgment.
             </p>
             <p className="text-lg font-bold text-dark-500">How it works?</p>
@@ -115,24 +116,26 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
               <li className="flex gap-2">
                 <span>1. </span>
                 <span>
-                  Web2 login creates an 
-{' '}
-<strong>AA wallet</strong>
+                  Web2 login creates an
+                  {' '}
+                  <strong>AA wallet</strong>
                 </span>
               </li>
               <li className="flex gap-2">
                 <span>2. </span>
                 <span>
-                  Using a 
-{' '}
-<strong>zk proof</strong> your new AA wallet connects to your existing OP mainnet address
+                  Using a
+                  {' '}
+                  <strong>zk proof</strong>
+                  {' '}
+                  your new AA wallet connects to your existing OP mainnet address
                 </span>
               </li>
               <li className="flex gap-2">
                 <span>3. </span>
                 <span>
                   Your AA wallet is used to create votes as attestations, and your OP mainnet address is
-{' '}
+                  {' '}
                   <strong>never used again</strong>
                 </span>
               </li>
@@ -148,28 +151,28 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
           <div className="border-l-2 border-gray-100"></div>
           <div className="flex w-1/2 flex-col items-center justify-center gap-2">
             {step === Step.EMAIL
-? (
-              <MethodSelection
-                otpData={otpData}
-                oAuthData={oAuthData}
-                pickedMethod={pickedMethod}
-                setOtpData={setOtpData}
-                setPickedMethod={setPickedMethod}
-                setEoaWallet={setEoaWallet}
-                setOAuthData={setOAuthData}
-                sendOTP={sendOTP}
-                setStep={setStep}
-              />
-            )
-: (
-              <OTPVerification
-                otpData={otpData}
-                setOtpData={setOtpData}
-                handleGoBack={goBack}
-                setEoaWallet={setEoaWallet}
-                setStep={setStep}
-              />
-            )}
+              ? (
+                  <MethodSelection
+                    otpData={otpData}
+                    oAuthData={oAuthData}
+                    pickedMethod={pickedMethod}
+                    setOtpData={setOtpData}
+                    setPickedMethod={setPickedMethod}
+                    setEoaWallet={setEoaWallet}
+                    setOAuthData={setOAuthData}
+                    sendOTP={sendOTP}
+                    setStep={setStep}
+                  />
+                )
+              : (
+                  <OTPVerification
+                    otpData={otpData}
+                    setOtpData={setOtpData}
+                    handleGoBack={goBack}
+                    setEoaWallet={setEoaWallet}
+                    setStep={setStep}
+                  />
+                )}
           </div>
         </div>
       </div>

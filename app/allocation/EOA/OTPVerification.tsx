@@ -82,7 +82,7 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
       setEoaWallet(smartWallet);
       setStep(Step.CONNECT_EOA);
     }
- catch {
+    catch {
       setOtpData({
         ...otpData,
         loading: false,
@@ -117,7 +117,7 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
         <h2 className="text-2xl font-bold">Verify Email</h2>
         <p className="mb-4 text-center text-sm leading-7 text-gray-400">
           Please enter the 4-digit secure code sent to your email
-{' '}
+          {' '}
           <strong className="flex justify-center gap-2">
             {otpData.email}
             <button onClick={handleGoBack}>
@@ -164,19 +164,19 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
         <div className="flex flex-col items-center justify-center gap-2 text-sm font-medium">
           <p className="text-center text-gray-400">Didn't receive code?</p>
           {otpData.sentAt && otpData.sentAt < Date.now() - 60000
-? (
-            <p className="text-gray-400">
+            ? (
+                <p className="text-gray-400">
                   Resend Code in
                   {' '}
-              <span className="text-primary">
-                {timer}
+                  <span className="text-primary">
+                    {timer}
                     s
-</span>
-            </p>
-          )
-: (
-            <button className="text-primary">Resend Code</button>
-          )}
+                  </span>
+                </p>
+              )
+            : (
+                <button className="text-primary">Resend Code</button>
+              )}
         </div>
       </div>
     </>

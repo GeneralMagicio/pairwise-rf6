@@ -108,10 +108,10 @@ export const useAuth = () => {
         confirmed: true,
       });
     }
- else if (prevAddress && connectedAddress !== prevAddress && !path.includes('comparison')) {
+    else if (prevAddress && connectedAddress !== prevAddress && !path.includes('comparison')) {
       signOut();
     }
- else if (prevAddress && connectedAddress !== prevAddress && path.includes('comparison')) {
+    else if (prevAddress && connectedAddress !== prevAddress && path.includes('comparison')) {
       setLoginAddress({ ...loginAddress, confirmed: false });
     }
   }, [connectedAddress, prevAddress, path]);
@@ -128,7 +128,7 @@ export const useAuth = () => {
     if (validToken) {
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
     }
- else setLoggedToPw(LogginToPwBackendState.Error);
+    else setLoggedToPw(LogginToPwBackendState.Error);
   }, [loginAddress.value]);
 
   useEffect(() => {
@@ -151,7 +151,7 @@ export const useAuth = () => {
           console.log('vt:', validToken);
           setLoggedToPw(LogginToPwBackendState.LoggedIn);
         }
- else {
+        else {
           if (!message || !signature) {
             const { message: val1, signature: val2 } = await getMessageAndSignature(
               address as `0x${string}`,
@@ -170,12 +170,12 @@ export const useAuth = () => {
           setLoggedToPw(LogginToPwBackendState.LoggedIn);
         }
       }
- catch (e) {
+      catch (e) {
         console.log('pw error', e);
         setLoggedToPw(LogginToPwBackendState.Error);
         return;
       }
- finally {
+      finally {
         setLoginInProgress(false);
       }
     },

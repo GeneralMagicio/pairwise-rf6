@@ -11,9 +11,9 @@ const VerificationLoading: FC<TVerificationLoadingProps> = ({ email }) => {
         <Image src="/assets/images/spinner.gif" alt="Loading" width={150} height={150} />
         <p className="text-gray-400">Please wait while we create a new wallet for you to sign in</p>
         <p className="text-gray-400">
-          Your wallet will be associated with the email 
-{' '}
-<span className="font-medium text-dark-500">{email}</span>
+          Your wallet will be associated with the email
+          {' '}
+          <span className="font-medium text-dark-500">{email}</span>
         </p>
       </div>
     </div>
