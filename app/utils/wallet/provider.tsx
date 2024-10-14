@@ -42,8 +42,8 @@ export default function AppKitProvider({
   children,
   initialState,
 }: {
-  children: ReactNode;
-  initialState?: State;
+  children: ReactNode
+  initialState?: State
 }) {
   return (
     <WagmiProvider config={config} initialState={initialState}>

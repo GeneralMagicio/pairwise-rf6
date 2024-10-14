@@ -28,7 +28,7 @@ export const getMessageAndSignature = async (address: `0x${string}`, chainId: nu
   const message = await createMessage({
     address,
     chainId,
-    nonce: ''
+    nonce: '',
   });
 
   const signature = await signFunc({ message });

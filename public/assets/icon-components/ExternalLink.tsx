@@ -1,7 +1,7 @@
 type TIconProps = {
-  size?: number;
-  color?: string;
-};
+  size?: number
+  color?: string
+}
 
 export const ExternalLinkIcon = ({
   size = 18,

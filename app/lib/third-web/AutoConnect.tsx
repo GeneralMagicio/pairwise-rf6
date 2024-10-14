@@ -9,20 +9,20 @@ export enum LogginToPwBackendState {
 }
 
 const AuthContext = React.createContext<{
-  isAutoConnecting: boolean | null;
-  setIsAutoConnecting: (bool: boolean | null) => void;
-  loggedToPw: LogginToPwBackendState;
-  isNewUser: boolean;
-  setLoggedToPw: (bool: LogginToPwBackendState) => void;
-  setIsNewUser: (bool: boolean) => void;
+  isAutoConnecting: boolean | null
+  setIsAutoConnecting: (bool: boolean | null) => void
+  loggedToPw: LogginToPwBackendState
+  isNewUser: boolean
+  setLoggedToPw: (bool: LogginToPwBackendState) => void
+  setIsNewUser: (bool: boolean) => void
 }>({
-  isAutoConnecting: null,
-  setIsAutoConnecting: () => {},
-  loggedToPw: LogginToPwBackendState.Initial,
-  isNewUser: false,
-  setLoggedToPw: () => {},
-  setIsNewUser: () => {},
-});
+      isAutoConnecting: null,
+      setIsAutoConnecting: () => {},
+      loggedToPw: LogginToPwBackendState.Initial,
+      isNewUser: false,
+      setLoggedToPw: () => {},
+      setIsNewUser: () => {},
+    });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAutoConnecting, setIsAutoConnecting] = useState<boolean | null>(

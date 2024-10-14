@@ -25,14 +25,14 @@ export enum LogginToPwBackendState {
 }
 
 interface AuthContextType {
-  loginInProgress: boolean | null;
-  setLoginInProgress: (bool: boolean | null) => void;
-  loggedToPw: LogginToPwBackendState;
-  setLoggedToPw: (bool: LogginToPwBackendState) => void;
-  isNewUser: boolean;
-  setIsNewUser: (bool: boolean) => void;
-  loginAddress: { value: `0x${string}` | undefined; confirmed: boolean };
-  setLoginAddress: (value: AuthContextType['loginAddress']) => void;
+  loginInProgress: boolean | null
+  setLoginInProgress: (bool: boolean | null) => void
+  loggedToPw: LogginToPwBackendState
+  setLoggedToPw: (bool: LogginToPwBackendState) => void
+  isNewUser: boolean
+  setIsNewUser: (bool: boolean) => void
+  loginAddress: { value: `0x${string}` | undefined, confirmed: boolean }
+  setLoginAddress: (value: AuthContextType['loginAddress']) => void
 }
 
 const AuthContext = React.createContext<AuthContextType>({
@@ -120,16 +120,18 @@ export const useAuth = () => {
         value: connectedAddress as `0x${string}` | undefined,
         confirmed: true,
       });
-    } else if (
-      prevAddress &&
-      connectedAddress !== prevAddress &&
-      !path.includes('comparison')
+    }
+    else if (
+      prevAddress
+      && connectedAddress !== prevAddress
+      && !path.includes('comparison')
     ) {
       signOut();
-    } else if (
-      prevAddress &&
-      connectedAddress !== prevAddress &&
-      path.includes('comparison')
+    }
+    else if (
+      prevAddress
+      && connectedAddress !== prevAddress
+      && path.includes('comparison')
     ) {
       setLoginAddress({ ...loginAddress, confirmed: false });
     }
@@ -146,7 +148,8 @@ export const useAuth = () => {
     const validToken = await isLoggedIn();
     if (validToken) {
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
-    } else setLoggedToPw(LogginToPwBackendState.Error);
+    }
+    else setLoggedToPw(LogginToPwBackendState.Error);
   }, [loginAddress.value]);
 
   useEffect(() => {
@@ -168,10 +171,11 @@ export const useAuth = () => {
         if (validToken) {
           console.log('vt:', validToken);
           setLoggedToPw(LogginToPwBackendState.LoggedIn);
-        } else {
+        }
+        else {
           if (!message || !signature) {
-            const { message: val1, signature: val2 } =
-              await getMessageAndSignature(
+            const { message: val1, signature: val2 }
+              = await getMessageAndSignature(
                 address as `0x${string}`,
                 chainId,
                 signMessageAsync
@@ -192,11 +196,13 @@ export const useAuth = () => {
           }
           setLoggedToPw(LogginToPwBackendState.LoggedIn);
         }
-      } catch (e) {
+      }
+      catch (e) {
         console.log('pw error', e);
         setLoggedToPw(LogginToPwBackendState.Error);
         return;
-      } finally {
+      }
+      finally {
         setLoginInProgress(false);
       }
     },

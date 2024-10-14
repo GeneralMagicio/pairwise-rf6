@@ -5,10 +5,10 @@ import { Wallet } from 'thirdweb/wallets';
 import { Step } from './EmailLoginModal';
 
 type TConnectEOAModalProps = {
-  email: string;
-  eoaWallet: Wallet | null;
-  setStep: (step: number) => void;
-};
+  email: string
+  eoaWallet: Wallet | null
+  setStep: (step: number) => void
+}
 
 const ConnectEOAModal: FC<TConnectEOAModalProps> = ({
   email,
@@ -38,7 +38,10 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({
         </h2>
         <p className="text-gray-400">
           We successfully created a new wallet associated to your email
-          <span className="font-medium text-dark-500"> {email}</span>
+          <span className="font-medium text-dark-500">
+            {' '}
+            {email}
+          </span>
         </p>
         <p className="text-gray-400">
           Please link this with your connected ETH address to continue.

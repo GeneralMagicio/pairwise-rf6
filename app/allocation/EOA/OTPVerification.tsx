@@ -15,11 +15,11 @@ import {
 } from '@/app/lib/third-web/methods';
 
 interface IOTPVerificationProps {
-  otpData: TOTPData;
-  setOtpData: (data: TOTPData) => void;
-  handleGoBack: () => void;
-  setEoaWallet: (wallet: Wallet) => void;
-  setStep: (step: number) => void;
+  otpData: TOTPData
+  setOtpData: (data: TOTPData) => void
+  handleGoBack: () => void
+  setEoaWallet: (wallet: Wallet) => void
+  setStep: (step: number) => void
 }
 
 export const OTPVerification: FC<IOTPVerificationProps> = ({
@@ -57,8 +57,8 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
     });
   };
 
-  const handleKeyPress =
-    (next: string, prev: string) => (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress
+    = (next: string, prev: string) => (e: KeyboardEvent<HTMLInputElement>) => {
       const target = e.target as HTMLInputElement;
 
       if (target.value.length === 1 && e.key !== 'Backspace') {
@@ -97,7 +97,8 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
       const smartWallet = await createSmartWalletFromEOA(account);
       setEoaWallet(smartWallet);
       setStep(Step.CONNECT_EOA);
-    } catch {
+    }
+    catch {
       setOtpData({
         ...otpData,
         loading: false,
@@ -115,8 +116,8 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
     [OtpStatus.SENT]: '',
   };
 
-  const borderColour =
-    `border-2 border-status-border-${
+  const borderColour
+    = `border-2 border-status-border-${
       statusBorderClassSuffix[otpData.otpStatus]
     }` || 'border border-gray-300';
 
@@ -136,7 +137,8 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
       <div className="flex flex-col items-center justify-center gap-y-6">
         <h2 className="text-2xl font-bold">Verify Email</h2>
         <p className="mb-4 text-center text-sm leading-7 text-gray-400">
-          Please enter the 4-digit secure code sent to your email{' '}
+          Please enter the 4-digit secure code sent to your email
+          {' '}
           <strong className="flex justify-center gap-2">
             {otpData.email}
             <button onClick={handleGoBack}>
@@ -191,13 +193,20 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
 
         <div className="flex flex-col items-center justify-center gap-2 text-sm font-medium">
           <p className="text-center text-gray-400">Didn't receive code?</p>
-          {otpData.sentAt && otpData.sentAt < Date.now() - 60000 ? (
-            <p className="text-gray-400">
-              Resend Code in <span className="text-primary">{timer}s</span>
-            </p>
-          ) : (
-            <button className="text-primary">Resend Code</button>
-          )}
+          {otpData.sentAt && otpData.sentAt < Date.now() - 60000
+            ? (
+                <p className="text-gray-400">
+                  Resend Code in
+                  {' '}
+                  <span className="text-primary">
+                    {timer}
+                    s
+                  </span>
+                </p>
+              )
+            : (
+                <button className="text-primary">Resend Code</button>
+              )}
         </div>
       </div>
     </>

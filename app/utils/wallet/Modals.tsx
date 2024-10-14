@@ -22,12 +22,12 @@ export default function Modals() {
     signOut,
   } = useAuth();
 
-  const notBhOpen =
-    loggedToPw === LogginToPwBackendState.LoggedIn &&
-    !path.includes('comparison');
+  const notBhOpen
+    = loggedToPw === LogginToPwBackendState.LoggedIn
+    && !path.includes('comparison');
 
-  const signInModalOpen =
-    (!!address ?? false) && loggedToPw === LogginToPwBackendState.Error;
+  const signInModalOpen
+    = (!!address ?? false) && loggedToPw === LogginToPwBackendState.Error;
 
   const handleNewWalletCancel = () => {
     setLoginAddress({ ...loginAddress, confirmed: true });

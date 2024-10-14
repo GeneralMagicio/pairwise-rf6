@@ -2,8 +2,8 @@ import { FC } from 'react';
 import Image from 'next/image';
 
 type TVerificationLoadingProps = {
-  email: string;
-};
+  email: string
+}
 const VerificationLoading: FC<TVerificationLoadingProps> = ({ email }) => {
   return (
     <div className="mx-auto w-[500px] rounded-lg bg-rating-illustration bg-no-repeat p-6 shadow-lg">
@@ -18,7 +18,8 @@ const VerificationLoading: FC<TVerificationLoadingProps> = ({ email }) => {
           Please wait while we create a new wallet for you to sign in
         </p>
         <p className="text-gray-400">
-          Your wallet will be associated with the email{' '}
+          Your wallet will be associated with the email
+          {' '}
           <span className="font-medium text-dark-500">{email}</span>
         </p>
       </div>
