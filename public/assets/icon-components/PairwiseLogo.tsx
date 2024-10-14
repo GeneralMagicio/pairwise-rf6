@@ -1,3 +1,4 @@
+/* eslint-disable @stylistic/max-len */
 import { FC, SVGProps } from 'react';
 
 export const PwLogo: FC<SVGProps<SVGSVGElement>> = () => (

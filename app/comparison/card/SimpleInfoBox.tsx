@@ -5,10 +5,10 @@ import { ArrowDownIcon } from '@/public/assets/icon-components/ArrowDown';
 import { ArrowUpIcon } from '@/public/assets/icon-components/ArrowUp';
 
 interface Props {
-  title: string;
-  description: string;
-  type: 'link' | 'pricing';
-  showIcon?: boolean;
+  title: string
+  description: string
+  type: 'link' | 'pricing'
+  showIcon?: boolean
 }
 
 const ICONS_MAP: Record<Props['type'], React.ReactNode> = {
@@ -36,7 +36,7 @@ const SimpleInfoBox: FC<Props> = ({
         target="_blank"
         className="break-all text-gray-700 hover:underline"
         rel="noopener noreferrer"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {displayTitle}
       </a>
@@ -50,8 +50,8 @@ const SimpleInfoBox: FC<Props> = ({
       className={`max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2 ${
         shouldCollapse ? 'cursor-pointer' : ''
       }`}
-      {...(shouldCollapse &&
-        getToggleProps())}
+      {...(shouldCollapse
+      && getToggleProps())}
     >
       <div
         className={`flex items-center justify-between ${

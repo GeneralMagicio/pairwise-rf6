@@ -29,18 +29,18 @@ enum ProjectSection {
 }
 
 interface CollapsibleProps {
-  title: string;
-  children: React.ReactNode;
-  onClick: () => void;
-  id: string;
-  expanded: boolean;
-  setExpanded: (value: boolean) => void;
+  title: string
+  children: React.ReactNode
+  onClick: () => void
+  id: string
+  expanded: boolean
+  setExpanded: (value: boolean) => void
 }
 
 export interface AutoScrollAction {
-  section: ProjectSection;
-  initiator: 'card1' | 'card2';
-  action: boolean;
+  section: ProjectSection
+  initiator: 'card1' | 'card2'
+  action: boolean
 }
 
 const ProjectSectionTitles = {
@@ -80,11 +80,13 @@ const Section: FC<CollapsibleProps> = ({
             })}
             className="flex cursor-pointer items-center gap-1 text-sm text-primary"
           >
-            {expanded ? (
-              <ArrowUpIcon color="black" width={20} height={20} />
-            ) : (
-              <ArrowDownIcon width={20} height={20} />
-            )}
+            {expanded
+              ? (
+                  <ArrowUpIcon color="black" width={20} height={20} />
+                )
+              : (
+                  <ArrowDownIcon width={20} height={20} />
+                )}
           </button>
         </div>
         <section {...getCollapseProps()} className="p-2">
@@ -107,20 +109,20 @@ function smoothScrollToElement(elementId: string) {
 }
 
 interface Props {
-  project: ProjectMetadata;
-  coi: boolean;
-  onCoICancel: () => void;
-  onCoIConfirm: () => void;
-  coiLoading: boolean;
-  dispatchAction: (section: ProjectSection, action: boolean) => void;
-  action: AutoScrollAction | undefined;
-  name: string;
-  sectionExpanded: Record<ProjectSection, boolean>;
-  setSectionExpanded: (value: Props['sectionExpanded']) => void;
-  key1: string;
-  key2: string;
-  aiMode: boolean;
-  setAi: () => void;
+  project: ProjectMetadata
+  coi: boolean
+  onCoICancel: () => void
+  onCoIConfirm: () => void
+  coiLoading: boolean
+  dispatchAction: (section: ProjectSection, action: boolean) => void
+  action: AutoScrollAction | undefined
+  name: string
+  sectionExpanded: Record<ProjectSection, boolean>
+  setSectionExpanded: (value: Props['sectionExpanded']) => void
+  key1: string
+  key2: string
+  aiMode: boolean
+  setAi: () => void
 }
 
 const NoneBox: FC = () => (
@@ -236,8 +238,8 @@ export const ProjectCard: React.FC<Props> = ({
         className={`container relative mx-auto my-4
       h-[80vh] w-full rounded-xl border 
       border-gray-200 bg-gray-50 px-4 pb-8 pt-4 ${
-        coi || coiLoading ? 'brightness-50' : ''
-      }`}
+    coi || coiLoading ? 'brightness-50' : ''
+    }`}
       >
         <div ref={parentRef} className="h-[78vh] gap-10 overflow-y-auto">
           <div className="mr-4">
@@ -322,10 +324,10 @@ export const ProjectCard: React.FC<Props> = ({
             <ProjectDescription description={project.description} />
             {project.socialLinks && (
               <div className="mb-6 flex flex-wrap gap-x-6 gap-y-2 text-slate-600">
-                {project.socialLinks.website?.map((item) => (
+                {project.socialLinks.website?.map(item => (
                   <ExternalLink key={item} address={item} type="website" />
                 ))}
-                {project.socialLinks.farcaster?.map((item) => (
+                {project.socialLinks.farcaster?.map(item => (
                   <ExternalLink key={item} address={item} type="warpcast" />
                 ))}
                 {project.socialLinks.twitter && (
@@ -346,8 +348,8 @@ export const ProjectCard: React.FC<Props> = ({
               <div className="mb-6 w-full">
                 <Team
                   team={(project.team || [])
-                    .filter((el) => 'pfp_url' in el)
-                    .map((item) => ({
+                    .filter(el => 'pfp_url' in el)
+                    .map(item => ({
                       profileImg: item.pfp_url,
                       urlLink: `https://warpcast.com/${item.username}`,
                     }))}
@@ -364,35 +366,37 @@ export const ProjectCard: React.FC<Props> = ({
               )}
               title={ProjectSectionTitles[ProjectSection.REPOS]}
             >
-              {project.github?.length ||
-              project.links?.length ||
-              project.contracts?.length ? (
-                <div className="space-y-4">
-                  {project.github?.map((repo) => (
-                    <GithubBox key={repo.url} repo={repo} />
-                  ))}
+              {project.github?.length
+              || project.links?.length
+              || project.contracts?.length
+                ? (
+                    <div className="space-y-4">
+                      {project.github?.map(repo => (
+                        <GithubBox key={repo.url} repo={repo} />
+                      ))}
 
-                  {project.links?.map((link) => (
-                    <SimpleInfoBox
-                      key={link.url}
-                      description={link.description}
-                      title={link.url}
-                      type="link"
-                    />
-                  ))}
+                      {project.links?.map(link => (
+                        <SimpleInfoBox
+                          key={link.url}
+                          description={link.description}
+                          title={link.url}
+                          type="link"
+                        />
+                      ))}
 
-                  {project.contracts?.map(({ address, chainId }) => (
-                    <ContractBox
-                      key={`${chainId}_${address}`}
-                      description=""
-                      address={address}
-                      chainId={chainId}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <NoneBox />
-              )}
+                      {project.contracts?.map(({ address, chainId }) => (
+                        <ContractBox
+                          key={`${chainId}_${address}`}
+                          description=""
+                          address={address}
+                          chainId={chainId}
+                        />
+                      ))}
+                    </div>
+                  )
+                : (
+                    <NoneBox />
+                  )}
             </Section>
             <Section
               id={`testimonials-${name}`}
@@ -431,41 +435,45 @@ export const ProjectCard: React.FC<Props> = ({
               )}
               title={ProjectSectionTitles[ProjectSection.IMPACT]}
             >
-              {project.impactStatement ? (
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <p>
-                      <strong className="text-gray-800">Category:</strong>{' '}
-                      {convertCategoryToLabel(
-                        project.impactStatement
-                          .category as JWTPayload['category']
-                      )}
-                    </p>
-                    <p>
-                      <strong className="text-gray-800">Subcategory:</strong>{' '}
-                      {project.impactStatement.subcategory}
-                    </p>
-                    <p className="text-primary">
-                      Applicants were asked to report on impact made between Oct
-                      1, 2023 - July 31, 2024. Promises of future deliverables
-                      or impact are not allowed.
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    {project.impactStatement.statement?.create?.map(
-                      ({ question, answer }) => (
-                        <QABox
-                          key={question}
-                          question={question}
-                          answer={answer}
-                        />
-                      )
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <NoneBox />
-              )}
+              {project.impactStatement
+                ? (
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <p>
+                          <strong className="text-gray-800">Category:</strong>
+                          {' '}
+                          {convertCategoryToLabel(
+                            project.impactStatement
+                              .category as JWTPayload['category']
+                          )}
+                        </p>
+                        <p>
+                          <strong className="text-gray-800">Subcategory:</strong>
+                          {' '}
+                          {project.impactStatement.subcategory}
+                        </p>
+                        <p className="text-primary">
+                          Applicants were asked to report on impact made between Oct
+                          1, 2023 - July 31, 2024. Promises of future deliverables
+                          or impact are not allowed.
+                        </p>
+                      </div>
+                      <div className="space-y-2">
+                        {project.impactStatement.statement?.create?.map(
+                          ({ question, answer }) => (
+                            <QABox
+                              key={question}
+                              question={question}
+                              answer={answer}
+                            />
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )
+                : (
+                    <NoneBox />
+                  )}
             </Section>
             <Section
               id={`pricing-${name}`}
@@ -478,16 +486,18 @@ export const ProjectCard: React.FC<Props> = ({
               title={ProjectSectionTitles[ProjectSection.PRICING]}
             >
               <div className="space-y-2 capitalize">
-                {project.pricingModel &&
-                typeof project.pricingModel === 'object' ? (
-                  <SimpleInfoBox
-                    title={project.pricingModel.type || ''}
-                    description={project.pricingModel.details || ''}
-                    type="pricing"
-                  />
-                ) : (
-                  <NoneBox />
-                )}
+                {project.pricingModel
+                && typeof project.pricingModel === 'object'
+                  ? (
+                      <SimpleInfoBox
+                        title={project.pricingModel.type || ''}
+                        description={project.pricingModel.details || ''}
+                        type="pricing"
+                      />
+                    )
+                  : (
+                      <NoneBox />
+                    )}
               </div>
             </Section>
             <Section
@@ -500,33 +510,35 @@ export const ProjectCard: React.FC<Props> = ({
               expanded={sectionExpanded[ProjectSection.GRANTS]}
               title={ProjectSectionTitles[ProjectSection.GRANTS]}
             >
-              {project.grantsAndFunding.grants?.length ||
-              project.grantsAndFunding.investments?.length ? (
-                <div className="space-y-2">
-                  {project.grantsAndFunding.grants?.map((grant, index) => (
-                    <GrantBox
-                      key={`grant_${index}`}
-                      description={grant.details}
-                      link={grant.link}
-                      amount={grant.amount}
-                      date={grant.date}
-                      title={grant.grant || ''}
-                    />
-                  ))}
-                  {project.grantsAndFunding.investments?.map((funding) => (
-                    <GrantBox
-                      key={funding.details}
-                      description={funding.details}
-                      link={null}
-                      amount={funding.amount}
-                      date={null}
-                      title="Funding"
-                    />
-                  ))}
-                </div>
-              ) : (
-                <NoneBox />
-              )}
+              {project.grantsAndFunding.grants?.length
+              || project.grantsAndFunding.investments?.length
+                ? (
+                    <div className="space-y-2">
+                      {project.grantsAndFunding.grants?.map((grant, index) => (
+                        <GrantBox
+                          key={`grant_${index}`}
+                          description={grant.details}
+                          link={grant.link}
+                          amount={grant.amount}
+                          date={grant.date}
+                          title={grant.grant || ''}
+                        />
+                      ))}
+                      {project.grantsAndFunding.investments?.map(funding => (
+                        <GrantBox
+                          key={funding.details}
+                          description={funding.details}
+                          link={null}
+                          amount={funding.amount}
+                          date={null}
+                          title="Funding"
+                        />
+                      ))}
+                    </div>
+                  )
+                : (
+                    <NoneBox />
+                  )}
             </Section>
           </div>
         </div>

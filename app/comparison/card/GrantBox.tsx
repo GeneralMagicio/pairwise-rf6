@@ -61,17 +61,17 @@ const GrantBox: FC<Props> = ({ title, link, amount, date, description }) => {
 
           {amount.includes('$') || amount.includes('USD') || amount.includes('usd') || amount.includes('dollars')
             ? (
-              <span className="flex items-center gap-2 text-sm">
-                <USDIcon />
-                {formatAmount(amount)}
-              </span>
-            )
+                <span className="flex items-center gap-2 text-sm">
+                  <USDIcon />
+                  {formatAmount(amount)}
+                </span>
+              )
             : (
-              <span className="flex items-center gap-2 text-sm">
-                <OPIcon />
-                {formatAmount(amount)}
-              </span>
-            )}
+                <span className="flex items-center gap-2 text-sm">
+                  <OPIcon />
+                  {formatAmount(amount)}
+                </span>
+              )}
           {date && (
             <span className="flex items-center gap-2 text-sm">
               <TimeIcon />
