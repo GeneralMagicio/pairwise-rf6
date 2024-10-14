@@ -118,9 +118,9 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
                   <div className="flex w-full flex-col items-center justify-center gap-6 px-4 py-10">
                     <Image src="assets/images/world-star-success.svg" width={100} height={100} alt="" />
                     <div className="flex flex-col items-center gap-2">
-                      <div className="text-sm text-[#232634]">
+                      <div className="text-center text-sm text-[#232634]">
                         <div>Successfully connected to your Farcaster account</div>
-                        <div>
+                        <div className="text-center">
                           @
                           {data.username}
                         </div>
