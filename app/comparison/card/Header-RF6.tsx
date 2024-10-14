@@ -1,8 +1,7 @@
 import React from 'react';
-import Image from 'next/image';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
 
- interface HeaderProps {
+interface HeaderProps {
   progress: number
   category: string
   question: string
