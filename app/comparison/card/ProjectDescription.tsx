@@ -36,12 +36,18 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({ description }) 
         {description}
       </p>
       {showButtons && !isExpanded && (
-        <span onClick={toggleExpand} className="cursor-pointer font-semibold text-dark-600 hover:underline">
+        <span
+          onClick={toggleExpand}
+          className="cursor-pointer font-semibold text-dark-600 hover:underline"
+        >
           View more
         </span>
       )}
       {showButtons && isExpanded && (
-        <span onClick={toggleExpand} className="cursor-pointer font-semibold text-dark-600 hover:underline">
+        <span
+          onClick={toggleExpand}
+          className="cursor-pointer font-semibold text-dark-600 hover:underline"
+        >
           View less
         </span>
       )}

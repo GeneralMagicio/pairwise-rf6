@@ -19,7 +19,12 @@ export const LandingPart1 = () => {
         />
       </div>
       <div className="relative w-full md:h-[650px] md:w-[750px]">
-        <Image src="assets/images/landing-p1.svg" alt="landing part 1" width={750} height={650} />
+        <Image
+          src="assets/images/landing-p1.svg"
+          alt="landing part 1"
+          width={750}
+          height={650}
+        />
       </div>
     </div>
   );

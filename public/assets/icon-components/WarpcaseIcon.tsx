@@ -1,6 +1,12 @@
 export const WarpcastIcon = () => {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M3.62146 2H12.2211V14.2288H10.9587V8.62722H10.9464C10.8068 7.07907 9.50574
         5.86588 7.92127 5.86588C6.3368 5.86588 5.03569 7.07907 4.89617 8.62722H4.88379V14.2288H3.62146V2Z"

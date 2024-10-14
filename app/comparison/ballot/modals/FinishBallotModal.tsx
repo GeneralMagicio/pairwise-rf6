@@ -7,7 +7,11 @@ interface UnlockBallotProps {
   onUnlock: () => void
 }
 
-const FinishBallot: FC<UnlockBallotProps> = ({ projectCount, category, onUnlock }) => {
+const FinishBallot: FC<UnlockBallotProps> = ({
+  projectCount,
+  category,
+  onUnlock,
+}) => {
   return (
     <div className="mx-auto w-[300px] overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat shadow-lg md:w-[500px]">
       <div className="px-6 py-10 text-center md:p-10">
@@ -19,7 +23,9 @@ const FinishBallot: FC<UnlockBallotProps> = ({ projectCount, category, onUnlock 
           className="mx-auto mb-6"
         />
         <h2 className="mb-4 text-xl font-medium text-dark-500">
-          Nice work! You're ready to unlock your ballot and distribute rewards
+          {
+            'Nice work! You\'re ready to unlock your ballot and distribute rewards'
+          }
         </h2>
         <p className="mb-6 px-4 text-gray-400">
           {`You've ranked all

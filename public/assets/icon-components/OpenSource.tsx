@@ -1,6 +1,12 @@
 export const OpenSourceIcon = ({ color }: { color?: string }) => {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill={color || 'none'} xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill={color || 'none'}
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M8.00067 1.33334C11.6825 1.33334 14.6673 4.31811 14.6673 8.00001C14.6673
          10.7535 12.998 13.1171 10.6162 14.134L8.9372 9.76761C9.56986 9.43174 10.0007

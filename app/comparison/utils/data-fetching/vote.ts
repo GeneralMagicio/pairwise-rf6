@@ -9,17 +9,21 @@ type ProjectVoteData = {
     project1Stars: number | null
     pickedId: number | null
   }
-};
+}
 
 export const updateProjectVote = async ({ data }: ProjectVoteData) => {
-  return await axiosInstance.post('flow/projects/vote', data);
+  return (await axiosInstance.post('flow/projects/vote', data));
 };
 
 export const updateProjectUndo = (cid: Number) => {
   return axiosInstance.post('flow/pairs/back', { collectionId: cid });
 };
 
-export const useUpdateProjectVote = ({ categoryId }: { categoryId: number }) => {
+export const useUpdateProjectVote = ({
+  categoryId,
+}: {
+  categoryId: number
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -33,7 +37,13 @@ export const useUpdateProjectVote = ({ categoryId }: { categoryId: number }) => 
   });
 };
 
-export const useUpdateProjectUndo = ({ categoryId, onSuccess }: { categoryId: number, onSuccess: () => void }) => {
+export const useUpdateProjectUndo = ({
+  categoryId,
+  onSuccess,
+}: {
+  categoryId: number
+  onSuccess: () => void
+}) => {
   const queryClient = useQueryClient();
 
   return useMutation({

@@ -1,6 +1,12 @@
 export const CommitIcon = () => {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M10.5827 8.66668C10.2866 9.81681 9.24253 10.6667 8 10.6667C6.75747 10.6667 5.71337
          9.81681 5.41735 8.66668H2V7.33334H5.41735C5.71337 6.18319 6.75747 5.33334

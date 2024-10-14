@@ -1,6 +1,12 @@
 export const TimeIcon = () => {
   return (
-    <svg width="20" height="20" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M8.00016 14.6667C4.31826 14.6667 1.3335 11.6819 1.3335 8.00001C1.3335 4.31811 4.31826 1.33334
          8.00016 1.33334C11.682 1.33334 14.6668 4.31811 14.6668 8.00001C14.6668 11.6819 11.682 14.6667

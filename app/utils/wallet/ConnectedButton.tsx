@@ -8,7 +8,11 @@ interface Props {
   onLogout: () => void
 }
 
-export function shortenWalletAddress(address: string, startLength: number = 7, endLength: number = 7): string {
+export function shortenWalletAddress(
+  address: string,
+  startLength: number = 7,
+  endLength: number = 7
+): string {
   // Check if the address is valid (starts with '0x' and has 42 characters)
   if (!address.startsWith('0x') || address.length !== 42) {
     throw new Error('Invalid wallet address format');
@@ -29,7 +33,10 @@ export function shortenWalletAddress(address: string, startLength: number = 7, e
 
 const LogoutButton: FC<Pick<Props, 'onLogout'>> = ({ onLogout }) => {
   return (
-    <button onClick={onLogout} className="flex w-full items-center justify-center gap-2 py-2">
+    <button
+      onClick={onLogout}
+      className="flex w-full items-center justify-center gap-2 py-2"
+    >
       <PowerIcon />
       <span className="text-primary"> Log out </span>
     </button>
@@ -45,7 +52,9 @@ const ConnectedButton: FC<Props> = ({ wallet, onLogout }) => {
         onClick={() => setOpen(!open)}
         className="flex h-fit w-44 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white py-2"
       >
-        <span className="text-sm text-gray-800">{shortenWalletAddress(wallet)}</span>
+        <span className="text-sm text-gray-800">
+          {shortenWalletAddress(wallet)}
+        </span>
         {open ? <ArrowUpIcon /> : <ArrowDownIcon />}
       </button>
       {open && (

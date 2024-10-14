@@ -3,7 +3,9 @@ import { AxiosResponse } from 'axios';
 import { axiosInstance } from '@/app/utils/axiosInstance';
 import { IProject } from '../types';
 
-export const getProjectsByCategoryId = async (id: number): Promise<AxiosResponse<IProject[]>> => {
+export const getProjectsByCategoryId = async (
+  id: number,
+): Promise<AxiosResponse<IProject[]>> => {
   return axiosInstance.get(`flow/projects?cid=${id}`);
 };
 

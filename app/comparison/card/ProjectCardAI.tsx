@@ -75,7 +75,10 @@ export const ProjectCardAI: React.FC<Props> = ({
     <div ref={divRef} className="relative">
       {coi && (
         <div className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2">
-          <ConflictOfInterestModal onCancel={onCoICancel} onDeclareConflict={onCoIConfirm} />
+          <ConflictOfInterestModal
+            onCancel={onCoICancel}
+            onDeclareConflict={onCoIConfirm}
+          />
         </div>
       )}
       {coiLoading && (
@@ -86,7 +89,9 @@ export const ProjectCardAI: React.FC<Props> = ({
       <div
         className={`container relative mx-auto my-4
       h-[80vh] w-full rounded-xl border 
-      border-gray-200 bg-gray-50 px-4 pb-8 pt-4 ${coi || coiLoading ? 'brightness-50' : ''}`}
+      border-gray-200 bg-gray-50 px-4 pb-8 pt-4 ${
+    coi || coiLoading ? 'brightness-50' : ''
+    }`}
       >
         <div ref={parentRef} className="h-[78vh] gap-10 overflow-y-auto">
           <div className="mr-4">
@@ -113,7 +118,9 @@ export const ProjectCardAI: React.FC<Props> = ({
             <div
               ref={titleRef}
               className={`mb-4 mt-16 transition-all ${
-                isSticky ? 'sticky left-0 top-0 z-50 w-full rounded-lg border border-gray-200 bg-gray-100 p-4 shadow-md' : ''
+                isSticky
+                  ? 'sticky left-0 top-0 z-50 w-full rounded-lg border border-gray-200 bg-gray-100 p-4 shadow-md'
+                  : ''
               }`}
             >
               <div className="flex items-center gap-8">
@@ -128,7 +135,9 @@ export const ProjectCardAI: React.FC<Props> = ({
                   />
                 )}
                 <div className="flex flex-col gap-3">
-                  <h1 className="text-3xl font-semibold">{project.name}</h1>
+                  <h1 className="text-3xl font-semibold">
+                    {project.name}
+                  </h1>
                   {project.organization && (
                     <div className="flex items-center gap-1 font-medium leading-6 text-slate-600">
                       <p>By</p>
@@ -164,10 +173,24 @@ export const ProjectCardAI: React.FC<Props> = ({
             </div>
             {project.socialLinks && (
               <div className="mb-6 flex flex-wrap gap-x-6 gap-y-2 text-slate-600">
-                {project.socialLinks.website?.map(item => <ExternalLink key={item} address={item} type="website" />)}
-                {project.socialLinks.farcaster?.map(item => <ExternalLink key={item} address={item} type="warpcast" />)}
-                {project.socialLinks.twitter && <ExternalLink address={project.socialLinks.twitter} type="x" />}
-                {project.socialLinks.mirror && <ExternalLink address={project.socialLinks.mirror} type="mirror" />}
+                {project.socialLinks.website?.map(item => (
+                  <ExternalLink key={item} address={item} type="website" />
+                ))}
+                {project.socialLinks.farcaster?.map(item => (
+                  <ExternalLink key={item} address={item} type="warpcast" />
+                ))}
+                {project.socialLinks.twitter && (
+                  <ExternalLink
+                    address={project.socialLinks.twitter}
+                    type="x"
+                  />
+                )}
+                {project.socialLinks.mirror && (
+                  <ExternalLink
+                    address={project.socialLinks.mirror}
+                    type="mirror"
+                  />
+                )}
               </div>
             )}
             <div className="space-y-4">
@@ -185,16 +208,21 @@ export const ProjectCardAI: React.FC<Props> = ({
 const SummaryBox: FC<{ section: ProjectAiSummary[0] }> = ({ section }) => {
   return (
     <div className="list-item border-t-2 border-gray-200 pt-4">
-      <h3 className="mb-2 text-lg font-bold"> {section.subHeader} </h3>
+      <h3 className="mb-2 text-lg font-bold">
+        {' '}
+        {section.subHeader}
+        {' '}
+      </h3>
       <ul className="">
         {section.points.map(point => (
           <li className="list-inside list-disc p-2 text-slate-600" key={point}>
             {' '}
             {point}
-{' '}
+            {' '}
           </li>
         ))}
       </ul>
     </div>
+
   );
 };

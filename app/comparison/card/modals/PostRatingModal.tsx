@@ -10,11 +10,18 @@ const PostRatingModal: FC<IPostRatingModalProps> = ({ confirm }) => {
     <div className="mx-auto w-[300px] rounded-lg bg-white bg-good-rating bg-no-repeat p-6 shadow-lg md:w-[450px]">
       <div className="mb-4 flex justify-center">
         <div className="rounded-full p-2">
-          <Image src="/assets/images/op-character2.svg" alt="Rating Illustration" width={160} height={180} />
+          <Image
+            src="/assets/images/op-character2.svg"
+            alt="Rating Illustration"
+            width={160}
+            height={180}
+          />
         </div>
       </div>
 
-      <h2 className="mb-4 text-center text-xl font-semibold text-dark-500">Well done! Now choose one.</h2>
+      <h2 className="mb-4 text-center text-xl font-semibold text-dark-500">
+        Well done! Now choose one.
+      </h2>
 
       <p className="mb-6 text-center text-sm text-gray-400">
         You rated both projects, now pick one that deserves to get funding.

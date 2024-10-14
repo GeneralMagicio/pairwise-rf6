@@ -25,7 +25,9 @@ const AuthContext = React.createContext<{
     });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAutoConnecting, setIsAutoConnecting] = useState<boolean | null>(null);
+  const [isAutoConnecting, setIsAutoConnecting] = useState<boolean | null>(
+    null
+  );
   const [loggedToPw, setLoggedToPw] = useState(LogginToPwBackendState.Initial);
   const [isNewUser, setIsNewUser] = useState(false);
 

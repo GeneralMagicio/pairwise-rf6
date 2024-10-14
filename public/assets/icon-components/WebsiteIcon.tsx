@@ -1,6 +1,20 @@
-export const WebsiteIcon = ({ color, width, height }: { color?: string, width?: number, height?: number }) => {
+export const WebsiteIcon = ({
+  color,
+  width,
+  height,
+}: {
+  color?: string
+  width?: number
+  height?: number
+}) => {
   return (
-    <svg width={width || 16} height={height || 16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width={width || 16}
+      height={height || 16}
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M12.2427 10.357L11.2999 9.41418L12.2427 8.47138C13.5444 7.16965 13.5444 5.05909 12.2427
          3.75734C10.941 2.45559 8.83036 2.45559 7.52863 3.75734L6.58582 4.70015L5.64302

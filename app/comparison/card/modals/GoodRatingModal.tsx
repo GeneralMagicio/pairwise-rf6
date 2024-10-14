@@ -14,7 +14,11 @@ interface IStarRatingProps {
 const StarRating: FC<IStarRatingProps> = ({ color, numRated }) => (
   <div className="flex gap-1">
     {[...Array(5)].map((_, index) => (
-      <StarIcon key={index} color={index < numRated ? color : '#D0D5DD'} size={20} />
+      <StarIcon
+        key={index}
+        color={index < numRated ? color : '#D0D5DD'}
+        size={20}
+      />
     ))}
   </div>
 );
@@ -31,15 +35,25 @@ const GoodRatingModal: FC<IGoodRatingModalProps> = ({ confirm }) => (
   <div className="mx-auto w-[300px] rounded-lg bg-white bg-good-rating bg-no-repeat p-6 shadow-lg md:w-[420px]">
     <div className="mb-6 flex justify-center">
       <div className="rounded-full p-2">
-        <Image src="/assets/images/op-character5.svg" alt="Rating Illustration" width={160} height={180} />
+        <Image
+          src="/assets/images/op-character5.svg"
+          alt="Rating Illustration"
+          width={160}
+          height={180}
+        />
       </div>
     </div>
 
-    <h2 className="mb-6 text-center text-xl font-semibold text-dark-500">How would you rate the second project?</h2>
+    <h2 className="mb-6 text-center text-xl font-semibold text-dark-500">
+      How would you rate the second project?
+    </h2>
 
     <div className="mb-8 flex flex-col justify-center gap-6 px-2 text-sm font-normal text-gray-400">
       {ratingOptions.map(({ color, numRated, label }, index) => (
-        <div key={index} className="flex flex-col-reverse items-center gap-4 md:flex-row">
+        <div
+          key={index}
+          className="flex flex-col-reverse items-center gap-4 md:flex-row"
+        >
           <StarRating color={color} numRated={numRated} />
           <label htmlFor="good">{label}</label>
         </div>

@@ -1,9 +1,18 @@
-import React, { FC, KeyboardEvent, FormEvent, useEffect, useState } from 'react';
+import React, {
+  FC,
+  KeyboardEvent,
+  FormEvent,
+  useEffect,
+  useState,
+} from 'react';
 import { Wallet } from 'thirdweb/wallets';
 import { TOTPData, OtpStatus, Step } from './EmailLoginModal';
 import { EditIcon } from '@/public/assets/icon-components/Edit';
 import { BackArrowIcon } from '@/public/assets/icon-components/BackArrow';
-import { createEmailEoa, createSmartWalletFromEOA } from '@/app/lib/third-web/methods';
+import {
+  createEmailEoa,
+  createSmartWalletFromEOA,
+} from '@/app/lib/third-web/methods';
 
 interface IOTPVerificationProps {
   otpData: TOTPData
@@ -13,7 +22,13 @@ interface IOTPVerificationProps {
   setStep: (step: number) => void
 }
 
-export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData, handleGoBack, setEoaWallet, setStep }) => {
+export const OTPVerification: FC<IOTPVerificationProps> = ({
+  otpData,
+  setOtpData,
+  handleGoBack,
+  setEoaWallet,
+  setStep,
+}) => {
   const [timer, setTimer] = useState<number>(10);
 
   useEffect(() => {
@@ -42,19 +57,20 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
     });
   };
 
-  const handleKeyPress = (next: string, prev: string) => (e: KeyboardEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement;
+  const handleKeyPress
+    = (next: string, prev: string) => (e: KeyboardEvent<HTMLInputElement>) => {
+      const target = e.target as HTMLInputElement;
 
-    if (target.value.length === 1 && e.key !== 'Backspace') {
-      const nextInput = document.getElementById(`otp-${next}`);
-      if (nextInput) nextInput.focus();
-    }
+      if (target.value.length === 1 && e.key !== 'Backspace') {
+        const nextInput = document.getElementById(`otp-${next}`);
+        if (nextInput) nextInput.focus();
+      }
 
-    if (e.key === 'Backspace' && target.value.length === 0) {
-      const prevInput = document.getElementById(`otp-${prev}`);
-      if (prevInput) prevInput.focus();
-    }
-  };
+      if (e.key === 'Backspace' && target.value.length === 0) {
+        const prevInput = document.getElementById(`otp-${prev}`);
+        if (prevInput) prevInput.focus();
+      }
+    };
 
   const handleEmailLogin = async () => {
     setOtpData({ ...otpData, loading: true });
@@ -82,7 +98,7 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
       setEoaWallet(smartWallet);
       setStep(Step.CONNECT_EOA);
     }
- catch {
+    catch {
       setOtpData({
         ...otpData,
         loading: false,
@@ -101,14 +117,19 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
   };
 
   const borderColour
-    = `border-2 border-status-border-${statusBorderClassSuffix[otpData.otpStatus]}` || 'border border-gray-300';
+    = `border-2 border-status-border-${
+      statusBorderClassSuffix[otpData.otpStatus]
+    }` || 'border border-gray-300';
 
   const otpCodeFilled = otpData.verificationCode.length === 6;
 
   return (
     <>
       <div className="mb-4 w-full px-8 text-lg text-gray-600">
-        <button className="flex items-center justify-start gap-4" onClick={handleGoBack}>
+        <button
+          className="flex items-center justify-start gap-4"
+          onClick={handleGoBack}
+        >
           <BackArrowIcon />
           <p>Back</p>
         </button>
@@ -117,7 +138,7 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
         <h2 className="text-2xl font-bold">Verify Email</h2>
         <p className="mb-4 text-center text-sm leading-7 text-gray-400">
           Please enter the 4-digit secure code sent to your email
-{' '}
+          {' '}
           <strong className="flex justify-center gap-2">
             {otpData.email}
             <button onClick={handleGoBack}>
@@ -134,7 +155,10 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
               maxLength={1}
               className={`size-16 rounded-md text-center text-4xl font-semibold outline-none transition duration-300 placeholder:opacity-45 ${borderColour}`}
               onChange={handleVerificationCodeChange}
-              onKeyUp={handleKeyPress(index === 5 ? '' : String(index + 1), String(index - 1))}
+              onKeyUp={handleKeyPress(
+                index === 5 ? '' : String(index + 1),
+                String(index - 1)
+              )}
               id={`otp-${index}`}
               data-index={index}
               value={otpData.verificationCode[index] || ''}
@@ -145,16 +169,22 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
         </div>
 
         {otpData.otpStatus === OtpStatus.INCORRECT && (
-          <p className="text-center text-sm text-status-text-error">Incorrect OTP</p>
+          <p className="text-center text-sm text-status-text-error">
+            Incorrect OTP
+          </p>
         )}
 
         {otpData.otpStatus === OtpStatus.EXPIRED && (
-          <p className="text-center text-sm text-status-text-expired">OTP Expired. Please try Resend Code.</p>
+          <p className="text-center text-sm text-status-text-expired">
+            OTP Expired. Please try Resend Code.
+          </p>
         )}
 
         <button
           className={`w-full rounded-lg border px-4 py-2 font-semibold ${
-            otpCodeFilled ? 'bg-primary text-white' : 'bg-gray-300 text-gray-500'
+            otpCodeFilled
+              ? 'bg-primary text-white'
+              : 'bg-gray-300 text-gray-500'
           } transition duration-300`}
           onClick={() => handleEmailLogin()}
         >
@@ -164,19 +194,19 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({ otpData, setOtpData
         <div className="flex flex-col items-center justify-center gap-2 text-sm font-medium">
           <p className="text-center text-gray-400">Didn't receive code?</p>
           {otpData.sentAt && otpData.sentAt < Date.now() - 60000
-? (
-            <p className="text-gray-400">
+            ? (
+                <p className="text-gray-400">
                   Resend Code in
                   {' '}
-              <span className="text-primary">
-                {timer}
+                  <span className="text-primary">
+                    {timer}
                     s
-</span>
-            </p>
-          )
-: (
-            <button className="text-primary">Resend Code</button>
-          )}
+                  </span>
+                </p>
+              )
+            : (
+                <button className="text-primary">Resend Code</button>
+              )}
         </div>
       </div>
     </>

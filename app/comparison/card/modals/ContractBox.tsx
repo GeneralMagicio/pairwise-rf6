@@ -10,13 +10,21 @@ interface IContractBoxProps {
   description: string
 }
 
-export const ContractBox = ({ address, chainId, description }: IContractBoxProps) => {
+export const ContractBox = ({
+  address,
+  chainId,
+  description,
+}: IContractBoxProps) => {
   const { isExpanded, getToggleProps, getCollapseProps } = useCollapse();
 
-  const chain = [optimism, base, mode, zora, fraxtal].find(c => c.id === Number(chainId));
+  const chain = [optimism, base, mode, zora, fraxtal].find(
+    c => c.id === Number(chainId)
+  );
   const { name, blockExplorers } = chain ?? {};
   const { url } = blockExplorers?.default ?? {};
-  const icon = `https://icons.llamao.fi/icons/chains/rsz_${name === 'Mode Mainnet' ? 'mode' : name?.toLowerCase()}.jpg`;
+  const icon = `https://icons.llamao.fi/icons/chains/rsz_${
+    name === 'Mode Mainnet' ? 'mode' : name?.toLowerCase()
+  }.jpg`;
 
   const renderTitle = () => {
     const title = address || 'Contract';
@@ -35,7 +43,15 @@ export const ContractBox = ({ address, chainId, description }: IContractBoxProps
   };
 
   const renderIcon = () => {
-    return <Image src={icon} alt={name || chainId.toString()} width={20} height={20} className="rounded-full" />;
+    return (
+      <Image
+        src={icon}
+        alt={name || chainId.toString()}
+        width={20}
+        height={20}
+        className="rounded-full"
+      />
+    );
   };
 
   const shouldCollapse = description.length > 0;
@@ -43,9 +59,15 @@ export const ContractBox = ({ address, chainId, description }: IContractBoxProps
   return (
     <div
       {...(shouldCollapse && getToggleProps())}
-      className={`max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2 ${shouldCollapse ? 'cursor-pointer' : ''}`}
+      className={`max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2 ${
+        shouldCollapse ? 'cursor-pointer' : ''
+      }`}
     >
-      <div className={`flex items-center justify-between ${isExpanded && shouldCollapse ? 'mb-4' : ''}`}>
+      <div
+        className={`flex items-center justify-between ${
+          isExpanded && shouldCollapse ? 'mb-4' : ''
+        }`}
+      >
         <div className="flex items-center gap-2">
           {renderIcon()}
           {renderTitle()}

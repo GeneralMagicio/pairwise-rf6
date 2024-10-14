@@ -10,7 +10,9 @@ interface Props {
 export const Rating: FC<Props> = ({ value, disabled, onChange }) => {
   const [hoverValue, setHoverValue] = useState<number | null>(null);
   const [currentValue, setCurrentValue] = useState(value ?? 3);
-  const [starsColoring, setStarsColoring] = useState(getStarsColoring(value).activeFillColor);
+  const [starsColoring, setStarsColoring] = useState(
+    getStarsColoring(value).activeFillColor
+  );
 
   function getStarsColoring(num?: number) {
     switch (num) {
@@ -34,7 +36,7 @@ export const Rating: FC<Props> = ({ value, disabled, onChange }) => {
       setStarsColoring(getStarsColoring(hoverValue).hoverFillColor);
       setCurrentValue(hoverValue);
     }
- else {
+    else {
       setStarsColoring(getStarsColoring(value).activeFillColor);
       setCurrentValue(value);
     }

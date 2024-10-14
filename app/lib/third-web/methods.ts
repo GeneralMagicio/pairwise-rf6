@@ -6,7 +6,10 @@ export enum Strategy {
   Google = 'google',
 }
 
-export const createEmailEoa = async (email: string, verificationCode: string) => {
+export const createEmailEoa = async (
+  email: string,
+  verificationCode: string
+) => {
   const wallet = inAppWallet();
   await wallet.connect({
     client,

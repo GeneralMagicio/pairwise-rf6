@@ -32,7 +32,12 @@ export const ExternalLink: FC<Props> = ({ address, type }) => {
   return (
     <div className="flex items-center gap-1">
       {getIcon(type)}
-      <a target="_blank" rel="noopener noreferrer" href={ensureHttpsPrefix(address)} className="break-all">
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href={ensureHttpsPrefix(address)}
+        className="break-all"
+      >
         {type === 'website' ? address : address.replace(/^https?:\/\//, '')}
       </a>
     </div>

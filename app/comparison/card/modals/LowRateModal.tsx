@@ -6,12 +6,20 @@ interface ILowRateModalProps {
   cancelSelection: () => void
 }
 
-const LowRateModal: FC<ILowRateModalProps> = ({ proceedWithSelection, cancelSelection }) => {
+const LowRateModal: FC<ILowRateModalProps> = ({
+  proceedWithSelection,
+  cancelSelection,
+}) => {
   return (
     <div className="mx-auto w-[300px] rounded-lg bg-white bg-rating-illustration bg-no-repeat p-6 shadow-lg md:w-[500px] md:px-10">
       <div className="mb-4 flex justify-center">
         <div className="rounded-full p-2">
-          <Image src="/assets/images/rating-illustration.svg" alt="Rating Illustration" width={304} height={60} />
+          <Image
+            src="/assets/images/rating-illustration.svg"
+            alt="Rating Illustration"
+            width={304}
+            height={60}
+          />
         </div>
       </div>
 
@@ -19,7 +27,9 @@ const LowRateModal: FC<ILowRateModalProps> = ({ proceedWithSelection, cancelSele
         Are you sure you want to select a lower rated project?
       </h2>
 
-      <p className="mb-6 text-center text-sm text-gray-400">Please change the rating or select the other project.</p>
+      <p className="mb-6 text-center text-sm text-gray-400">
+        Please change the rating or select the other project.
+      </p>
 
       <button
         onClick={proceedWithSelection}

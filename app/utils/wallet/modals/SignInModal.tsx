@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth } from '../AuthProvider';
 
-interface SignInWithWalletProps {}
+interface SignInWithWalletProps {
+}
 
 const SignInWithWallet: React.FC<SignInWithWalletProps> = () => {
   const { doLoginFlow } = useAuth();

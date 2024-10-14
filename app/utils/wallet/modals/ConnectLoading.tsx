@@ -11,12 +11,18 @@ const ConnectLoading: React.FC = () => {
         width={220}
         height={220}
         className="absolute -left-16 -top-16 overflow-hidden"
-      /> */}
+      /> */ }
       <div className="size-32">
-        <Lottie animationData={spinner} loop={true} autoplay={true} />
+        <Lottie
+          animationData={spinner}
+          loop={true}
+          autoplay={true}
+        />
       </div>
       <h2 className="mb-1 text-base font-medium text-gray-500">Signing in...</h2>
-      <p className="mb-2 text-base text-gray-500">Please check your wallet and sign in to continue</p>
+      <p className="mb-2 text-base text-gray-500">
+        Please check your wallet and sign in to continue
+      </p>
     </div>
   );
 };

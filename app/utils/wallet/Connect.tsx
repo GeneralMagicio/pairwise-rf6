@@ -28,7 +28,7 @@ export const ConnectButton = () => {
     try {
       open();
     }
- catch (_e) {
+    catch (_e) {
       open();
     }
   }
@@ -44,7 +44,9 @@ export const ConnectButton = () => {
   //   func()
   // }, [isConnected, address, chainId, signMessageAsync])
 
-  if (isConnected && loginAddress.value) return <ConnectedButton onLogout={logout} wallet={loginAddress.value} />;
+  if (isConnected && loginAddress.value) return (
+    <ConnectedButton onLogout={logout} wallet={loginAddress.value} />
+  );
 
   return (
     <button
@@ -66,8 +68,7 @@ const ConnectWalletModal = () => {
         <h2 className="mb-6 text-2xl font-bold">Connect wallet</h2>
 
         <div className="space-y-3">
-          <button
-            className="flex w-full items-center justify-between rounded-lg bg-gray-100 p-4 transition-colors
+          <button className="flex w-full items-center justify-between rounded-lg bg-gray-100 p-4 transition-colors
            hover:bg-gray-200"
           >
             <div className="flex items-center">
@@ -94,9 +95,7 @@ const ConnectWalletModal = () => {
         </div>
 
         <div className="mt-6">
-          <a href="#" className="text-red-500 hover:underline">
-            Need help?
-          </a>
+          <a href="#" className="text-red-500 hover:underline">Need help?</a>
         </div>
       </div>
     </div>

@@ -34,17 +34,17 @@ export type TOTPData = {
   loading: boolean
   otpStatus: OtpStatus
   sentAt?: number
-};
+}
 
 export type TOAuthData = {
   email: string
   loading: boolean
   error: string
-};
+}
 
 type TEmailLoginModalProps = {
   closeModal: () => void
-};
+}
 
 const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
   const [otpData, setOtpData] = useState<TOTPData>({
@@ -62,7 +62,9 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
   });
   const [step, setStep] = useState<Step>(Step.EMAIL);
   const [eoaWallet, setEoaWallet] = useState<Wallet | null>(null);
-  const [pickedMethod, setPickedMethod] = useState<Strategy | 'email' | null>(null);
+  const [pickedMethod, setPickedMethod] = useState<Strategy | 'email' | null>(
+    null
+  );
 
   const goBack = () => {
     setStep(otpData.otpStatus !== OtpStatus.VERIFIED ? Step.EMAIL : Step.OTP);
@@ -88,7 +90,7 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
         sentAt: Date.now(),
       });
     }
- catch (e) {
+    catch (e) {
       setOtpData({
         ...otpData,
         loading: false,
@@ -103,30 +105,43 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
       <div className="mx-auto w-[1100px] rounded-lg bg-rating-illustration bg-no-repeat p-10 shadow-lg">
         <div className="flex justify-center gap-6 py-2">
           <div className="flex w-1/2 flex-col gap-4 px-4 py-8">
-            <h2 className="text-2xl font-bold text-dark-500">Why you need to log in with Email?</h2>
+            <h2 className="text-2xl font-bold text-dark-500">
+              Why you need to log in with Email?
+            </h2>
             <p className="text-gray-600">
-              Pairwise allows for <strong className="text-dark-500">anonymous voting</strong>, letting you express your views
-              without any fear of judgment.
+              Pairwise allows for
+              {' '}
+              <strong className="text-dark-500">anonymous voting</strong>
+              ,
+              letting you express your views without any fear of judgment.
             </p>
             <p className="text-lg font-bold text-dark-500">How it works?</p>
             <ul className="mt-4 flex flex-col gap-4 text-gray-600">
               <li className="flex gap-2">
                 <span>1. </span>
                 <span>
-                  Web2 login creates an <strong>AA wallet</strong>
+                  Web2 login creates an
+                  {' '}
+                  <strong>AA wallet</strong>
                 </span>
               </li>
               <li className="flex gap-2">
                 <span>2. </span>
                 <span>
-                  Using a <strong>zk proof</strong> your new AA wallet connects to your existing OP mainnet address
+                  Using a
+                  {' '}
+                  <strong>zk proof</strong>
+                  {' '}
+                  your new AA wallet connects
+                  to your existing OP mainnet address
                 </span>
               </li>
               <li className="flex gap-2">
                 <span>3. </span>
                 <span>
-                  Your AA wallet is used to create votes as attestations, and your OP mainnet address is
-{' '}
+                  Your AA wallet is used to create votes as attestations, and
+                  your OP mainnet address is
+                  {' '}
                   <strong>never used again</strong>
                 </span>
               </li>
@@ -142,28 +157,28 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
           <div className="border-l-2 border-gray-100"></div>
           <div className="flex w-1/2 flex-col items-center justify-center gap-2">
             {step === Step.EMAIL
-? (
-              <MethodSelection
-                otpData={otpData}
-                oAuthData={oAuthData}
-                pickedMethod={pickedMethod}
-                setOtpData={setOtpData}
-                setPickedMethod={setPickedMethod}
-                setEoaWallet={setEoaWallet}
-                setOAuthData={setOAuthData}
-                sendOTP={sendOTP}
-                setStep={setStep}
-              />
-            )
-: (
-              <OTPVerification
-                otpData={otpData}
-                setOtpData={setOtpData}
-                handleGoBack={goBack}
-                setEoaWallet={setEoaWallet}
-                setStep={setStep}
-              />
-            )}
+              ? (
+                  <MethodSelection
+                    otpData={otpData}
+                    oAuthData={oAuthData}
+                    pickedMethod={pickedMethod}
+                    setOtpData={setOtpData}
+                    setPickedMethod={setPickedMethod}
+                    setEoaWallet={setEoaWallet}
+                    setOAuthData={setOAuthData}
+                    sendOTP={sendOTP}
+                    setStep={setStep}
+                  />
+                )
+              : (
+                  <OTPVerification
+                    otpData={otpData}
+                    setOtpData={setOtpData}
+                    handleGoBack={goBack}
+                    setEoaWallet={setEoaWallet}
+                    setStep={setStep}
+                  />
+                )}
           </div>
         </div>
       </div>
@@ -175,7 +190,13 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
   }
 
   if (step === Step.CONNECT_EOA) {
-    return <ConnectEOAModal email={otpData.email} eoaWallet={eoaWallet} setStep={setStep} />;
+    return (
+      <ConnectEOAModal
+        email={otpData.email}
+        eoaWallet={eoaWallet}
+        setStep={setStep}
+      />
+    );
   }
 
   if (step === Step.SUCCESS) {

@@ -8,7 +8,7 @@ export const isLoggedIn = async () => {
     const { data } = await axiosInstance.get<Number>('/auth/isloggedin');
     return data;
   }
- catch (err) {
+  catch (err) {
     return false;
   }
 };
@@ -26,7 +26,7 @@ const createMessage: SIWEConfig['createMessage'] = ({ address, chainId }) =>
 export const getMessageAndSignature = async (
   address: `0x${string}`,
   chainId: number,
-  signFunc: ({ message }: { message: string }) => Promise<`0x${string}`>,
+  signFunc: ({ message }: { message: string }) => Promise<`0x${string}`>
 ) => {
   const message = await createMessage({
     address,
@@ -39,7 +39,12 @@ export const getMessageAndSignature = async (
   return { message, signature };
 };
 
-export const loginToPwBackend = async (chainId: number, address: string, message: string, signature: `0x${string}`) => {
+export const loginToPwBackend = async (
+  chainId: number,
+  address: string,
+  message: string,
+  signature: `0x${string}`
+) => {
   // const nonce = await fetchNonce()
   // const nonce = generateRandomString(16
 
@@ -70,7 +75,7 @@ export const logoutFromPwBackend = () => {
     }
     // await axios.post('/auth/logout')
   }
- catch (err) {
+  catch (err) {
     console.error(err);
   }
 };

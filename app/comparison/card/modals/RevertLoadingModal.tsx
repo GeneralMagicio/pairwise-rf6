@@ -10,7 +10,9 @@ const RevertLoadingModal: FC = () => {
         <Lottie animationData={back} loop={true} autoplay={true} />
       </div>
 
-      <p className="mt-6 text-center text-gray-400">Reverting back to last action...</p>
+      <p className="mt-6 text-center text-gray-400">
+        Reverting back to last action...
+      </p>
     </div>
   );
 };

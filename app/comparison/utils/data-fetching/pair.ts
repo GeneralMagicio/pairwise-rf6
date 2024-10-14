@@ -11,7 +11,9 @@ export interface IPairwisePairsResponse {
   threshold: number
 }
 
-export const getPairwisePairs = async (cid: number): Promise<IPairwisePairsResponse> => {
+export const getPairwisePairs = async (
+  cid: number,
+): Promise<IPairwisePairsResponse> => {
   return (await axiosInstance.get(`flow/pairs?cid=${cid}`)).data;
 };
 
@@ -39,7 +41,10 @@ export const useGetPairwisePairs = (cid: number) => {
 //   })
 // }
 
-export const getPairwisePairsForProject = async (cid: number, pid: number): Promise<IPairwisePairsResponse> => {
+export const getPairwisePairsForProject = async (
+  cid: number,
+  pid: number
+): Promise<IPairwisePairsResponse> => {
   return (await axiosInstance.get(`flow/pairs-for-project?cid=${cid}&pid=${pid}`)).data;
 };
 

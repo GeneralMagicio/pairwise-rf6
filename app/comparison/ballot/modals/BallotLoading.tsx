@@ -9,7 +9,9 @@ const BallotLoading: FC = () => {
         <Lottie animationData={hourglass} loop={true} autoplay={true} />
       </div>
 
-      <p className="mt-2 text-center text-dark-500">Please wait while we update your ballot...</p>
+      <p className="mt-2 text-center text-dark-500">
+        Please wait while we update your ballot...
+      </p>
     </div>
   );
 };

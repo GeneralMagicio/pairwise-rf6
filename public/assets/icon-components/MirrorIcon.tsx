@@ -1,6 +1,12 @@
 export const MirrorIcon = () => {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M2.00016 2C1.63198 2 1.3335 2.29848 1.3335 2.66667V13.3333C1.3335 13.7015 1.63198
          14 2.00016 14H14.0002C14.3684 14 14.6668 13.7015 14.6668 13.3333V2.66667C14.6668

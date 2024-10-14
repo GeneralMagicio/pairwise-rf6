@@ -1,6 +1,12 @@
 export const ForkIcon = () => {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M6 4C6 4.87081 5.44346 5.61164 4.66667 5.88619V6C4.66667 6.7364 5.26362 7.33333
          6 7.33333H10C10.7364 7.33333 11.3333 6.7364 11.3333 6V5.88619C10.5565 5.61164

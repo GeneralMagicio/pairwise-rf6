@@ -8,7 +8,10 @@ interface HeaderProps {
   isFirstSelection?: boolean
 }
 
-const HeaderRF6: React.FC<HeaderProps> = ({ category, isFirstSelection }) => {
+const HeaderRF6: React.FC<HeaderProps> = ({
+  category,
+  isFirstSelection,
+}) => {
   // const [isBarFixed, setIsBarFixed] = useState(false);
 
   // useEffect(() => {
@@ -34,12 +37,16 @@ const HeaderRF6: React.FC<HeaderProps> = ({ category, isFirstSelection }) => {
           <div className="flex items-center justify-between bg-white px-4 py-2">
             <div className="flex items-center">
               {/* <OPCharacter /> */}
-              <span className="ml-2 text-lg font-bold italic text-primary">IMPACT = PROFIT</span>
+              <span className="ml-2 text-lg font-bold italic text-primary">
+                IMPACT = PROFIT
+              </span>
             </div>
           </div>
         )}
         <div className="flex items-center gap-4">
-          <span className="rounded-full bg-blue-100 px-3 py-1 text-center text-sm text-blue-link">{category}</span>
+          <span className="rounded-full bg-blue-100 px-3 py-1 text-center text-sm text-blue-link">
+            {category}
+          </span>
           <ConnectButton />
         </div>
       </div>

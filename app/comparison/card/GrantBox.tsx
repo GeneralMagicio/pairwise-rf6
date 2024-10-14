@@ -28,15 +28,15 @@ export function formatAmount(amount: string) {
   if (num >= 1000000) {
     return (num / 1000000).toFixed(1) + 'M';
   }
- else if (num >= 1000) {
+  else if (num >= 1000) {
     return (num / 1000).toFixed(1) + 'K';
   }
- else {
+  else {
     const decimalPlaces = (num.toString().split('.')[1] || []).length;
     if (decimalPlaces > 3) {
       return num.toFixed(3);
     }
- else {
+    else {
       return num.toString();
     }
   }
@@ -49,7 +49,9 @@ const GrantBox: FC<Props> = ({ title, link, amount, date, description }) => {
     <div className="max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2">
       <div className="flex items-center justify-between py-1">
         <div className="flex items-center justify-between gap-6">
-          <span className="text-sm">{truncate(title, 20)}</span>
+          <span className="text-sm">
+            {truncate(title, 20)}
+          </span>
           {link && (
             <a href={link} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm">
               <WebsiteIcon />
@@ -58,18 +60,18 @@ const GrantBox: FC<Props> = ({ title, link, amount, date, description }) => {
           )}
 
           {amount.includes('$') || amount.includes('USD') || amount.includes('usd') || amount.includes('dollars')
-? (
-            <span className="flex items-center gap-2 text-sm">
-              <USDIcon />
-              {formatAmount(amount)}
-            </span>
-          )
-: (
-            <span className="flex items-center gap-2 text-sm">
-              <OPIcon />
-              {formatAmount(amount)}
-            </span>
-          )}
+            ? (
+                <span className="flex items-center gap-2 text-sm">
+                  <USDIcon />
+                  {formatAmount(amount)}
+                </span>
+              )
+            : (
+                <span className="flex items-center gap-2 text-sm">
+                  <OPIcon />
+                  {formatAmount(amount)}
+                </span>
+              )}
           {date && (
             <span className="flex items-center gap-2 text-sm">
               <TimeIcon />
@@ -78,7 +80,10 @@ const GrantBox: FC<Props> = ({ title, link, amount, date, description }) => {
           )}
         </div>
         {description && (
-          <button {...getToggleProps()} className="text-sm text-gray-600 hover:underline">
+          <button
+            {...getToggleProps()}
+            className="text-sm text-gray-600 hover:underline"
+          >
             {isExpanded ? <ArrowUpIcon /> : <ArrowDownIcon />}
           </button>
         )}

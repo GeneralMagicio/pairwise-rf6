@@ -12,45 +12,22 @@ interface TeamProps {
 }
 
 export const mockTeam: TeamProps['team'] = [
-  {
-    profileImg: 'https://assets.vercel.com/image/upload/q_auto/front/about/individual-investors/natfriedman.png',
-    urlLink: 'https://x.com/natfriedman',
-  },
-  {
-    profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
-    individual-investors/jordanwalke.png`,
-    urlLink: 'link2',
-  },
-  {
-    profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
-    individual-investors/navalravikant.png`,
-    urlLink: 'link2',
-  },
-  {
-    profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
-    individual-investors/jessiefrazelle.png`,
-    urlLink: 'link2',
-  },
-  {
-    profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
-    individual-investors/ilyasukhar.png`,
-    urlLink: 'link2',
-  },
-  {
-    profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
-    individual-investors/davidcramer.png`,
-    urlLink: 'link2',
-  },
-  {
-    profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
-    individual-investors/anthonycasalena.png`,
-    urlLink: 'link2',
-  },
-  {
-    profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
-    individual-investors/matiaswoloski.png`,
-    urlLink: 'link2',
-  },
+  { profileImg: 'https://assets.vercel.com/image/upload/q_auto/front/about/individual-investors/natfriedman.png',
+    urlLink: 'https://x.com/natfriedman' },
+  { profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
+    individual-investors/jordanwalke.png`, urlLink: 'link2' },
+  { profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
+    individual-investors/navalravikant.png`, urlLink: 'link2' },
+  { profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
+    individual-investors/jessiefrazelle.png`, urlLink: 'link2' },
+  { profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
+    individual-investors/ilyasukhar.png`, urlLink: 'link2' },
+  { profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
+    individual-investors/davidcramer.png`, urlLink: 'link2' },
+  { profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
+    individual-investors/anthonycasalena.png`, urlLink: 'link2' },
+  { profileImg: `https://assets.vercel.com/image/upload/q_auto/front/about/
+    individual-investors/matiaswoloski.png`, urlLink: 'link2' },
 ];
 
 const Team: React.FC<TeamProps> = ({ team }) => {
@@ -69,7 +46,11 @@ const Team: React.FC<TeamProps> = ({ team }) => {
           className={`${index !== 0 ? '-ml-2' : ''}`}
           style={{ zIndex: displayedTeam.length - index }}
         >
-          <img src={member.profileImg} alt={`Team member ${index + 1}`} className="size-9 rounded-full object-cover" />
+          <img
+            src={member.profileImg}
+            alt={`Team member ${index + 1}`}
+            className="size-9 rounded-full object-cover"
+          />
         </a>
       ))}
       {!expanded && team.length > 5 && (
