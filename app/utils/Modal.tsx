@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 interface ModalProps {
@@ -10,15 +10,18 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = ({ isOpen, onClose, children }) => {
-  const modalNode = document.getElementById('modal-root');
+  const [modalNode, setModalNode] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
+    setModalNode(document.getElementById('modal-root'));
+
     // Optional: Handle escape key press to close modal
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose();
       }
     };
+
     window.addEventListener('keyup', handleKeyUp);
     return () => window.removeEventListener('keyup', handleKeyUp);
   }, [onClose]);
