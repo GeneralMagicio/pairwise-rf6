@@ -8,7 +8,7 @@ type TConnectEOAModalProps = {
   email: string
   eoaWallet: Wallet | null
   setStep: (step: number) => void
-};
+}
 
 const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, eoaWallet, setStep }) => {
   const { connect } = useConnect();
@@ -27,7 +27,10 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, eoaWallet, setStep 
         <h2 className="mb-6 text-2xl font-bold text-dark-500">Connect your newly created wallet to your ETH wallet</h2>
         <p className="text-gray-400">
           We successfully created a new wallet associated to your email
-          <span className="font-medium text-dark-500"> {email}</span>
+          <span className="font-medium text-dark-500"> 
+{' '}
+{email}
+</span>
         </p>
         <p className="text-gray-400">Please link this with your connected ETH address to continue.</p>
         <button

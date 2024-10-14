@@ -9,7 +9,7 @@ type ProjectVoteData = {
     project1Stars: number | null
     pickedId: number | null
   }
-};
+}
 
 export const updateProjectVote = async ({ data }: ProjectVoteData) => {
   return await axiosInstance.post('flow/projects/vote', data);

@@ -1,7 +1,7 @@
 type IconProps = {
   size?: string
   color?: string
-};
+}
 
 export const EditIcon = ({ size, color }: IconProps) => {
   return (

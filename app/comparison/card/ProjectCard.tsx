@@ -382,9 +382,9 @@ export const ProjectCard: React.FC<Props> = ({
                       {convertCategoryToLabel(project.impactStatement.category as JWTPayload['category'])}
                     </p>
                     <p>
-                      <strong className="text-gray-800">Subcategory:</strong> 
-{' '}
-{project.impactStatement.subcategory}
+                      <strong className="text-gray-800">Subcategory:</strong>
+                      {' '}
+                      {project.impactStatement.subcategory}
                     </p>
                     <p className="text-primary">
                           Applicants were asked to report on impact made between Oct 1, 2023 - July 31, 2024. Promises of future
