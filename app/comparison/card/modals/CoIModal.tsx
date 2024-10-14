@@ -15,9 +15,7 @@ const ConflictOfInterestModal: FC<Props> = ({ onDeclareConflict, onCancel }) => 
         </div>
       </div>
 
-      <h2 className="mb-4 text-center text-xl font-bold text-dark-500">
-        Declare a conflict of interest
-      </h2>
+      <h2 className="mb-4 text-center text-xl font-bold text-dark-500">Declare a conflict of interest</h2>
 
       <p className="mb-6 text-center text-gray-400">
         {`        A conflict of interest exists if you get income from this

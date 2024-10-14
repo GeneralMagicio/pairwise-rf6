@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
 
-const PAIRWISE_REPPORT_URL
-  = `https://github.com/GeneralMagicio/pairwise-rpgf5/issues/new?
+const PAIRWISE_REPPORT_URL = `https://github.com/GeneralMagicio/pairwise-rpgf5/issues/new?
   assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+`;
 
 interface HeaderProps {
@@ -14,21 +13,10 @@ interface HeaderProps {
 }
 
 const OPCharacter: React.FC = () => (
-  <Image
-    src="/assets/images/op-character3.svg"
-    alt="op character"
-    width={60}
-    height={48}
-    unoptimized
-  />
+  <Image src="/assets/images/op-character3.svg" alt="op character" width={60} height={48} unoptimized />
 );
 
-const Header: React.FC<HeaderProps> = ({
-  progress,
-  category,
-  question,
-  isFirstSelection,
-}) => {
+const Header: React.FC<HeaderProps> = ({ progress, category, question, isFirstSelection }) => {
   const [isBarFixed, setIsBarFixed] = useState(false);
 
   useEffect(() => {
@@ -36,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({
       if (window.scrollY > 100) {
         setIsBarFixed(true);
       }
-      else {
+ else {
         setIsBarFixed(false);
       }
     };
@@ -55,9 +43,7 @@ const Header: React.FC<HeaderProps> = ({
           <div className="flex items-center justify-between bg-white px-4 py-2">
             <div className="flex items-center">
               <OPCharacter />
-              <span className="ml-2 text-lg font-bold italic text-primary">
-                IMPACT = PROFIT
-              </span>
+              <span className="ml-2 text-lg font-bold italic text-primary">IMPACT = PROFIT</span>
             </div>
           </div>
         )}
@@ -65,30 +51,19 @@ const Header: React.FC<HeaderProps> = ({
           <h2 className="text-center text-xl font-semibold">{question}</h2>
         </div>
         <div className="flex items-center gap-4">
-          <span className="rounded-full bg-blue-100 px-3 py-1 text-center text-sm text-blue-link">
-            {category}
-          </span>
+          <span className="rounded-full bg-blue-100 px-3 py-1 text-center text-sm text-blue-link">{category}</span>
           <ConnectButton />
           <button
             className="rounded-lg border border-gray-200 p-2 text-sm"
-            onClick={() =>
-              window.open(PAIRWISE_REPPORT_URL + question, '_blank')}
+            onClick={() => window.open(PAIRWISE_REPPORT_URL + question, '_blank')}
           >
             Report an issue
           </button>
         </div>
       </div>
 
-      <div
-        className={`h-2 bg-red-100 ${
-          isBarFixed ? 'fixed left-0 top-0 z-50 w-full' : ''
-        }`}
-      >
-        <div
-          className="h-full bg-primary"
-          style={{ width: `${progress}%` }}
-        >
-        </div>
+      <div className={`h-2 bg-red-100 ${isBarFixed ? 'fixed left-0 top-0 z-50 w-full' : ''}`}>
+        <div className="h-full bg-primary" style={{ width: `${progress}%` }}></div>
       </div>
     </div>
   );

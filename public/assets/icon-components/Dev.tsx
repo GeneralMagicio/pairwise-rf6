@@ -1,12 +1,6 @@
 export const DevIcon = () => {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M13.3332 14.6667H2.6665V13.3333C2.6665 11.4924 4.15889 9.99999 5.99984 9.99999H9.99984C11.8408
          9.99999 13.3332 11.4924 13.3332 13.3333V14.6667ZM7.99984 8.66666C5.7907 8.66666

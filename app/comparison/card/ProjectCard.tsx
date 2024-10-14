@@ -51,14 +51,7 @@ const ProjectSectionTitles = {
   [ProjectSection.GRANTS]: 'Grants and investment',
 };
 
-const Section: FC<CollapsibleProps> = ({
-  title,
-  children,
-  onClick,
-  id,
-  expanded,
-  setExpanded,
-}) => {
+const Section: FC<CollapsibleProps> = ({ title, children, onClick, id, expanded, setExpanded }) => {
   const { getCollapseProps, getToggleProps } = useCollapse({
     isExpanded: expanded,
   });
@@ -80,13 +73,7 @@ const Section: FC<CollapsibleProps> = ({
             })}
             className="flex cursor-pointer items-center gap-1 text-sm text-primary"
           >
-            {expanded
-              ? (
-                  <ArrowUpIcon color="black" width={20} height={20} />
-                )
-              : (
-                  <ArrowDownIcon width={20} height={20} />
-                )}
+            {expanded ? <ArrowUpIcon color="black" width={20} height={20} /> : <ArrowDownIcon width={20} height={20} />}
           </button>
         </div>
         <section {...getCollapseProps()} className="p-2">
@@ -127,9 +114,7 @@ interface Props {
 
 const NoneBox: FC = () => (
   <div className="space-y-2">
-    <div className="max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2">
-      None
-    </div>
+    <div className="max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2">None</div>
   </div>
 );
 
@@ -223,10 +208,7 @@ export const ProjectCard: React.FC<Props> = ({
     <div ref={divRef} className="relative">
       {coi && (
         <div className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2">
-          <ConflictOfInterestModal
-            onCancel={onCoICancel}
-            onDeclareConflict={onCoIConfirm}
-          />
+          <ConflictOfInterestModal onCancel={onCoICancel} onDeclareConflict={onCoIConfirm} />
         </div>
       )}
       {coiLoading && (
@@ -237,9 +219,7 @@ export const ProjectCard: React.FC<Props> = ({
       <div
         className={`container relative mx-auto my-4
       h-[80vh] w-full rounded-xl border 
-      border-gray-200 bg-gray-50 px-4 pb-8 pt-4 ${
-    coi || coiLoading ? 'brightness-50' : ''
-    }`}
+      border-gray-200 bg-gray-50 px-4 pb-8 pt-4 ${coi || coiLoading ? 'brightness-50' : ''}`}
       >
         <div ref={parentRef} className="h-[78vh] gap-10 overflow-y-auto">
           <div className="mr-4">
@@ -266,9 +246,7 @@ export const ProjectCard: React.FC<Props> = ({
             <div
               ref={titleRef}
               className={`mb-4 mt-16 transition-all ${
-                isSticky
-                  ? 'sticky left-0 top-0 z-30 w-full rounded-lg border border-gray-200 bg-gray-100 p-4 shadow-md'
-                  : ''
+                isSticky ? 'sticky left-0 top-0 z-30 w-full rounded-lg border border-gray-200 bg-gray-100 p-4 shadow-md' : ''
               }`}
             >
               <div className="flex items-center gap-8">
@@ -283,11 +261,7 @@ export const ProjectCard: React.FC<Props> = ({
                   />
                 )}
                 <div className="flex flex-col gap-3">
-                  <h1
-                    className={`text-3xl font-semibold ${styles.oneLineClamp}`}
-                  >
-                    {project.name}
-                  </h1>
+                  <h1 className={`text-3xl font-semibold ${styles.oneLineClamp}`}>{project.name}</h1>
                   {project.organization && (
                     <div className="flex items-center gap-1 font-medium leading-6 text-slate-600">
                       <p>By</p>
@@ -324,24 +298,10 @@ export const ProjectCard: React.FC<Props> = ({
             <ProjectDescription description={project.description} />
             {project.socialLinks && (
               <div className="mb-6 flex flex-wrap gap-x-6 gap-y-2 text-slate-600">
-                {project.socialLinks.website?.map(item => (
-                  <ExternalLink key={item} address={item} type="website" />
-                ))}
-                {project.socialLinks.farcaster?.map(item => (
-                  <ExternalLink key={item} address={item} type="warpcast" />
-                ))}
-                {project.socialLinks.twitter && (
-                  <ExternalLink
-                    address={project.socialLinks.twitter}
-                    type="x"
-                  />
-                )}
-                {project.socialLinks.mirror && (
-                  <ExternalLink
-                    address={project.socialLinks.mirror}
-                    type="mirror"
-                  />
-                )}
+                {project.socialLinks.website?.map(item => <ExternalLink key={item} address={item} type="website" />)}
+                {project.socialLinks.farcaster?.map(item => <ExternalLink key={item} address={item} type="warpcast" />)}
+                {project.socialLinks.twitter && <ExternalLink address={project.socialLinks.twitter} type="x" />}
+                {project.socialLinks.mirror && <ExternalLink address={project.socialLinks.mirror} type="mirror" />}
               </div>
             )}
             {project.team?.length && (
@@ -360,52 +320,32 @@ export const ProjectCard: React.FC<Props> = ({
               id={`repos-${name}`}
               setExpanded={hnadleExpanded(ProjectSection.REPOS)}
               expanded={sectionExpanded[ProjectSection.REPOS]}
-              onClick={handleSectionClick(
-                ProjectSection.REPOS,
-                !sectionExpanded[ProjectSection.REPOS]
-              )}
+              onClick={handleSectionClick(ProjectSection.REPOS, !sectionExpanded[ProjectSection.REPOS])}
               title={ProjectSectionTitles[ProjectSection.REPOS]}
             >
-              {project.github?.length
-              || project.links?.length
-              || project.contracts?.length
-                ? (
-                    <div className="space-y-4">
-                      {project.github?.map(repo => (
-                        <GithubBox key={repo.url} repo={repo} />
-                      ))}
+              {project.github?.length || project.links?.length || project.contracts?.length
+? (
+                <div className="space-y-4">
+                  {project.github?.map(repo => <GithubBox key={repo.url} repo={repo} />)}
 
-                      {project.links?.map(link => (
-                        <SimpleInfoBox
-                          key={link.url}
-                          description={link.description}
-                          title={link.url}
-                          type="link"
-                        />
-                      ))}
+                  {project.links?.map(link => (
+                    <SimpleInfoBox key={link.url} description={link.description} title={link.url} type="link" />
+                  ))}
 
-                      {project.contracts?.map(({ address, chainId }) => (
-                        <ContractBox
-                          key={`${chainId}_${address}`}
-                          description=""
-                          address={address}
-                          chainId={chainId}
-                        />
-                      ))}
-                    </div>
-                  )
-                : (
-                    <NoneBox />
-                  )}
+                  {project.contracts?.map(({ address, chainId }) => (
+                    <ContractBox key={`${chainId}_${address}`} description="" address={address} chainId={chainId} />
+                  ))}
+                </div>
+              )
+: (
+                <NoneBox />
+              )}
             </Section>
             <Section
               id={`testimonials-${name}`}
               setExpanded={hnadleExpanded(ProjectSection.TESTIMONIALS)}
               expanded={sectionExpanded[ProjectSection.TESTIMONIALS]}
-              onClick={handleSectionClick(
-                ProjectSection.TESTIMONIALS,
-                !sectionExpanded[ProjectSection.TESTIMONIALS]
-              )}
+              onClick={handleSectionClick(ProjectSection.TESTIMONIALS, !sectionExpanded[ProjectSection.TESTIMONIALS])}
               title={ProjectSectionTitles[ProjectSection.TESTIMONIALS]}
             >
               <div className="space-y-4">
@@ -429,116 +369,95 @@ export const ProjectCard: React.FC<Props> = ({
               id={`impact-${name}`}
               setExpanded={hnadleExpanded(ProjectSection.IMPACT)}
               expanded={sectionExpanded[ProjectSection.IMPACT]}
-              onClick={handleSectionClick(
-                ProjectSection.IMPACT,
-                !sectionExpanded[ProjectSection.IMPACT]
-              )}
+              onClick={handleSectionClick(ProjectSection.IMPACT, !sectionExpanded[ProjectSection.IMPACT])}
               title={ProjectSectionTitles[ProjectSection.IMPACT]}
             >
               {project.impactStatement
-                ? (
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <p>
-                          <strong className="text-gray-800">Category:</strong>
-                          {' '}
-                          {convertCategoryToLabel(
-                            project.impactStatement
-                              .category as JWTPayload['category']
-                          )}
+? (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <p>
+                      <strong className="text-gray-800">Category:</strong>
+{' '}
+                      {convertCategoryToLabel(project.impactStatement.category as JWTPayload['category'])}
+                    </p>
+                    <p>
+                      <strong className="text-gray-800">Subcategory:</strong> 
+{' '}
+{project.impactStatement.subcategory}
+                    </p>
+                    <p className="text-primary">
+                          Applicants were asked to report on impact made between Oct 1, 2023 - July 31, 2024. Promises of future
+                          deliverables or impact are not allowed.
                         </p>
-                        <p>
-                          <strong className="text-gray-800">Subcategory:</strong>
-                          {' '}
-                          {project.impactStatement.subcategory}
-                        </p>
-                        <p className="text-primary">
-                          Applicants were asked to report on impact made between Oct
-                          1, 2023 - July 31, 2024. Promises of future deliverables
-                          or impact are not allowed.
-                        </p>
-                      </div>
-                      <div className="space-y-2">
-                        {project.impactStatement.statement?.create?.map(
-                          ({ question, answer }) => (
-                            <QABox
-                              key={question}
-                              question={question}
-                              answer={answer}
-                            />
-                          )
-                        )}
-                      </div>
-                    </div>
-                  )
-                : (
-                    <NoneBox />
-                  )}
+                  </div>
+                  <div className="space-y-2">
+                    {project.impactStatement.statement?.create?.map(({ question, answer }) => (
+                      <QABox key={question} question={question} answer={answer} />
+                    ))}
+                  </div>
+                </div>
+              )
+: (
+                <NoneBox />
+              )}
             </Section>
             <Section
               id={`pricing-${name}`}
               setExpanded={hnadleExpanded(ProjectSection.PRICING)}
-              onClick={handleSectionClick(
-                ProjectSection.PRICING,
-                !sectionExpanded[ProjectSection.PRICING]
-              )}
+              onClick={handleSectionClick(ProjectSection.PRICING, !sectionExpanded[ProjectSection.PRICING])}
               expanded={sectionExpanded[ProjectSection.PRICING]}
               title={ProjectSectionTitles[ProjectSection.PRICING]}
             >
               <div className="space-y-2 capitalize">
-                {project.pricingModel
-                && typeof project.pricingModel === 'object'
-                  ? (
-                      <SimpleInfoBox
-                        title={project.pricingModel.type || ''}
-                        description={project.pricingModel.details || ''}
-                        type="pricing"
-                      />
-                    )
-                  : (
-                      <NoneBox />
-                    )}
+                {project.pricingModel && typeof project.pricingModel === 'object'
+? (
+                  <SimpleInfoBox
+                    title={project.pricingModel.type || ''}
+                    description={project.pricingModel.details || ''}
+                    type="pricing"
+                  />
+                )
+: (
+                  <NoneBox />
+                )}
               </div>
             </Section>
             <Section
               id={`grants-${name}`}
               setExpanded={hnadleExpanded(ProjectSection.GRANTS)}
-              onClick={handleSectionClick(
-                ProjectSection.GRANTS,
-                !sectionExpanded[ProjectSection.GRANTS]
-              )}
+              onClick={handleSectionClick(ProjectSection.GRANTS, !sectionExpanded[ProjectSection.GRANTS])}
               expanded={sectionExpanded[ProjectSection.GRANTS]}
               title={ProjectSectionTitles[ProjectSection.GRANTS]}
             >
-              {project.grantsAndFunding.grants?.length
-              || project.grantsAndFunding.investments?.length
-                ? (
-                    <div className="space-y-2">
-                      {project.grantsAndFunding.grants?.map((grant, index) => (
-                        <GrantBox
-                          key={`grant_${index}`}
-                          description={grant.details}
-                          link={grant.link}
-                          amount={grant.amount}
-                          date={grant.date}
-                          title={grant.grant || ''}
-                        />
-                      ))}
-                      {project.grantsAndFunding.investments?.map(funding => (
-                        <GrantBox
-                          key={funding.details}
-                          description={funding.details}
-                          link={null}
-                          amount={funding.amount}
-                          date={null}
-                          title="Funding"
-                        />
-                      ))}
-                    </div>
-                  )
-                : (
-                    <NoneBox />
-                  )}
+              {project.grantsAndFunding.grants?.length || project.grantsAndFunding.investments?.length
+? (
+                <div className="space-y-2">
+                  {project.grantsAndFunding.grants?.map((grant, index) => (
+                    <GrantBox
+                      key={`grant_${index}`}
+                      description={grant.details}
+                      link={grant.link}
+                      amount={grant.amount}
+                      date={grant.date}
+                      title={grant.grant || ''}
+                    />
+                  ))}
+                  {project.grantsAndFunding.investments?.map(funding => (
+                    <GrantBox
+                      key={funding.details}
+                      description={funding.details}
+                      link={null}
+                      amount={funding.amount}
+                      date={null}
+                      title="Funding"
+                    />
+                  ))}
+                </div>
+              )
+: (
+                <NoneBox />
+              )}
             </Section>
           </div>
         </div>

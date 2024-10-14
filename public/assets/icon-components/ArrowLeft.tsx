@@ -10,6 +10,5 @@ export const ArrowLeftIcon = () => {
         strokeLinejoin="round"
       />
     </svg>
-
   );
 };

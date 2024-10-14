@@ -1,12 +1,6 @@
 export const CoinbaseIcon = () => {
   return (
-    <svg
-      width="24"
-      height="25"
-      viewBox="0 0 24 25"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_380_11206)">
         <path
           d="M0 0.5H24V24.5H0V0.5ZM10.0938 6.9428C8.628 7.5338 7.4238 8.7332 6.8202

@@ -38,13 +38,7 @@ createWeb3Modal({
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
 });
 
-export default function AppKitProvider({
-  children,
-  initialState,
-}: {
-  children: ReactNode
-  initialState?: State
-}) {
+export default function AppKitProvider({ children, initialState }: { children: ReactNode, initialState?: State }) {
   return (
     <WagmiProvider config={config} initialState={initialState}>
       <Thirdweb5Provider>

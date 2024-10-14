@@ -1,20 +1,9 @@
 'use client';
 
-import React, {
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { useAccount, useSignMessage } from 'wagmi';
 import { usePathname, useRouter } from 'next/navigation';
-import {
-  getMessageAndSignature,
-  isLoggedIn,
-  loginToPwBackend,
-  logoutFromPwBackend,
-} from './pw-login';
+import { getMessageAndSignature, isLoggedIn, loginToPwBackend, logoutFromPwBackend } from './pw-login';
 import { axiosInstance } from '../axiosInstance';
 import { usePrevious } from '../methods';
 
@@ -52,9 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const [isNewUser, setIsNewUser] = useState(false);
 
-  const [loginAddress, setLoginAddress] = useState<
-    AuthContextType['loginAddress']
-  >({ confirmed: true, value: undefined });
+  const [loginAddress, setLoginAddress] = useState<AuthContextType['loginAddress']>({ confirmed: true, value: undefined });
 
   useAuth();
 
@@ -121,18 +108,10 @@ export const useAuth = () => {
         confirmed: true,
       });
     }
-    else if (
-      prevAddress
-      && connectedAddress !== prevAddress
-      && !path.includes('comparison')
-    ) {
+ else if (prevAddress && connectedAddress !== prevAddress && !path.includes('comparison')) {
       signOut();
     }
-    else if (
-      prevAddress
-      && connectedAddress !== prevAddress
-      && path.includes('comparison')
-    ) {
+ else if (prevAddress && connectedAddress !== prevAddress && path.includes('comparison')) {
       setLoginAddress({ ...loginAddress, confirmed: false });
     }
   }, [connectedAddress, prevAddress, path]);
@@ -149,7 +128,7 @@ export const useAuth = () => {
     if (validToken) {
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
     }
-    else setLoggedToPw(LogginToPwBackendState.Error);
+ else setLoggedToPw(LogginToPwBackendState.Error);
   }, [loginAddress.value]);
 
   useEffect(() => {
@@ -172,41 +151,35 @@ export const useAuth = () => {
           console.log('vt:', validToken);
           setLoggedToPw(LogginToPwBackendState.LoggedIn);
         }
-        else {
+ else {
           if (!message || !signature) {
-            const { message: val1, signature: val2 }
-              = await getMessageAndSignature(
-                address as `0x${string}`,
-                chainId,
-                signMessageAsync
-              );
+            const { message: val1, signature: val2 } = await getMessageAndSignature(
+              address as `0x${string}`,
+              chainId,
+              signMessageAsync,
+            );
             message = val1;
             signature = val2;
           }
           setLoginInProgress(true);
           console.log('Logging to pw');
-          const res = await loginToPwBackend(
-            chainId,
-            address,
-            message,
-            signature
-          );
+          const res = await loginToPwBackend(chainId, address, message, signature);
           if (res.isNewUser) {
             setIsNewUser(true);
           }
           setLoggedToPw(LogginToPwBackendState.LoggedIn);
         }
       }
-      catch (e) {
+ catch (e) {
         console.log('pw error', e);
         setLoggedToPw(LogginToPwBackendState.Error);
         return;
       }
-      finally {
+ finally {
         setLoginInProgress(false);
       }
     },
-    [chainId, connectedAddress]
+    [chainId, connectedAddress],
   );
 
   useEffect(() => {
@@ -226,7 +199,7 @@ export const useAuth = () => {
           signOut();
         }
         return Promise.reject(error);
-      }
+      },
     );
 
     return () => {

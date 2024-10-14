@@ -1,12 +1,6 @@
 export const StarsIcon = () => {
   return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 22 22"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_1335_10046)">
         <path
           d="M4.12504 20.1668V15.5835M4.12504 6.41683V1.8335M1.83337 4.12516H6.41671M1.83337

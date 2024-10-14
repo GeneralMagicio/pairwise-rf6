@@ -1,18 +1,6 @@
-export const WarningIcon = ({
-  color,
-  size,
-}: {
-  color?: string
-  size?: number
-}) => {
+export const WarningIcon = ({ color, size }: { color?: string, size?: number }) => {
   return (
-    <svg
-      width={size || '19'}
-      height={size || '17'}
-      viewBox="0 0 19 17"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width={size || '19'} height={size || '17'} viewBox="0 0 19 17" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M9.49982 6.49995V9.83328M9.49982 13.1666H9.50815M8.34591 2.24305L1.49184
          14.0819C1.11167 14.7386 0.921587 15.0669 0.949681 15.3364C0.974186 15.5714

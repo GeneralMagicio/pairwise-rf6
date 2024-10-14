@@ -14,12 +14,7 @@ export const OPIcon = () => {
         fill="url(#pattern0_638_9957)"
       />
       <defs>
-        <pattern
-          id="pattern0_638_9957"
-          patternContentUnits="objectBoundingBox"
-          width="1"
-          height="1"
-        >
+        <pattern id="pattern0_638_9957" patternContentUnits="objectBoundingBox" width="1" height="1">
           <use xlinkHref="#image0_638_9957" transform="scale(0.000976562)" />
         </pattern>
         <image

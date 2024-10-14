@@ -5,11 +5,9 @@ type Data = {
   data: {
     pid: number // project ID
   }
-}
+};
 
-export const markCoi = async ({
-  data,
-}: Data) => {
+export const markCoi = async ({ data }: Data) => {
   console.log(data);
   const res = await axiosInstance.post('/flow/mark-coi', data);
   return res.data;

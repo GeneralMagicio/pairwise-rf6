@@ -1,11 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
+  content: ['./pages/**/*.{js,ts,jsx,tsx,mdx}', './components/**/*.{js,ts,jsx,tsx,mdx}', './app/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
@@ -51,12 +47,11 @@ const config: Config = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'rating-illustration': 'url(\'/assets/images/rating-bg.svg\')',
         'conflict-loading': 'url(\'/assets/images/loading-bg.svg\')',
         'good-rating': 'url(\'/assets/images/good-rating-bg.svg\')',
-        'ballot': 'url(\'/assets/images/ballot-bg.svg\')',
+        ballot: "url('/assets/images/ballot-bg.svg')",
       },
       screens: {
         // small laptops

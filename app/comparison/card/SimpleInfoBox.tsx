@@ -16,12 +16,7 @@ const ICONS_MAP: Record<Props['type'], React.ReactNode> = {
   pricing: null,
 };
 
-const SimpleInfoBox: FC<Props> = ({
-  description,
-  title,
-  type,
-  showIcon = true,
-}) => {
+const SimpleInfoBox: FC<Props> = ({ description, title, type, showIcon = true }) => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   const renderTitle = () => {
@@ -47,27 +42,16 @@ const SimpleInfoBox: FC<Props> = ({
 
   return (
     <div
-      className={`max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2 ${
-        shouldCollapse ? 'cursor-pointer' : ''
-      }`}
-      {...(shouldCollapse
-      && getToggleProps())}
+      className={`max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2 ${shouldCollapse ? 'cursor-pointer' : ''}`}
+      {...(shouldCollapse && getToggleProps())}
     >
-      <div
-        className={`flex items-center justify-between ${
-          isExpanded && shouldCollapse ? 'mb-4' : ''
-        }`}
-      >
+      <div className={`flex items-center justify-between ${isExpanded && shouldCollapse ? 'mb-4' : ''}`}>
         <div className="flex items-center gap-2">
-          {ICONS_MAP[type] && showIcon && (
-            <span className="size-5">{ICONS_MAP[type]}</span>
-          )}
+          {ICONS_MAP[type] && showIcon && <span className="size-5">{ICONS_MAP[type]}</span>}
           {renderTitle()}
         </div>
         {shouldCollapse && (
-          <button
-            className="text-sm text-gray-600 hover:underline"
-          >
+          <button className="text-sm text-gray-600 hover:underline">
             {isExpanded ? <ArrowUpIcon /> : <ArrowDownIcon />}
           </button>
         )}

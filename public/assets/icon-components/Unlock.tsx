@@ -3,18 +3,11 @@ import { FC } from 'react';
 type TIconProps = {
   size?: number
   color?: string
-}
+};
 
 export const UnlockIcon: FC<TIconProps> = ({ size = 20, color = 'currentColor' }) => {
   return (
-    <svg
-      height={size}
-      width={size}
-      fill="none"
-      stroke={color}
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg height={size} width={size} fill="none" stroke={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
