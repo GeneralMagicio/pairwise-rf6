@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import AppKitProvider from './utils/wallet/provider';
 import type { Metadata } from 'next';
 import './globals.css';
+import FarcasterProvider from './utils/FarcasterProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -24,7 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body>
-        <AppKitProvider>{children}</AppKitProvider>
+        <AppKitProvider>
+          <FarcasterProvider>
+            {children}
+          </FarcasterProvider>
+        </AppKitProvider>
         <div id="modal-root"></div>
       </body>
     </html>
