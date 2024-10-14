@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({ progress, category, question, isFirstSe
       if (window.scrollY > 100) {
         setIsBarFixed(true);
       }
-      else {
+ else {
         setIsBarFixed(false);
       }
     };

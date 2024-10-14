@@ -324,22 +324,22 @@ export const ProjectCard: React.FC<Props> = ({
               title={ProjectSectionTitles[ProjectSection.REPOS]}
             >
               {project.github?.length || project.links?.length || project.contracts?.length
-                ? (
-                    <div className="space-y-4">
-                      {project.github?.map(repo => <GithubBox key={repo.url} repo={repo} />)}
+? (
+                <div className="space-y-4">
+                  {project.github?.map(repo => <GithubBox key={repo.url} repo={repo} />)}
 
-                      {project.links?.map(link => (
-                        <SimpleInfoBox key={link.url} description={link.description} title={link.url} type="link" />
-                      ))}
+                  {project.links?.map(link => (
+                    <SimpleInfoBox key={link.url} description={link.description} title={link.url} type="link" />
+                  ))}
 
-                      {project.contracts?.map(({ address, chainId }) => (
-                        <ContractBox key={`${chainId}_${address}`} description="" address={address} chainId={chainId} />
-                      ))}
-                    </div>
-                  )
-                : (
-                    <NoneBox />
-                  )}
+                  {project.contracts?.map(({ address, chainId }) => (
+                    <ContractBox key={`${chainId}_${address}`} description="" address={address} chainId={chainId} />
+                  ))}
+                </div>
+              )
+: (
+                <NoneBox />
+              )}
             </Section>
             <Section
               id={`testimonials-${name}`}
@@ -373,34 +373,34 @@ export const ProjectCard: React.FC<Props> = ({
               title={ProjectSectionTitles[ProjectSection.IMPACT]}
             >
               {project.impactStatement
-                ? (
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <p>
-                          <strong className="text-gray-800">Category:</strong>
-                          {' '}
-                          {convertCategoryToLabel(project.impactStatement.category as JWTPayload['category'])}
-                        </p>
-                        <p>
-                          <strong className="text-gray-800">Subcategory:</strong>
-                          {' '}
-                          {project.impactStatement.subcategory}
-                        </p>
-                        <p className="text-primary">
+? (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <p>
+                      <strong className="text-gray-800">Category:</strong>
+{' '}
+                      {convertCategoryToLabel(project.impactStatement.category as JWTPayload['category'])}
+                    </p>
+                    <p>
+                      <strong className="text-gray-800">Subcategory:</strong>
+                      {' '}
+                      {project.impactStatement.subcategory}
+                    </p>
+                    <p className="text-primary">
                           Applicants were asked to report on impact made between Oct 1, 2023 - July 31, 2024. Promises of future
                           deliverables or impact are not allowed.
                         </p>
-                      </div>
-                      <div className="space-y-2">
-                        {project.impactStatement.statement?.create?.map(({ question, answer }) => (
-                          <QABox key={question} question={question} answer={answer} />
-                        ))}
-                      </div>
-                    </div>
-                  )
-                : (
-                    <NoneBox />
-                  )}
+                  </div>
+                  <div className="space-y-2">
+                    {project.impactStatement.statement?.create?.map(({ question, answer }) => (
+                      <QABox key={question} question={question} answer={answer} />
+                    ))}
+                  </div>
+                </div>
+              )
+: (
+                <NoneBox />
+              )}
             </Section>
             <Section
               id={`pricing-${name}`}
@@ -411,16 +411,16 @@ export const ProjectCard: React.FC<Props> = ({
             >
               <div className="space-y-2 capitalize">
                 {project.pricingModel && typeof project.pricingModel === 'object'
-                  ? (
-                      <SimpleInfoBox
-                        title={project.pricingModel.type || ''}
-                        description={project.pricingModel.details || ''}
-                        type="pricing"
-                      />
-                    )
-                  : (
-                      <NoneBox />
-                    )}
+? (
+                  <SimpleInfoBox
+                    title={project.pricingModel.type || ''}
+                    description={project.pricingModel.details || ''}
+                    type="pricing"
+                  />
+                )
+: (
+                  <NoneBox />
+                )}
               </div>
             </Section>
             <Section
@@ -431,33 +431,33 @@ export const ProjectCard: React.FC<Props> = ({
               title={ProjectSectionTitles[ProjectSection.GRANTS]}
             >
               {project.grantsAndFunding.grants?.length || project.grantsAndFunding.investments?.length
-                ? (
-                    <div className="space-y-2">
-                      {project.grantsAndFunding.grants?.map((grant, index) => (
-                        <GrantBox
-                          key={`grant_${index}`}
-                          description={grant.details}
-                          link={grant.link}
-                          amount={grant.amount}
-                          date={grant.date}
-                          title={grant.grant || ''}
-                        />
-                      ))}
-                      {project.grantsAndFunding.investments?.map(funding => (
-                        <GrantBox
-                          key={funding.details}
-                          description={funding.details}
-                          link={null}
-                          amount={funding.amount}
-                          date={null}
-                          title="Funding"
-                        />
-                      ))}
-                    </div>
-                  )
-                : (
-                    <NoneBox />
-                  )}
+? (
+                <div className="space-y-2">
+                  {project.grantsAndFunding.grants?.map((grant, index) => (
+                    <GrantBox
+                      key={`grant_${index}`}
+                      description={grant.details}
+                      link={grant.link}
+                      amount={grant.amount}
+                      date={grant.date}
+                      title={grant.grant || ''}
+                    />
+                  ))}
+                  {project.grantsAndFunding.investments?.map(funding => (
+                    <GrantBox
+                      key={funding.details}
+                      description={funding.details}
+                      link={null}
+                      amount={funding.amount}
+                      date={null}
+                      title="Funding"
+                    />
+                  ))}
+                </div>
+              )
+: (
+                <NoneBox />
+              )}
             </Section>
           </div>
         </div>

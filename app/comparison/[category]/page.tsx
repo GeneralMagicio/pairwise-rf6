@@ -109,7 +109,7 @@ export default function Home() {
       setProgress(data.progress);
       setBypassPrevProgress(false);
     }
-    else {
+ else {
       setProgress(getBiggerNumber(prevProgress, data?.progress));
     }
   }, [data]);
@@ -179,7 +179,7 @@ export default function Home() {
     if (data?.votedPairs) {
       markAsVisited();
     }
-    else {
+ else {
       checkFirstTimeVisit();
       // show the post rating modal if the user has already rated the projects
       if (getGetStarted().postRating) {
@@ -223,7 +223,7 @@ export default function Home() {
       setProject1(pair.pairs[0].find(project => project.id !== id2)!);
       setRating1(pair.pairs[0].find(project => project.id === id2)!.rating);
     }
-    catch (e) {
+ catch (e) {
       queryClient.refetchQueries({
         queryKey: ['pairwise-pairs', cid],
       });
@@ -248,7 +248,7 @@ export default function Home() {
       setProject2(pair.pairs[0].find(project => project.id !== id1)!);
       setRating2(pair.pairs[0].find(project => project.id === id1)!.rating);
     }
-    catch (e) {
+ catch (e) {
       queryClient.refetchQueries({
         queryKey: ['pairwise-pairs', cid],
       });
@@ -284,10 +284,10 @@ export default function Home() {
       localStorage.setItem(getSuccessBalootLSKey(address), 'true');
       setShowSuccessBallot(true);
     }
-    catch (e) {
+ catch (e) {
       setBallotError(true);
     }
-    finally {
+ finally {
       setBallotLoading(false);
     }
   };
@@ -452,87 +452,87 @@ export default function Home() {
         isFirstSelection={isInitialVisit}
       />
       {isInitialVisit
-        ? (
-            <IntroView setUserAsVisited={setUserAsVisited} />
-          )
-        : (
-            <div className="relative flex w-full items-center justify-between gap-8 px-8 py-2">
-              <div className="relative w-[49%]">
-                {aiMode1
-                  ? (
-                      <ProjectCardAI
-                        key={project1.RPGF5Id}
-                        aiMode={aiMode1}
-                        setAi={toggleAiMode}
-                        key1={project1.RPGF5Id}
-                        key2={project2.RPGF5Id}
-                        coiLoading={coiLoading1}
-                        summaryData={project1.aiSummary}
-                        coi={coi1}
-                        project={{ ...project1.metadata, ...project1 } as any}
-                        onCoICancel={cancelCoI1}
-                        onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
-                      />
-                    )
-                  : (
-                      <ProjectCard
-                        key={project1.RPGF5Id}
-                        aiMode={aiMode1}
-                        setAi={toggleAiMode}
-                        sectionExpanded={sectionExpanded1}
-                        setSectionExpanded={setSectionExpanded1}
-                        name="card1"
-                        action={lastAction}
-                        dispatchAction={dispatchAction('card1')}
-                        key1={project1.RPGF5Id}
-                        key2={project2.RPGF5Id}
-                        coiLoading={coiLoading2}
-                        coi={coi1}
-                        project={{ ...project1.metadata, ...project1 } as any}
-                        onCoICancel={cancelCoI1}
-                        onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
-                      />
-                    )}
-              </div>
-              <div className="relative w-[49%]">
-                {aiMode2
-                  ? (
-                      <ProjectCardAI
-                        key={project2.RPGF5Id}
-                        aiMode={aiMode2}
-                        setAi={toggleAiMode}
-                        key1={project2.RPGF5Id}
-                        key2={project1.RPGF5Id}
-                        coiLoading={coiLoading2}
-                        coi={coi2}
-                        summaryData={project2.aiSummary}
-                        onCoICancel={cancelCoI2}
-                        onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
-                        project={{ ...project2.metadata, ...project2 } as any}
-                      />
-                    )
-                  : (
-                      <ProjectCard
-                        key={project2.RPGF5Id}
-                        aiMode={aiMode2}
-                        setAi={toggleAiMode}
-                        sectionExpanded={sectionExpanded2}
-                        setSectionExpanded={setSectionExpanded2}
-                        name="card2"
-                        action={lastAction}
-                        dispatchAction={dispatchAction('card2')}
-                        key1={project2.RPGF5Id}
-                        key2={project1.RPGF5Id}
-                        coiLoading={coiLoading2}
-                        coi={coi2}
-                        onCoICancel={cancelCoI2}
-                        onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
-                        project={{ ...project2.metadata, ...project2 } as any}
-                      />
-                    )}
-              </div>
-            </div>
-          )}
+? (
+        <IntroView setUserAsVisited={setUserAsVisited} />
+      )
+: (
+        <div className="relative flex w-full items-center justify-between gap-8 px-8 py-2">
+          <div className="relative w-[49%]">
+            {aiMode1
+? (
+              <ProjectCardAI
+                key={project1.RPGF5Id}
+                aiMode={aiMode1}
+                setAi={toggleAiMode}
+                key1={project1.RPGF5Id}
+                key2={project2.RPGF5Id}
+                coiLoading={coiLoading1}
+                summaryData={project1.aiSummary}
+                coi={coi1}
+                project={{ ...project1.metadata, ...project1 } as any}
+                onCoICancel={cancelCoI1}
+                onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
+              />
+            )
+: (
+              <ProjectCard
+                key={project1.RPGF5Id}
+                aiMode={aiMode1}
+                setAi={toggleAiMode}
+                sectionExpanded={sectionExpanded1}
+                setSectionExpanded={setSectionExpanded1}
+                name="card1"
+                action={lastAction}
+                dispatchAction={dispatchAction('card1')}
+                key1={project1.RPGF5Id}
+                key2={project2.RPGF5Id}
+                coiLoading={coiLoading2}
+                coi={coi1}
+                project={{ ...project1.metadata, ...project1 } as any}
+                onCoICancel={cancelCoI1}
+                onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
+              />
+            )}
+          </div>
+          <div className="relative w-[49%]">
+            {aiMode2
+? (
+              <ProjectCardAI
+                key={project2.RPGF5Id}
+                aiMode={aiMode2}
+                setAi={toggleAiMode}
+                key1={project2.RPGF5Id}
+                key2={project1.RPGF5Id}
+                coiLoading={coiLoading2}
+                coi={coi2}
+                summaryData={project2.aiSummary}
+                onCoICancel={cancelCoI2}
+                onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
+                project={{ ...project2.metadata, ...project2 } as any}
+              />
+            )
+: (
+              <ProjectCard
+                key={project2.RPGF5Id}
+                aiMode={aiMode2}
+                setAi={toggleAiMode}
+                sectionExpanded={sectionExpanded2}
+                setSectionExpanded={setSectionExpanded2}
+                name="card2"
+                action={lastAction}
+                dispatchAction={dispatchAction('card2')}
+                key1={project2.RPGF5Id}
+                key2={project1.RPGF5Id}
+                coiLoading={coiLoading2}
+                coi={coi2}
+                onCoICancel={cancelCoI2}
+                onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
+                project={{ ...project2.metadata, ...project2 } as any}
+              />
+            )}
+          </div>
+        </div>
+      )}
 
       {!isInitialVisit && (
         <footer className="sticky bottom-0 z-50 flex w-full items-center justify-around gap-4 bg-white py-8 shadow-inner">
