@@ -6,6 +6,8 @@ import CategoryAllocation, { Category } from './components/CategoryAllocation';
 import ConnectBox from './components/ConnectBox';
 import { modifyPercentage, RankItem } from './utils';
 import { CustomizedSlider } from './components/Slider';
+import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
+import FarcasterModal from './components/FarcasterModal';
 
 const Categories: Category[] = [
   {
@@ -50,6 +52,8 @@ const AllocationPage = () => {
   const [categoryRanking, setCategoryRanking] = useState(ranks);
   const [totalValue, setTotalValue] = useState(2);
   const [percentageError, setPercentageError] = useState<string>();
+  const [ isOpenFarcasterModal, setIsOpenFarcasterModal ] = useState(false);
+  const [ isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal ] = useState(false);
 
   const handleLock = (id: RankItem['id']) => () => {
     try {
@@ -90,6 +94,12 @@ const AllocationPage = () => {
         question="Which project had the greatest impact on the OP Stack?"
         isFirstSelection={false}
       />
+      <WorldIdSignInSuccessModal isOpen={isWorldIdSignSuccessModal} onClose={()=>{
+        setIsWorldIdSignSuccessModal(false);
+      }}/>
+      <FarcasterModal isOpen={isOpenFarcasterModal} onClose={()=>{
+        setIsOpenFarcasterModal(false)
+      }}/>
       <div className="flex justify-between gap-4 p-16">
         <div className="flex max-w-[65%] flex-col gap-3">
           <h2 className="text-3xl font-bold"> Round 6: Governance </h2>
@@ -178,7 +188,11 @@ const AllocationPage = () => {
 
         </div>
         <div className="mt-28 max-w-[25%]">
-          <ConnectBox onConnectFarcaster={() => {}} onConnectTwitter={() => {}} onConnectWorldID={() => {}} />
+          <ConnectBox onConnectFarcaster={() => {
+            setIsOpenFarcasterModal(true);
+          }} onConnectTwitter={() => {}} onConnectWorldID={() => {
+            setIsWorldIdSignSuccessModal(true)
+          }} />
         </div>
       </div>
     </div>
