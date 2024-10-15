@@ -15,7 +15,7 @@ export default function Modals() {
   const { address } = useAccount();
   const { loggedToPw, loginInProgress, loginAddress, setLoginAddress, doLoginFlow, signOut } = useAuth();
 
-  const notBhOpen = loggedToPw === LogginToPwBackendState.LoggedIn && !path.includes('comparison');
+  const notBhOpen = loggedToPw === LogginToPwBackendState.LoggedIn && !path?.includes('comparison');
 
   const signInModalOpen = (address ?? false) && (loggedToPw === LogginToPwBackendState.Error);
 

@@ -111,10 +111,10 @@ export const useAuth = () => {
     if (!prevAddress && !loginAddress.value && connectedAddress) {
       setLoginAddress({ value: connectedAddress, confirmed: true });
     }
-    else if (prevAddress && connectedAddress !== prevAddress && !path.includes('comparison')) {
+    else if (prevAddress && connectedAddress !== prevAddress && !path?.includes('comparison')) {
       signOut();
     }
-    else if (prevAddress && connectedAddress !== prevAddress && path.includes('comparison')) {
+    else if (prevAddress && connectedAddress !== prevAddress && path?.includes('comparison')) {
       setLoginAddress({ ...loginAddress, confirmed: false });
     }
   }, [connectedAddress, prevAddress, path]);
