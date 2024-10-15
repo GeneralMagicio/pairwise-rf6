@@ -97,6 +97,7 @@ export const useAuth = () => {
     setLoginInProgress,
     loginAddress,
     setLoginAddress,
+    isAutoConnecting,
     setIsAutoConnecting,
     // setShowBhModal,
   } = useContext(AuthContext);
@@ -288,6 +289,7 @@ export const useAuth = () => {
     loginAddress,
     setLoginAddress,
     redirectToComparisonPage,
+    isAutoConnecting,
     // setShowBhModal,
     doLoginFlow,
   };
