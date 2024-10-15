@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import RankingRow from "./components/RankingRow";
-import RankingTabs from "./components/RankingTabs";
-import HeaderRF6 from "../comparison/card/Header-RF6";
-import { useProjectsByCategoryId } from "../comparison/utils/data-fetching/projects";
-import Spinner from "@/app/components/Spinner";
-import SearchBar from "./components/SearchBar";
+import { useEffect, useState } from 'react';
+import RankingRow from './components/RankingRow';
+import RankingTabs from './components/RankingTabs';
+import HeaderRF6 from '../comparison/card/Header-RF6';
+import { useProjectsByCategoryId } from '../comparison/utils/data-fetching/projects';
+import Spinner from '@/app/components/Spinner';
+import SearchBar from './components/SearchBar';
 
 type TTab = {
-  id: number;
-  title: string;
-  imageSrc: string;
-  projectCount: number;
+  id: number
+  title: string
+  imageSrc: string
+  projectCount: number
 };
 
 enum VotingStatus {
@@ -23,38 +23,38 @@ enum VotingStatus {
 export const tabs: TTab[] = [
   {
     id: 1,
-    title: "Infrastructure & Tooling",
-    imageSrc: "/assets/images/category-it-icon.svg",
+    title: 'Infrastructure & Tooling',
+    imageSrc: '/assets/images/category-it-icon.svg',
     projectCount: 20,
   },
   {
     id: 2,
-    title: "Gov Research & Analytics",
-    imageSrc: "/assets/images/category-gra-icon.svg",
+    title: 'Gov Research & Analytics',
+    imageSrc: '/assets/images/category-gra-icon.svg',
     projectCount: 15,
   },
   {
     id: 3,
-    title: "Governance Leadership",
-    imageSrc: "/assets/images/category-gl-icon.svg",
+    title: 'Governance Leadership',
+    imageSrc: '/assets/images/category-gl-icon.svg',
     projectCount: 30,
   },
 ];
 
 const votingStatusMap = {
   [VotingStatus.IN_PROGRESS]: {
-    text: "In progress",
-    classes: "bg-voting-in-progress-bgColor text-voting-in-progress-textColor",
+    text: 'In progress',
+    classes: 'bg-voting-in-progress-bgColor text-voting-in-progress-textColor',
   },
   [VotingStatus.READY_TO_SUBMIT]: {
-    text: "Ready to submit",
-    classes: "bg-voting-ready-bgColor text-voting-ready-textColor",
+    text: 'Ready to submit',
+    classes: 'bg-voting-ready-bgColor text-voting-ready-textColor',
   },
 };
 
 const RangingPage = ({ categoryId = 1 }: { categoryId: number }) => {
   const [selectedTab, setSelectedTab] = useState<number>(categoryId);
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
 
   const {
     data: projects,
@@ -84,7 +84,7 @@ const RangingPage = ({ categoryId = 1 }: { categoryId: number }) => {
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-2">
               <p className="text-2xl font-semibold text-gray-700">
-                {tabs.find((tab) => tab.id === selectedTab)?.title}
+                {tabs.find(tab => tab.id === selectedTab)?.title}
               </p>
               <p className="text-sm font-normal text-gray-600">
                 OP calculations in this ballot are based on your budget of
@@ -100,23 +100,27 @@ const RangingPage = ({ categoryId = 1 }: { categoryId: number }) => {
             </div>
           </div>
           <SearchBar search={search} setSearch={setSearch} />
-          {isLoading ? (
-            <Spinner />
-          ) : projects?.length ? (
-            <table className="w-full">
-              <tbody className="flex flex-col gap-6">
-                {projects
-                  .filter((project) =>
-                    project.name.toLowerCase().includes(search.toLowerCase())
-                  )
-                  .map((project) => (
-                    <RankingRow key={project.id} project={project} />
-                  ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className="text-gray-400 text-center">No projects found</p>
-          )}
+          {isLoading
+            ? (
+                <Spinner />
+              )
+            : projects?.length
+              ? (
+                  <table className="w-full">
+                    <tbody className="flex flex-col gap-6">
+                      {projects
+                        .filter(project =>
+                          project.name.toLowerCase().includes(search.toLowerCase())
+                        )
+                        .map(project => (
+                          <RankingRow key={project.id} project={project} />
+                        ))}
+                    </tbody>
+                  </table>
+                )
+              : (
+                  <p className="text-center text-gray-400">No projects found</p>
+                )}
         </div>
       </div>
     </div>

@@ -49,12 +49,12 @@ const config: Config = {
           active: '#FFD1D5',
           inactive: '#FBFCFE',
         },
-        voting: {
-          "in-progress": {
+        'voting': {
+          'in-progress': {
             bgColor: '#FFE0CC',
             textColor: '#AD3700',
           },
-          ready: {
+          'ready': {
             bgColor: '#ECFDF3',
             textColor: '#17B26A',
           },
