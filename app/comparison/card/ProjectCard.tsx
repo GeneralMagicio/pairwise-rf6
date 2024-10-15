@@ -73,7 +73,7 @@ const Section: FC<CollapsibleProps> = ({
       <hr className="border-t border-gray-200" />
       <div id={id} className="mb-4 pt-4">
         <div className="flex items-center justify-between gap-4 p-2">
-          <button className="font-inter text-xl font-medium">{title}</button>
+          <button className="text-xl font-medium">{title}</button>
           <button
             {...getToggleProps({
               onClick: expandSection,
@@ -284,12 +284,12 @@ export const ProjectCard: React.FC<Props> = ({
                 )}
                 <div className="flex flex-col gap-3">
                   <h1
-                    className={`font-inter text-3xl font-semibold ${styles.oneLineClamp}`}
+                    className={`text-3xl font-semibold ${styles.oneLineClamp}`}
                   >
                     {project.name}
                   </h1>
                   {project.organization && (
-                    <div className="flex items-center gap-1 font-inter font-medium leading-6 text-slate-600">
+                    <div className="flex items-center gap-1 font-medium leading-6 text-slate-600">
                       <p>By</p>
                       {project.organization.organizationAvatarUrl && (
                         <Image

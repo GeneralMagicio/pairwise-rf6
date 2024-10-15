@@ -14,7 +14,7 @@ import { QuestionMarkIcon } from '@/public/assets/icon-components/QuestionMark';
 import { ProjectMetadata } from '../utils/types';
 
 type ArrayElement<ArrayType extends readonly unknown[]> =
-  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never
 
 interface Props {
   repo: ArrayElement<Exclude<ProjectMetadata['github'], null>>
@@ -26,7 +26,7 @@ const GithubBox: FC<Props> = ({ repo }) => {
   return (
     <div
       {...getToggleProps()}
-      className="max-w-full cursor-pointer rounded-lg border border-gray-200 bg-gray-50 p-2 py-[12px] font-inter"
+      className="max-w-full cursor-pointer rounded-lg border border-gray-200 bg-gray-50 p-2 py-[12px]"
     >
       <div
         className={`flex items-center justify-between ${
@@ -71,7 +71,7 @@ const GithubBox: FC<Props> = ({ repo }) => {
         {'metrics' in repo && repo.metrics
           ? (
               <>
-                <div className="mb-2 grid grid-cols-3 gap-2 font-inter text-sm font-normal leading-5">
+                <div className="font-inter mb-2 grid grid-cols-3 gap-2 text-sm font-normal leading-5">
                   <div className="flex items-center gap-2 rounded-md bg-gray-100 p-2">
                     <TimeIcon />
                     <span className="text-sm">

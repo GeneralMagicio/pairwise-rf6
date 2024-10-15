@@ -22,6 +22,8 @@ const config: Config = {
           500: '#98A2B3',
           600: '#404454',
           700: '#0F111A',
+          placeholder: '#667085',
+          border: '#EAECF0',
         },
         blue: {
           foreground: '#3374DB',
@@ -32,10 +34,23 @@ const config: Config = {
           500: '#05060B',
           600: '#101828',
         },
+        status: {
+          border: {
+            success: '#75E0A7',
+            error: '#FDA29B',
+            expired: '#FEC84B',
+          },
+          text: {
+            error: '#D92D20',
+            expired: '#DC6803',
+          },
+          bg: {
+            error: '#FEF3F2',
+          },
+        },
       },
       fontFamily: {
-        inter: ['var(--font-inter)'],
-        mono: ['var(--font-roboto-mono)'],
+        sans: ['"Inter var", sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

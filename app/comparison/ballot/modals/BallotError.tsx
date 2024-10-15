@@ -11,8 +11,8 @@ const BALLOT_REPPORT_URL
 
 const BallotError: React.FC<UnlockBallotProps> = ({ onClick }) => {
   return (
-    <div className="mx-auto w-[96] overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat shadow-lg">
-      <div className="p-10 text-center">
+    <div className="mx-auto w-[300px] overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat shadow-lg md:w-[500px]">
+      <div className="px-6 py-10 text-center  md:px-10">
         <Image
           src="/assets/images/ballot-error.svg"
           alt="Celebration"
@@ -24,7 +24,9 @@ const BallotError: React.FC<UnlockBallotProps> = ({ onClick }) => {
           Error updating ballot!
         </h2>
         <p className="mb-6 text-gray-400">
-          We encountered a problem updating your ballot. Please retry updating.
+          We encountered a problem updating your ballot.
+          <br />
+          Please retry updating.
         </p>
         <button
           onClick={onClick}
