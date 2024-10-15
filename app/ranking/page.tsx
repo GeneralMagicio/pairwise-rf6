@@ -2,44 +2,16 @@
 
 import { useEffect, useState } from 'react';
 import RankingRow from './components/RankingRow';
-import RankingTabs from './components/RankingTabs';
+import RankingTabs, { tabs } from './components/RankingTabs';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import { useProjectsByCategoryId } from '../comparison/utils/data-fetching/projects';
 import Spinner from '@/app/components/Spinner';
 import SearchBar from './components/SearchBar';
 
-type TTab = {
-  id: number
-  title: string
-  imageSrc: string
-  projectCount: number
-};
-
 enum VotingStatus {
   IN_PROGRESS,
   READY_TO_SUBMIT,
 }
-
-export const tabs: TTab[] = [
-  {
-    id: 1,
-    title: 'Infrastructure & Tooling',
-    imageSrc: '/assets/images/category-it-icon.svg',
-    projectCount: 20,
-  },
-  {
-    id: 2,
-    title: 'Gov Research & Analytics',
-    imageSrc: '/assets/images/category-gra-icon.svg',
-    projectCount: 15,
-  },
-  {
-    id: 3,
-    title: 'Governance Leadership',
-    imageSrc: '/assets/images/category-gl-icon.svg',
-    projectCount: 30,
-  },
-];
 
 const votingStatusMap = {
   [VotingStatus.IN_PROGRESS]: {
@@ -52,7 +24,7 @@ const votingStatusMap = {
   },
 };
 
-const RangingPage = ({ categoryId = 1 }: { categoryId: number }) => {
+const RankingPage = ({ categoryId = 1 }: { categoryId: number }) => {
   const [selectedTab, setSelectedTab] = useState<number>(categoryId);
   const [search, setSearch] = useState<string>('');
 
@@ -127,4 +99,4 @@ const RangingPage = ({ categoryId = 1 }: { categoryId: number }) => {
   );
 };
 
-export default RangingPage;
+export default RankingPage;

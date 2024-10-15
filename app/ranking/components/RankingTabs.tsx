@@ -1,11 +1,38 @@
 import { FC } from 'react';
 import Image from 'next/image';
-import { tabs } from '../page';
 
 type TRankingTabsProps = {
   selectedTab: number
   setSelectedTab: (id: number) => void
 };
+
+type TTab = {
+  id: number
+  title: string
+  imageSrc: string
+  projectCount: number
+};
+
+export const tabs: TTab[] = [
+  {
+    id: 1,
+    title: 'Infrastructure & Tooling',
+    imageSrc: '/assets/images/category-it-icon.svg',
+    projectCount: 20,
+  },
+  {
+    id: 2,
+    title: 'Gov Research & Analytics',
+    imageSrc: '/assets/images/category-gra-icon.svg',
+    projectCount: 15,
+  },
+  {
+    id: 3,
+    title: 'Governance Leadership',
+    imageSrc: '/assets/images/category-gl-icon.svg',
+    projectCount: 30,
+  },
+];
 
 const RankingTabs: FC<TRankingTabsProps> = ({
   selectedTab,
