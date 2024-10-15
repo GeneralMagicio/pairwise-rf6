@@ -7,9 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { proof } = req.body;
   try {
-    console.log(proof);
     const response = (await verifyCloudProof(proof, appId, actionId)) as IVerifyResponse;
-    console.log(response);
     return res.status(response.success ? 200 : 400).json(response);
   }
   catch (err) {
