@@ -9,9 +9,18 @@ import React, {
 } from 'react';
 import { useAccount, useSignMessage } from 'wagmi';
 import { usePathname, useRouter } from 'next/navigation';
-import { getMessageAndSignature, isLoggedIn, loginToPwBackend, logoutFromPwBackend } from './pw-login';
+import { WalletId, createWallet } from 'thirdweb/wallets';
+import { useConnect } from 'thirdweb/react';
+import {
+  getMessageAndSignature,
+  isLoggedIn,
+  loginToPwBackend,
+  logoutFromPwBackend,
+} from './pw-login';
 import { axiosInstance } from '../axiosInstance';
 import { usePrevious } from '../methods';
+import StorageLabel from '@/app/lib/localStorage';
+import { client, smartWalletConfig } from './provider';
 
 export enum LogginToPwBackendState {
   Initial,
@@ -28,6 +37,8 @@ interface AuthContextType {
   setIsNewUser: (bool: boolean) => void
   loginAddress: { value: `0x${string}` | undefined, confirmed: boolean }
   setLoginAddress: (value: AuthContextType['loginAddress']) => void
+  isAutoConnecting: boolean
+  setIsAutoConnecting: (bool: boolean) => void
 }
 
 const AuthContext = React.createContext<AuthContextType>({
@@ -39,19 +50,20 @@ const AuthContext = React.createContext<AuthContextType>({
   setIsNewUser: () => {},
   loginAddress: { value: undefined, confirmed: true },
   setLoginAddress: () => {},
+  isAutoConnecting: false,
+  setIsAutoConnecting: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [loginInProgress, setLoginInProgress] = useState<boolean | null>(
-    null,
-  );
-  const [loggedToPw, setLoggedToPw] = useState(
-    LogginToPwBackendState.Initial,
-  );
+  const [loginInProgress, setLoginInProgress] = useState<boolean | null>(null);
+  const [loggedToPw, setLoggedToPw] = useState(LogginToPwBackendState.Initial);
+  const [isAutoConnecting, setIsAutoConnecting] = useState(false);
 
   const [isNewUser, setIsNewUser] = useState(false);
 
-  const [loginAddress, setLoginAddress] = useState<AuthContextType['loginAddress']>({ confirmed: true, value: undefined });
+  const [loginAddress, setLoginAddress] = useState<
+    AuthContextType['loginAddress']
+  >({ confirmed: true, value: undefined });
 
   useAuth();
 
@@ -66,6 +78,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsNewUser,
         loginAddress,
         setLoginAddress,
+        isAutoConnecting,
+        setIsAutoConnecting,
       }}
     >
       {children}
@@ -83,6 +97,8 @@ export const useAuth = () => {
     setLoginInProgress,
     loginAddress,
     setLoginAddress,
+    isAutoConnecting,
+    setIsAutoConnecting,
     // setShowBhModal,
   } = useContext(AuthContext);
 
@@ -93,6 +109,7 @@ export const useAuth = () => {
 
   const router = useRouter();
   const path = usePathname();
+  const { connect } = useConnect();
 
   const signOut = async (redirectToLanding: boolean = true) => {
     logoutFromPwBackend();
@@ -104,17 +121,32 @@ export const useAuth = () => {
 
   useEffect(() => {
     const loggedInAddress = localStorage.getItem('loggedInAddress');
-    if (loggedInAddress) setLoginAddress({ value: loggedInAddress as `0x${string}`, confirmed: true });
+    if (loggedInAddress)
+      setLoginAddress({
+        value: loggedInAddress as `0x${string}`,
+        confirmed: true,
+      });
   }, []);
 
   useEffect(() => {
     if (!prevAddress && !loginAddress.value && connectedAddress) {
-      setLoginAddress({ value: connectedAddress, confirmed: true });
+      setLoginAddress({
+        value: connectedAddress as `0x${string}` | undefined,
+        confirmed: true,
+      });
     }
-    else if (prevAddress && connectedAddress !== prevAddress && !path.includes('comparison')) {
+    else if (
+      prevAddress
+      && connectedAddress !== prevAddress
+      && !path.includes('comparison')
+    ) {
       signOut();
     }
-    else if (prevAddress && connectedAddress !== prevAddress && path.includes('comparison')) {
+    else if (
+      prevAddress
+      && connectedAddress !== prevAddress
+      && path.includes('comparison')
+    ) {
       setLoginAddress({ ...loginAddress, confirmed: false });
     }
   }, [connectedAddress, prevAddress, path]);
@@ -138,50 +170,58 @@ export const useAuth = () => {
     checkLoggedInToPw();
   }, [checkLoggedInToPw]);
 
-  const doLoginFlow = useCallback(async (addressParam?: `0x${string}`) => {
-    console.log('Running the check login flow');
-    const address = addressParam ?? connectedAddress;
-    if (loginInProgress || !address || !chainId) return;
-    // setLoginAddress({value: connectedAddress, confirmed: false})
-    let message;
-    let signature;
+  const doLoginFlow = useCallback(
+    async (addressParam?: `0x${string}`) => {
+      console.log('Running the check login flow');
+      const address = addressParam ?? connectedAddress;
+      if (loginInProgress || !address || !chainId) return;
+      // setLoginAddress({value: connectedAddress, confirmed: false})
+      let message;
+      let signature;
 
-    try {
-      console.log('Checking pw token if exists?');
-      const validToken = await isLoggedIn();
-      if (validToken) {
-        console.log('vt:', validToken);
-        setLoggedToPw(LogginToPwBackendState.LoggedIn);
-      }
-      else {
-        if (!message || !signature) {
-          const { message: val1, signature: val2 } = await getMessageAndSignature(address, chainId, signMessageAsync);
-          message = val1;
-          signature = val2;
+      try {
+        console.log('Checking pw token if exists?');
+        const validToken = await isLoggedIn();
+        if (validToken) {
+          console.log('vt:', validToken);
+          setLoggedToPw(LogginToPwBackendState.LoggedIn);
         }
-        setLoginInProgress(true);
-        console.log('Logging to pw');
-        const res = await loginToPwBackend(
-          chainId,
-          address,
-          message,
-          signature
-        );
-        if (res.isNewUser) {
-          setIsNewUser(true);
+        else {
+          if (!message || !signature) {
+            const { message: val1, signature: val2 }
+              = await getMessageAndSignature(
+                address as `0x${string}`,
+                chainId,
+                signMessageAsync
+              );
+            message = val1;
+            signature = val2;
+          }
+          setLoginInProgress(true);
+          console.log('Logging to pw');
+          const res = await loginToPwBackend(
+            chainId,
+            address,
+            message,
+            signature
+          );
+          if (res.isNewUser) {
+            setIsNewUser(true);
+          }
+          setLoggedToPw(LogginToPwBackendState.LoggedIn);
         }
-        setLoggedToPw(LogginToPwBackendState.LoggedIn);
       }
-    }
-    catch (e) {
-      console.log('pw error', e);
-      setLoggedToPw(LogginToPwBackendState.Error);
-      return;
-    }
-    finally {
-      setLoginInProgress(false);
-    }
-  }, [chainId, connectedAddress]);
+      catch (e) {
+        console.log('pw error', e);
+        setLoggedToPw(LogginToPwBackendState.Error);
+        return;
+      }
+      finally {
+        setLoginInProgress(false);
+      }
+    },
+    [chainId, connectedAddress]
+  );
 
   useEffect(() => {
     if (loggedToPw === LogginToPwBackendState.LoggedIn) {
@@ -200,7 +240,7 @@ export const useAuth = () => {
           signOut();
         }
         return Promise.reject(error);
-      },
+      }
     );
 
     return () => {
@@ -208,6 +248,31 @@ export const useAuth = () => {
       axiosInstance.interceptors.response.eject(interceptor);
     };
   }, []);
+
+  useEffect(() => {
+    const main = async () => {
+      try {
+        const personalWalletId = localStorage.getItem(
+          StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+        );
+
+        if (!personalWalletId) return;
+        setIsAutoConnecting(true);
+        const personalWallet = createWallet(personalWalletId as WalletId);
+        const personalAccount = await personalWallet.autoConnect({
+          client: client,
+        });
+        const smartWallet = createWallet('smart', smartWalletConfig);
+        await smartWallet.connect({ personalAccount, client: client });
+        await connect(smartWallet);
+      }
+      finally {
+        setIsAutoConnecting(false);
+      }
+    };
+
+    main();
+  }, [setIsAutoConnecting, connect]);
 
   // useEffect(() => {
   //   if (address) {
@@ -224,6 +289,7 @@ export const useAuth = () => {
     loginAddress,
     setLoginAddress,
     redirectToComparisonPage,
+    isAutoConnecting,
     // setShowBhModal,
     doLoginFlow,
   };

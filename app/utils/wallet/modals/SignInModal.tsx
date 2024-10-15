@@ -7,7 +7,7 @@ interface SignInWithWalletProps {
 const SignInWithWallet: React.FC<SignInWithWalletProps> = () => {
   const { doLoginFlow } = useAuth();
   return (
-    <div className="mx-auto rounded-lg bg-white p-6 shadow-md">
+    <div className="mx-auto w-[300px] rounded-lg bg-white p-6 shadow-md md:w-[420px]">
       <h2 className="mb-4 text-center text-xl font-semibold">Sign in with wallet</h2>
       <p className="mb-6 text-center text-gray-500">
         Please sign in message on your wallet to authenticate the connected address

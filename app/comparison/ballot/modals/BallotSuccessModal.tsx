@@ -7,8 +7,8 @@ interface UnlockBallotProps {
 
 const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ onClick }) => {
   return (
-    <div className="mx-auto w-[96] overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat shadow-lg">
-      <div className="p-10 text-center">
+    <div className="mx-auto w-[300px] overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat shadow-lg md:w-[500px]">
+      <div className="px-6 py-10 text-center md:p-10">
         <Image
           src="/assets/images/ballot-success.svg"
           alt="Celebration"
@@ -21,6 +21,7 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ onClick }) => {
         </h2>
         <p className="mb-6 text-gray-400">
           Your ballot has been updated successfully.
+          <br />
           Click to go back to the voting app.
         </p>
         <button

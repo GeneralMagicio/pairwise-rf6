@@ -7,8 +7,24 @@ import { createWeb3Modal } from '@web3modal/wagmi/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { State, WagmiProvider } from 'wagmi';
+import { createThirdwebClient } from 'thirdweb';
+import { ThirdwebProvider } from 'thirdweb/react';
 import { config, projectId, metadata } from './config';
 import { AuthProvider } from './AuthProvider';
+import {
+  activeChain,
+  clientId,
+  factoryAddress,
+} from '../../lib/constants';
+
+export const smartWalletConfig = {
+  factoryAddress: factoryAddress,
+  chain: activeChain,
+  gasless: true,
+};
+
+export const client = createThirdwebClient({ clientId });
+
 // import { siweProviderConfig } from "./SiweProviderConfig";
 
 // Setup queryClient
@@ -45,11 +61,11 @@ export default function AppKitProvider({
 }) {
   return (
     <WagmiProvider config={config} initialState={initialState}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
-      </QueryClientProvider>
+      <ThirdwebProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>{children}</AuthProvider>
+        </QueryClientProvider>
+      </ThirdwebProvider>
     </WagmiProvider>
   );
 }

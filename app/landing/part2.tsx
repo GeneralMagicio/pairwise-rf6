@@ -9,7 +9,7 @@ export const LandingPart2 = () => {
       <div className="relative h-[360px] w-full md:h-[540px]">
         <Image src="assets/images/landing-p2.svg" alt="landing part 2" width={700} height={540} />
       </div>
-      <div className="flex max-w-[400px] flex-col gap-2 font-inter text-4xl font-bold md:max-w-[700px] sl:text-2xl">
+      <div className="flex max-w-[400px] flex-col gap-2 text-4xl font-bold md:max-w-[700px] sl:text-2xl">
         <TextBlock
           mainText="Choose the project that you consider had a greater"
           highlightText="impact"

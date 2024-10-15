@@ -10,7 +10,16 @@
 		"unused-imports"
 	],
 	"rules": {
-		"@stylistic/max-len": ["error", {"code": 125}],
+		"@stylistic/max-len": [
+			"error",
+			{
+				"code": 125,
+				"ignoreUrls": true,
+				"ignoreStrings": true,
+				"ignoreTemplateLiterals": true,
+				"ignoreRegExpLiterals": true
+			}
+		],
 		"@stylistic/semi": "off",
 		"no-unused-vars": "off",
 		"react/no-unescaped-entities": "warn",
@@ -47,8 +56,14 @@
 				"considerQueryString": true
 			}
 		],
-		"semi": ["error", "always"],
-		"quotes": ["error", "single"] 
+		"semi": [
+			"error",
+			"always"
+		],
+		"quotes": [
+			"error",
+			"single"
+		]
 	},
 	"settings": {
 		"import/resolver": {

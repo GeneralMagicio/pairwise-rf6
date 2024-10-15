@@ -4,6 +4,7 @@ import { ChangeEventHandler, FC, useEffect, useRef } from 'react';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import { roundFractions } from '../utils';
+import { useAuth } from '@/app/utils/wallet/AuthProvider';
 
 export interface Category {
   id: number
@@ -34,11 +35,16 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   locked,
   onPercentageChange,
 }) => {
+  const { isAutoConnecting } = useAuth();
+
   const inputRef = useRef<HTMLInputElement>(null);
-  const handleInputChange: ChangeEventHandler<HTMLInputElement> = debounce((event) => {
-    const value = event.target.value;
-    onPercentageChange(roundFractions(Number(value), 2));
-  }, 1500);
+  const handleInputChange: ChangeEventHandler<HTMLInputElement> = debounce(
+    (event) => {
+      const value = event.target.value;
+      onPercentageChange(roundFractions(Number(value), 2));
+    },
+    1500
+  );
 
   const handlePlus = debounce(() => {
     const value = allocationPercentage;
@@ -75,7 +81,9 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
       <div className="flex w-fit flex-col gap-2">
         <div className="flex items-center space-x-2">
           <div className="flex justify-center gap-6 border px-10 py-2">
-            <button onClick={handleMinus} className="font-bold text-gray-500">-</button>
+            <button onClick={handleMinus} className="font-bold text-gray-500">
+              -
+            </button>
             <div className="flex gap-0 rounded bg-white">
               <input
                 onChange={handleInputChange}
@@ -86,16 +94,12 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
               />
               <span> % </span>
             </div>
-            <button onClick={handlePlus} className="font-bold text-gray-500">+</button>
+            <button onClick={handlePlus} className="font-bold text-gray-500">
+              +
+            </button>
           </div>
           <button onClick={onLockClick} className="text-gray-500">
-            {locked
-              ? (
-                  <LockIcon />
-                )
-              : (
-                  <UnlockIcon />
-                )}
+            {locked ? <LockIcon /> : <UnlockIcon />}
           </button>
         </div>
         <div className="w-fit border bg-gray-50 px-[53px] py-2 text-sm text-gray-500">
@@ -106,18 +110,25 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
         <div className="my-2 flex gap-2">
           <button
             onClick={onScore}
-            className="whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-white"
+            className={`whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ${
+              isAutoConnecting
+                ? 'bg-gray-300 text-gray-600'
+                : 'bg-primary text-white'
+            }`}
+            disabled={isAutoConnecting}
           >
             Score Projects
           </button>
           <button
             onClick={onDelegate}
-            className="rounded-md border px-4 py-2 text-sm font-medium text-gray-700"
+            className={`rounded-md border px-4 py-2 text-sm font-medium ${
+              isAutoConnecting ? 'bg-gray-300 text-gray-600' : 'text-gray-700'
+            }`}
+            disabled={isAutoConnecting}
           >
             Delegate
           </button>
         </div>
-
       </div>
     </div>
   );
