@@ -184,6 +184,7 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
                     handleGoBack={goBack}
                     setEoaWallet={setEoaWallet}
                     setStep={setStep}
+                    resendOTP={sendOTP}
                   />
                 )}
           </div>

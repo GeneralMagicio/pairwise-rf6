@@ -20,7 +20,11 @@ interface IOTPVerificationProps {
   handleGoBack: () => void
   setEoaWallet: (wallet: Wallet) => void
   setStep: (step: number) => void
+  resendOTP: () => void
 }
+
+const FIVE_MINUTES = 5 * 60 * 1000;
+const INITIAL_TIMER = 5 * 60;
 
 export const OTPVerification: FC<IOTPVerificationProps> = ({
   otpData,
@@ -28,11 +32,14 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
   handleGoBack,
   setEoaWallet,
   setStep,
+  resendOTP,
 }) => {
-  const [timer, setTimer] = useState<number>(10);
+  const [timer, setTimer] = useState<number>(INITIAL_TIMER);
 
   useEffect(() => {
-    if (otpData.sentAt && otpData.sentAt >= Date.now() - 60000) {
+    setTimer(INITIAL_TIMER);
+
+    if (otpData.sentAt && otpData.sentAt >= Date.now() - FIVE_MINUTES) {
       const intervalId = setInterval(() => {
         setTimer((prev: number) => (prev > 0 ? prev - 1 : 0));
       }, 1000);
@@ -194,19 +201,30 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
 
         <div className="flex flex-col items-center justify-center gap-2 text-sm font-medium">
           <p className="text-center text-gray-400">Didn't receive code?</p>
-          {otpData.sentAt && otpData.sentAt < Date.now() - 60000
+          {!otpData.sentAt
+          || (otpData.sentAt && otpData.sentAt > Date.now() - FIVE_MINUTES)
             ? (
                 <p className="text-gray-400">
                   Resend Code in
                   {' '}
                   <span className="text-primary">
-                    {timer}
-                    s
+                    {timer > 60
+                      ? `${Math.floor(timer / 60)}:${(timer % 60)
+                        .toString()
+                        .padStart(2, '0')}`
+                      : `${timer}s`}
                   </span>
                 </p>
               )
             : (
-                <button className="text-primary">Resend Code</button>
+                <button
+                  className="text-primary"
+                  onClick={() => {
+                    resendOTP();
+                  }}
+                >
+                  Resend Code
+                </button>
               )}
         </div>
       </div>
