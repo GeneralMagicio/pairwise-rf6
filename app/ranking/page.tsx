@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import RankingRow from "./components/RankingRow";
-import RankingTabs, { tabs } from "./components/RankingTabs";
-import HeaderRF6 from "../comparison/card/Header-RF6";
-import { useProjectsByCategoryId } from "../comparison/utils/data-fetching/projects";
-import Spinner from "@/app/components/Spinner";
-import SearchBar from "./components/SearchBar";
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import RankingRow from './components/RankingRow';
+import RankingTabs, { tabs } from './components/RankingTabs';
+import HeaderRF6 from '../comparison/card/Header-RF6';
+import { useProjectsByCategoryId } from '../comparison/utils/data-fetching/projects';
+import Spinner from '@/app/components/Spinner';
+import SearchBar from './components/SearchBar';
 
 enum VotingStatus {
   IN_PROGRESS,
@@ -16,12 +16,12 @@ enum VotingStatus {
 
 const votingStatusMap = {
   [VotingStatus.IN_PROGRESS]: {
-    text: "In progress",
-    classes: "bg-voting-in-progress-bgColor text-voting-in-progress-textColor",
+    text: 'In progress',
+    classes: 'bg-voting-in-progress-bgColor text-voting-in-progress-textColor',
   },
   [VotingStatus.READY_TO_SUBMIT]: {
-    text: "Ready to submit",
-    classes: "bg-voting-ready-bgColor text-voting-ready-textColor",
+    text: 'Ready to submit',
+    classes: 'bg-voting-ready-bgColor text-voting-ready-textColor',
   },
 };
 
@@ -29,12 +29,12 @@ const RankingPage = () => {
   const params = useSearchParams();
   const router = useRouter();
 
-  const category = params.get("category");
+  const category = params.get('category');
 
   const [selectedTab, setSelectedTab] = useState<number>(
     category ? parseInt(category) : 1
   );
-  const [search, setSearch] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
 
   const {
     data: projects,
@@ -65,7 +65,7 @@ const RankingPage = () => {
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-2">
               <p className="text-2xl font-semibold text-gray-700">
-                {tabs.find((tab) => tab.id === selectedTab)?.title}
+                {tabs.find(tab => tab.id === selectedTab)?.title}
               </p>
               <p className="text-sm font-normal text-gray-600">
                 OP calculations in this ballot are based on your budget of
@@ -81,23 +81,27 @@ const RankingPage = () => {
             </div>
           </div>
           <SearchBar search={search} setSearch={setSearch} />
-          {isLoading ? (
-            <Spinner />
-          ) : projects?.length ? (
-            <table className="w-full">
-              <tbody className="flex flex-col gap-6">
-                {projects
-                  .filter((project) =>
-                    project.name.toLowerCase().includes(search.toLowerCase())
-                  )
-                  .map((project) => (
-                    <RankingRow key={project.id} project={project} />
-                  ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className="text-center text-gray-400">No projects found</p>
-          )}
+          {isLoading
+            ? (
+                <Spinner />
+              )
+            : projects?.length
+              ? (
+                  <table className="w-full">
+                    <tbody className="flex flex-col gap-6">
+                      {projects
+                        .filter(project =>
+                          project.name.toLowerCase().includes(search.toLowerCase())
+                        )
+                        .map(project => (
+                          <RankingRow key={project.id} project={project} />
+                        ))}
+                    </tbody>
+                  </table>
+                )
+              : (
+                  <p className="text-center text-gray-400">No projects found</p>
+                )}
         </div>
       </div>
     </div>
