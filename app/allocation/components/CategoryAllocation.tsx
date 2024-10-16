@@ -1,29 +1,33 @@
-import debounce from 'lodash.debounce';
-import Image from 'next/image';
-import { ChangeEventHandler, FC, useEffect, useRef } from 'react';
-import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
-import { LockIcon } from '@/public/assets/icon-components/Lock';
-import { roundFractions } from '../utils';
-import { useAuth } from '@/app/utils/wallet/AuthProvider';
+import debounce from "lodash.debounce";
+import Image from "next/image";
+import { ChangeEventHandler, FC, useEffect, useRef } from "react";
+import { roundFractions } from "../utils";
+import { useAuth } from "@/app/utils/wallet/AuthProvider";
+import { ArrowRightIcon } from "@/public/assets/icon-components/ArrowRightIcon";
+import Link from "next/link";
+import { LockIcon } from "@/public/assets/icon-components/Lock";
+import { UnlockIcon } from "@/public/assets/icon-components/Unlock";
 
 export interface Category {
-  id: number
-  imageSrc: string
-  title: string
-  description: string
-  projectCount: number
+  id: number;
+  imageSrc: string;
+  title: string;
+  description: string;
+  projectCount?: number;
 }
 
 interface CategoryAllocationProps extends Category {
-  allocationPercentage: number
-  onDelegate: () => void
-  onScore: () => void
-  onLockClick: () => void
-  locked: boolean
-  onPercentageChange: (value: number) => void
+  allocationPercentage: number;
+  allocatingBudget: boolean;
+  onDelegate: () => void;
+  onScore: () => void;
+  onLockClick: () => void;
+  locked: boolean;
+  onPercentageChange: (value: number) => void;
 }
 
 const CategoryAllocation: FC<CategoryAllocationProps> = ({
+  allocatingBudget,
   imageSrc,
   title,
   description,
@@ -63,72 +67,86 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   }, [allocationPercentage]);
 
   return (
-    <div className="flex justify-between rounded-lg border p-4">
-      <div className="flex max-w-[75%] space-x-4">
-        <div className=" rounded-lg">
-          <Image src={imageSrc} alt={title} width={96} height={96} />
+    <div className="flex justify-between rounded-lg border p-4 bg-gray-50">
+      <div className="flex w-[76%] justify-between">
+        <div className="flex space-x-4">
+          <div className=" rounded-lg">
+            <Image src={imageSrc} alt={title} width={64} height={64} />
+          </div>
+          <div className="flex flex-col max-w-[70%] gap-2">
+            <Link className="flex font-medium items-center gap-2" href="#">
+              {title}
+              <ArrowRightIcon color="#05060B" size={24} />
+            </Link>
+            <p className="text-sm text-gray-400">{description}</p>
+            <p className="w-fit mt-2 rounded-full bg-gray-200 px-2 py-1 text-xs text-gray-700 font-medium">
+              {projectCount} projects
+            </p>
+          </div>
         </div>
-        <div className="max-w-[70%] space-y-2">
-          <h3 className="text-lg font-semibold">{title}</h3>
-          <p className="text-sm text-gray-600">{description}</p>
-          <p className="mt-1 w-fit rounded-lg bg-gray-100 p-2 text-xs text-gray-800">
-            {projectCount}
-            {' '}
-            projects
-          </p>
-        </div>
+        <div className="border-l pl-4 flex flex-col gap-2 border-gray-200"></div>
       </div>
-      <div className="flex w-fit flex-col gap-2">
-        <div className="flex items-center space-x-2">
-          <div className="flex justify-center gap-6 border px-10 py-2">
-            <button onClick={handleMinus} className="font-bold text-gray-500">
-              -
-            </button>
-            <div className="flex gap-0 rounded bg-white">
-              <input
-                onChange={handleInputChange}
-                ref={inputRef}
-                className="w-12 text-center font-semibold outline-none"
-                type="number"
-                defaultValue={allocationPercentage}
-              />
-              <span> % </span>
+      <div className="flex gap-2 justify-center items-center w-[24%]">
+        {allocatingBudget ? (
+          <div className="w-full flex justify-center gap-6 p-2 items-start">
+            <div className="flex flex-col text-gray-500 gap-2">
+              <div className="flex gap-2 border rounded-md px-6 py-1">
+                <button
+                  onClick={handleMinus}
+                  className="font-bold text-gray-600"
+                >
+                  -
+                </button>
+                <div className="flex gap-0 rounded bg-white text-dark-500">
+                  <input
+                    onChange={handleInputChange}
+                    ref={inputRef}
+                    className="w-20 text-center font-semibold outline-none bg-gray-50"
+                    type="number"
+                    defaultValue={allocationPercentage}
+                  />
+                </div>
+                <button
+                  onClick={handlePlus}
+                  className="font-bold text-gray-600"
+                >
+                  +
+                </button>
+              </div>
+              <div className="flex bg-gray-100 px-4 py-0.5 text-sm text-gray-600 justify-center rounded-md">
+                <p className="text-center w-fit text-xs font-medium">
+                  {(allocationPercentage * 100000).toLocaleString() + " OP"}
+                </p>
+              </div>
             </div>
-            <button onClick={handlePlus} className="font-bold text-gray-500">
-              +
+            <button onClick={onLockClick} className="text-gray-500 py-2">
+              {locked ? <LockIcon /> : <UnlockIcon />}
             </button>
           </div>
-          <button onClick={onLockClick} className="text-gray-500">
-            {locked ? <LockIcon /> : <UnlockIcon />}
-          </button>
-        </div>
-        <div className="w-fit border bg-gray-50 px-[53px] py-2 text-sm text-gray-500">
-          {(allocationPercentage * 100000).toLocaleString()}
-          {' '}
-          OP
-        </div>
-        <div className="my-2 flex gap-2">
-          <button
-            onClick={onScore}
-            className={`whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium ${
-              isAutoConnecting
-                ? 'bg-gray-300 text-gray-600'
-                : 'bg-primary text-white'
-            }`}
-            disabled={isAutoConnecting}
-          >
-            Score Projects
-          </button>
-          <button
-            onClick={onDelegate}
-            className={`rounded-md border px-4 py-2 text-sm font-medium ${
-              isAutoConnecting ? 'bg-gray-300 text-gray-600' : 'text-gray-700'
-            }`}
-            disabled={isAutoConnecting}
-          >
-            Delegate
-          </button>
-        </div>
+        ) : (
+          <>
+            <button
+              onClick={onScore}
+              className={`whitespace-nowrap rounded-md px-8 py-2 text-sm font-medium ${
+                isAutoConnecting
+                  ? "border bg-gray-300 text-gray-600"
+                  : "bg-primary text-white"
+              }`}
+              disabled={isAutoConnecting}
+            >
+              Vote
+            </button>
+            <button
+              onClick={onDelegate}
+              className={`rounded-md border px-4 py-2 text-sm font-medium ${
+                isAutoConnecting ? "bg-gray-300 text-gray-600" : "text-gray-700"
+              }`}
+              disabled={isAutoConnecting}
+            >
+              Delegate
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -57,6 +57,7 @@ const config: Config = {
         'conflict-loading': 'url(\'/assets/images/loading-bg.svg\')',
         'good-rating': 'url(\'/assets/images/good-rating-bg.svg\')',
         'ballot': 'url(\'/assets/images/ballot-bg.svg\')',
+        'voting-power': 'url(\'/assets/images/bg-voting-power.svg\')',
       },
       screens: {
         // small laptops
