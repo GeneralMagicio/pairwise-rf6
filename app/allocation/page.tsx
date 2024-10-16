@@ -233,7 +233,7 @@ const AllocationPage = () => {
             </button>
           </div>
         </div>
-        <div className="mt-28 max-w-[25%]">
+        <div className="w-fit gap-6 rounded-xl p-4">
           <ConnectBox
             onConnectFarcaster={() => {
               setIsOpenFarcasterModal(true);
