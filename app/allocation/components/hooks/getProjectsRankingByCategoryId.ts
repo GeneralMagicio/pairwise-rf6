@@ -14,10 +14,9 @@ export interface IProjectsRankingResponse {
 }
 
 export const getProjectsRankingByCategoryId = async (
-  cid: number,
+  cid: number
 ): Promise<AxiosResponse<IProjectsRankingResponse>> => {
-  return axiosInstance.get(`flow/ranking?cid=${cid}
-	`);
+  return axiosInstance.get(`flow/ranking?cid=${cid}`);
 };
 
 export const useProjectsRankingByCategoryId = (cid: number) => {
