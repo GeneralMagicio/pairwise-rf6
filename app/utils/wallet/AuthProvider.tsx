@@ -138,14 +138,14 @@ export const useAuth = () => {
     else if (
       prevAddress
       && connectedAddress !== prevAddress
-      && !path.includes('comparison')
+      && !path?.includes('comparison')
     ) {
       signOut();
     }
     else if (
       prevAddress
       && connectedAddress !== prevAddress
-      && path.includes('comparison')
+      && path?.includes('comparison')
     ) {
       setLoginAddress({ ...loginAddress, confirmed: false });
     }

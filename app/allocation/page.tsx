@@ -10,6 +10,8 @@ import CategoryAllocation, { Category } from './components/CategoryAllocation';
 import ConnectBox from './components/ConnectBox';
 import { modifyPercentage, RankItem } from './utils';
 import { CustomizedSlider } from './components/Slider';
+import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
+import FarcasterModal from './components/FarcasterModal';
 
 const Categories: Category[] = [
   {
@@ -61,6 +63,8 @@ const AllocationPage = () => {
   const [categoryRanking, setCategoryRanking] = useState(ranks);
   const [totalValue, setTotalValue] = useState(2);
   const [percentageError, setPercentageError] = useState<string>();
+  const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
+  const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleLock = (id: RankItem['id']) => () => {
@@ -118,6 +122,18 @@ const AllocationPage = () => {
         category="category"
         question="Which project had the greatest impact on the OP Stack?"
         isFirstSelection={false}
+      />
+      <WorldIdSignInSuccessModal
+        isOpen={isWorldIdSignSuccessModal}
+        onClose={() => {
+          setIsWorldIdSignSuccessModal(false);
+        }}
+      />
+      <FarcasterModal
+        isOpen={isOpenFarcasterModal}
+        onClose={() => {
+          setIsOpenFarcasterModal(false);
+        }}
       />
       <div className="flex justify-between gap-4 p-16">
         <div className="flex max-w-[65%] flex-col gap-3">
@@ -217,11 +233,15 @@ const AllocationPage = () => {
             </button>
           </div>
         </div>
-        <div className="mt-28 max-w-[25%]">
+        <div className="w-fit gap-6 rounded-xl p-4">
           <ConnectBox
-            onConnectFarcaster={() => {}}
+            onConnectFarcaster={() => {
+              setIsOpenFarcasterModal(true);
+            }}
             onConnectTwitter={() => {}}
-            onConnectWorldID={() => {}}
+            onConnectWorldID={() => {
+              setIsWorldIdSignSuccessModal(true);
+            }}
           />
         </div>
       </div>

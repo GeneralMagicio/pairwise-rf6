@@ -49,7 +49,7 @@ const getSuccessBalootLSKey = (address: string) => {
 };
 
 export default function Home() {
-  const { category } = useParams();
+  const { category } = useParams() ?? {};
   const router = useRouter();
   const queryClient = useQueryClient();
   const { address, chainId } = useAccount();

@@ -24,7 +24,7 @@ export default function Modals() {
 
   const notBhOpen
     = loggedToPw === LogginToPwBackendState.LoggedIn
-    && !path.includes('comparison');
+    && !path?.includes('comparison');
 
   const signInModalOpen
     = (!!address ?? false) && loggedToPw === LogginToPwBackendState.Error;

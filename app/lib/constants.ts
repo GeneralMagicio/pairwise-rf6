@@ -16,6 +16,8 @@ export const starHoverColor = {
   5: '#479F7899',
 };
 
+export const appId = (process.env.NEXT_PUBLIC_WORLD_APP_ID as `app_${string}`)!;
+export const actionId = process.env.NEXT_PUBLIC_WORLD_ACTION_ID!;
 export const brandColor = {
   primary: '#FF0420',
 };
