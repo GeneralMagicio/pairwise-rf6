@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Modal from '@/app/utils/Modal';
 import LoadingModalContent from './LoadingModalContent';
 import LoadedModalContent from './LoadedModalContent';
+import { axiosInstance } from '@/app/utils/axiosInstance';
 
 interface FarcasterModalProps {
   isOpen: boolean
@@ -16,6 +17,7 @@ interface IDelegates {
 }
 
 const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
+  // const queryClient = useQueryClient();
   const {
     signIn,
     connect,
@@ -23,28 +25,35 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
     isSuccess,
     url,
     data,
+    isPolling,
   } = useSignIn({
-    onSuccess: ({ fid }) => { console.log(fid); },
+    onSuccess: async ({ message, signature, custody }) => {
+      if (terminate) return;
+      setTerminate(true);
+      await axiosInstance.post('/flow/connect/farcaster', {
+        message,
+        signature,
+        address: custody,
+      });
+      // queryClient.refetchQueries({ queryKey: ['connect-status'] });
+    },
   });
   const [delegates, setDelegateAmount] = useState< IDelegates[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [hasSignedIn, setHasSignedIn] = useState(false);
+  const [terminate, setTerminate] = useState(false);
 
   useEffect(() => {
-    if (isOpen && !isConnected) {
-      // Establish the relay connection when modal opens
+    if (isOpen) {
       connect();
     }
-  }, [isOpen, isConnected]);
+  }, [isOpen, connect]);
 
   useEffect(() => {
-    if (isConnected && !isSuccess && !hasSignedIn) {
-      console.log('connected');
+    if (isOpen && isConnected && !isPolling && !isSuccess && !terminate) {
       signIn();
-      setHasSignedIn(true);
     }
-  }, [isConnected, signIn, isSuccess, hasSignedIn]);
+  }, [isOpen, isPolling, isConnected, isSuccess, signIn, terminate]);
 
   useEffect(() => {
     if (data) {
