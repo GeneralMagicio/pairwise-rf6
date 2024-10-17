@@ -1,11 +1,11 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 type TIconProps = {
-  size?: number;
-  color?: string;
+  size?: number
+  color?: string
 };
 
-export const ArrowRightIcon: FC<TIconProps> = ({ size = 20, color = "white" }) => {
+export const ArrowRightIcon: FC<TIconProps> = ({ size = 20, color = 'white' }) => {
   return (
     <svg
       width={size}

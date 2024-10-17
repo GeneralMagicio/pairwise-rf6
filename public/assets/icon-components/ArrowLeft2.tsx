@@ -1,11 +1,11 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 type IconProps = {
-  size?: number;
-  color?: string;
+  size?: number
+  color?: string
 };
 
-export const ArrowLeft2Icon: FC<IconProps> = ({ size = 20, color = "#0F111A" }) => (
+export const ArrowLeft2Icon: FC<IconProps> = ({ size = 20, color = '#0F111A' }) => (
   <svg
     width={size}
     height={size}

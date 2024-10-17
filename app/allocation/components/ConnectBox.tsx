@@ -1,13 +1,13 @@
-import React from "react";
-import Image from "next/image";
-import { WorldIdIcon } from "@/public/assets/icon-components/WorldIdIcon";
-import { XIcon } from "@/public/assets/icon-components/XIcon";
-import { WarpcastIcon } from "@/public/assets/icon-components/WarpcastIcon";
+import React from 'react';
+import Image from 'next/image';
+import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
+import { XIcon } from '@/public/assets/icon-components/XIcon';
+import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 
 interface ConnectBoxProps {
-  onConnectWorldID: () => void;
-  onConnectTwitter: () => void;
-  onConnectFarcaster: () => void;
+  onConnectWorldID: () => void
+  onConnectTwitter: () => void
+  onConnectFarcaster: () => void
 }
 
 const ConnectBox: React.FC<ConnectBoxProps> = ({
@@ -41,7 +41,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
 
       <button
         onClick={onConnectWorldID}
-        className="mb-4 flex w-full items-center border justify-center gap-2 rounded-md bg-gray-50 border-[#CBD5E0] px-4 py-2 text-gray-700 font-semibold"
+        className="mb-4 flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] bg-gray-50 px-4 py-2 font-semibold text-gray-700"
       >
         <WorldIdIcon />
         Connect with WorldID
@@ -49,18 +49,18 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
 
       <hr className="my-6" />
 
-      <div className="flex flex-col w-full items-center justify-center gap-6 bg-voting-power p-4 rounded-xl">
-        <p className="text-4xl text-[#2C6074] font-bold">
+      <div className="flex w-full flex-col items-center justify-center gap-6 rounded-xl bg-voting-power p-4">
+        <p className="text-4xl font-bold text-[#2C6074]">
           You have extra powers now!
         </p>
-        <p className="text-gray-600 font-medium">
+        <p className="font-medium text-gray-600">
           Some people have delegated their voting power to you. With great power
           comes great responsibility. Use it wisely.
         </p>
 
         <button
           onClick={onConnectTwitter}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-gray-800 border border-[##CBD5E0] font-semibold"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
         >
           <XIcon />
           Connect with X (Twitter)
@@ -68,7 +68,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
 
         <button
           onClick={onConnectFarcaster}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-gray-800 border border-[##CBD5E0] font-semibold"
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
         >
           <WarpcastIcon />
           Connect with Farcaster

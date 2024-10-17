@@ -1,10 +1,10 @@
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { categoryIdSlugMap } from "@/app/comparison/utils/helpers";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { categoryIdSlugMap } from '@/app/comparison/utils/helpers';
 
 type TSuccessModalProps = {
-  closeModal: () => void;
-  selectedCategoryId: number | null;
+  closeModal: () => void
+  selectedCategoryId: number | null
 };
 
 const SuccessModal = ({
@@ -17,7 +17,7 @@ const SuccessModal = ({
     closeModal();
 
     if (selectedCategoryId)
-      router.push(`/comparison/${categoryIdSlugMap.get(selectedCategoryId)}`); 
+      router.push(`/comparison/${categoryIdSlugMap.get(selectedCategoryId)}`);
   };
 
   return (
