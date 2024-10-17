@@ -75,7 +75,7 @@ const AllocationPage = () => {
   const router = useRouter();
 
   const { data: categories, isLoading } = useCategories();
-  console.log('categories => ', categories);
+  console.log('categories => ', categories, isLoading);
 
   const [categoryRanking, setCategoryRanking] = useState(ranks);
   const [totalValue, setTotalValue] = useState(2);
