@@ -13,7 +13,7 @@ export interface Category {
   imageSrc: string
   title: string
   description: string
-  projectCount?: number
+  projectCount: number
 }
 
 interface CategoryAllocationProps extends Category {
@@ -27,7 +27,6 @@ interface CategoryAllocationProps extends Category {
 }
 
 const CategoryAllocation: FC<CategoryAllocationProps> = ({
-  id,
   allocatingBudget,
   imageSrc,
   title,
@@ -80,7 +79,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
               <ArrowRightIcon color="#05060B" size={24} />
             </Link>
             <p className="text-sm text-gray-400">{description}</p>
-            {id !== 0 && projectCount && (
+            {projectCount && (
               <p className="mt-2 w-fit rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700">
                 {`${projectCount} project${projectCount > 1 ? 's' : ''}`}
               </p>

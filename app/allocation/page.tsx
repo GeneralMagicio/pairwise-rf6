@@ -8,6 +8,9 @@ import Modal from '../utils/Modal';
 import EmailLoginModal from './components/EOA/EmailLoginModal';
 
 import CategoryAllocation, { Category } from './components/CategoryAllocation';
+import BudgetAllocation, {
+  BudgetCategory,
+} from './components/BudgetAllocation';
 import ConnectBox from './components/ConnectBox';
 import { modifyPercentage, RankItem } from './utils';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
@@ -18,14 +21,14 @@ import { useCategories } from './components/hooks/getCategories';
 import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
 import FarcasterModal from './components/FarcasterModal';
 
+const BudgetCategory: BudgetCategory = {
+  title: 'Budget',
+  description:
+    'Choose how much OP should be dedicated to this round, or delegate this decision to someone you trust.',
+  imageSrc: '/assets/images/budget-card.svg',
+};
+
 const Categories: Category[] = [
-  {
-    id: 0,
-    title: 'Budget',
-    description:
-      'Choose how much OP should be dedicated to this round, or delegate this decision to someone you trust.',
-    imageSrc: '/assets/images/budget-card.svg',
-  },
   {
     id: 1,
     title: 'Governance Infrastructure & Tooling',
@@ -134,11 +137,6 @@ const AllocationPage = () => {
       return;
     }
 
-    if (id === 0) {
-      setAllocatingBudget(true);
-      return;
-    }
-
     router.push(`/comparison/${categoryIdSlugMap.get(id)}`);
   };
 
@@ -238,6 +236,15 @@ const AllocationPage = () => {
               </div>
             </div>
             <div className="flex flex-col gap-4">
+              {!allocatingBudget && (
+                <BudgetAllocation
+                  {...BudgetCategory}
+                  onDelegate={() => {}}
+                  onScore={() => {
+                    setAllocatingBudget(true);
+                  }}
+                />
+              )}
               {Categories.map((cat) => {
                 const rank = categoryRanking.find(el => el.id === cat.id)!;
                 return (
