@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from './axiosInstance';
+import { BadgeCardEntryType } from './BadgeCard';
 
 export type MedalTypes =
   | 'Bronze'
@@ -18,18 +19,6 @@ export type BadgeData = {
   delegateAmount?: number
   holderType?: MedalTypes
   delegateType?: MedalTypes
-};
-
-export type BadgeCardEntryType = [
-  key: keyof typeof badgeTypeMapping,
-  value: number,
-];
-
-export const badgeTypeMapping = {
-  holderPoints: 'Holder',
-  delegatePoints: 'Delegate',
-  recipientsPoints: 'Recipient',
-  badgeholderPoints: 'Badgeholder',
 };
 
 export const getBadgeMedal = (
