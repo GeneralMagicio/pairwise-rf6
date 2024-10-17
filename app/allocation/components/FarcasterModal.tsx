@@ -30,7 +30,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
     onSuccess: async ({ message, signature, custody }) => {
       if (terminate) return;
       setTerminate(true);
-      const res = await axiosInstance.post('/flow/connect/farcaster', {
+      await axiosInstance.post('/flow/connect/farcaster', {
         message,
         signature,
         address: custody,
