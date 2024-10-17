@@ -75,7 +75,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} showCloseButton>
       {url && !isSuccess && (
-        <div className="w-[300px] md:w-[420px] flex flex-col items-center space-y-4 px-6 pt-16 pb-6 text-center">
+        <div className="flex w-[300px] flex-col items-center space-y-4 px-6 pb-6 pt-16 text-center md:w-[420px]">
           <div className="relative size-auto">
             <QRCode uri={url} />
             <div className="absolute left-1/2 top-1/2 size-1/4 -translate-x-1/2 -translate-y-1/2 bg-white">
@@ -83,7 +83,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
           <p className="text-nowrap text-lg font-semibold">Sign in with Farcaster</p>
-          <p className="text-wrap text-sm text-gray-400 px-10">
+          <p className="text-wrap px-10 text-sm text-gray-400">
             Scan the QR code with your phone or enter the link on your mobile browser
           </p>
           <button
