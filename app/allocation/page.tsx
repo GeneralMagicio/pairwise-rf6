@@ -21,7 +21,7 @@ import { useCategories } from './components/hooks/getCategories';
 import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
 import FarcasterModal from './components/FarcasterModal';
 
-const BudgetCategory: BudgetCategory = {
+const budgetCategory: BudgetCategory = {
   title: 'Budget',
   description:
     'Choose how much OP should be dedicated to this round, or delegate this decision to someone you trust.',
@@ -243,7 +243,7 @@ const AllocationPage = () => {
             <div className="flex flex-col gap-4">
               {!allocatingBudget && (
                 <BudgetAllocation
-                  {...BudgetCategory}
+                  {...budgetCategory}
                   onDelegate={() => {}}
                   onScore={() => {
                     setAllocatingBudget(true);
