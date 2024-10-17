@@ -76,7 +76,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
 
       <hr className="my-6" />
 
-      <div className="flex w-full flex-col items-center justify-center gap-6 rounded-xl bg-voting-power p-4">
+      <div className="flex w-full flex-col items-center justify-center gap-6 rounded-xl bg-voting-power bg-cover bg-no-repeat p-4">
         <p className="text-4xl font-bold text-[#2C6074]">
           You have extra powers now!
         </p>

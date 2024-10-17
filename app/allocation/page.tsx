@@ -207,31 +207,36 @@ const AllocationPage = () => {
                       </p>
                     )}
                 {allocatingBudget && (
-                  <div className="my-6 flex items-center gap-4">
-                    <span> 2M </span>
-                    <CustomizedSlider
-                      className="my-2 min-w-[55%]"
-                      value={totalValue}
-                      onChange={handleSliderChange}
-                      shiftStep={0.1}
-                      step={0.1}
-                      marks
-                      min={2}
-                      max={8}
-                    />
-                    <span> 8M </span>
-                    <div className="w-64 whitespace-nowrap rounded-md border bg-gray-50 py-2 text-center text-sm text-gray-500">
-                      {(totalValue * 1_000_000).toLocaleString()}
-                      {' '}
-                      OP
+                  <>
+                    <div className="my-6 flex items-center gap-4">
+                      <span> 2M </span>
+                      <CustomizedSlider
+                        className="my-2 min-w-[55%]"
+                        value={totalValue}
+                        onChange={handleSliderChange}
+                        shiftStep={0.1}
+                        step={0.1}
+                        marks
+                        min={2}
+                        max={8}
+                      />
+                      <span> 8M </span>
+                      <div className="w-64 whitespace-nowrap rounded-md border bg-gray-50 py-2 text-center text-sm text-gray-500">
+                        {(totalValue * 1_000_000).toLocaleString()}
+                        {' '}
+                        OP
+                      </div>
+                      <button
+                        onClick={() => {}}
+                        className="ml-auto rounded-md border px-4 py-2 text-sm font-medium text-gray-700"
+                      >
+                        Delegate
+                      </button>
                     </div>
-                    <button
-                      onClick={() => {}}
-                      className="ml-auto rounded-md border px-4 py-2 text-sm font-medium text-gray-700"
-                    >
-                      Delegate
-                    </button>
-                  </div>
+                    <p className="text-gray-400">
+                      Next, decide how much OP should go to each category
+                    </p>
+                  </>
                 )}
               </div>
             </div>

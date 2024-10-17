@@ -122,8 +122,8 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
                     </p>
                   </div>
                 </div>
-                <button onClick={onLockClick} className="py-2 text-gray-500">
-                  {locked ? <LockIcon /> : <UnlockIcon />}
+                <button onClick={onLockClick} className={`rounded-md p-1.5 ${locked ? 'bg-gray-700' : 'bg-transparent'}`}>
+                  {locked ? <LockIcon color="#fff" /> : <UnlockIcon />}
                 </button>
               </div>
             )
