@@ -7,10 +7,10 @@ export const XIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_1162_15217)">
+      <g clipPath="url(#clip0_1162_15217)">
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M14.4455 21L8.89604 13.0901L1.94886 21H-0.990234L7.59209 11.2311L-0.990234 -1H6.55571L11.786 6.45502L18.3393 -1H21.2784L13.0943 8.31648L21.9914 21H14.4455ZM17.7185 18.77H15.7398L3.21811 1.23H5.1971L10.2121 8.25316L11.0793 9.47186L17.7185 18.77Z"
           fill="black"
         />

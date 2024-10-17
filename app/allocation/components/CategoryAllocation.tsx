@@ -27,6 +27,7 @@ interface CategoryAllocationProps extends Category {
 }
 
 const CategoryAllocation: FC<CategoryAllocationProps> = ({
+  id,
   allocatingBudget,
   imageSrc,
   title,
@@ -79,9 +80,11 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
               <ArrowRightIcon color="#05060B" size={24} />
             </Link>
             <p className="text-sm text-gray-400">{description}</p>
-            <p className="w-fit mt-2 rounded-full bg-gray-200 px-2 py-1 text-xs text-gray-700 font-medium">
-              {projectCount} projects
-            </p>
+            {id !== 0 && projectCount && (
+              <p className="w-fit mt-2 rounded-full bg-gray-200 px-2 py-1 text-xs text-gray-700 font-medium">
+                {`${projectCount} project${projectCount > 1 ? "s" : ""}`}
+              </p>
+            )}
           </div>
         </div>
         <div className="border-l pl-4 flex flex-col gap-2 border-gray-200"></div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useActiveWallet } from "thirdweb/react";
 import HeaderRF6 from "../comparison/card/Header-RF6";
 import Modal from "../utils/Modal";
@@ -12,6 +13,8 @@ import { modifyPercentage, RankItem } from "./utils";
 import { ArrowRightIcon } from "@/public/assets/icon-components/ArrowRight";
 import { ArrowLeft2Icon } from "@/public/assets/icon-components/ArrowLeft2";
 import { CustomizedSlider } from "./components/Slider";
+import { categoryIdSlugMap } from "../comparison/utils/helpers";
+import { useCategories } from "./components/hooks/getCategories";
 
 const Categories: Category[] = [
   {
@@ -67,12 +70,17 @@ const ranks: RankItem[] = [
 
 const AllocationPage = () => {
   const wallet = useActiveWallet();
+  const router = useRouter();
+
+  const { data: categories, isLoading } = useCategories();
+  console.log("categories => ", categories);
+
   const [categoryRanking, setCategoryRanking] = useState(ranks);
   const [totalValue, setTotalValue] = useState(2);
   const [percentageError, setPercentageError] = useState<string>();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [allocatingBudget, setAllocatingBudget] = useState(false);
-  const [seletedCategoryId, setSelectedCategoryId] = useState<number | null>(
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
 
@@ -114,7 +122,6 @@ const AllocationPage = () => {
   const handleScoreProjects = (id: RankItem["id"]) => () => {
     setSelectedCategoryId(id);
 
-    console.log("wallet :>> ", wallet);
     if (!wallet) {
       setShowLoginModal(true);
       return;
@@ -124,6 +131,8 @@ const AllocationPage = () => {
       setAllocatingBudget(true);
       return;
     }
+
+    router.push(`/comparison/${categoryIdSlugMap.get(id)}`);
   };
 
   return (
@@ -133,7 +142,10 @@ const AllocationPage = () => {
         onClose={() => setShowLoginModal(false)}
         showCloseButton={true}
       >
-        <EmailLoginModal closeModal={() => setShowLoginModal(false)} selectedCategoryId={seletedCategoryId} />
+        <EmailLoginModal
+          closeModal={() => setShowLoginModal(false)}
+          selectedCategoryId={selectedCategoryId}
+        />
       </Modal>
       <HeaderRF6
         progress={30}
@@ -222,8 +234,7 @@ const AllocationPage = () => {
             </div>
             {allocatingBudget && (
               <span className='className="w-fit h-4 self-end text-primary'>
-                {" "}
-                {percentageError ? `Error: ${percentageError}` : ""}{" "}
+                {percentageError ? `Error: ${percentageError}` : ""}
               </span>
             )}
             {allocatingBudget ? (
