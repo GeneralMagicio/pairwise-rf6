@@ -10,8 +10,7 @@ interface ICategoryRankingResponse
 
 export const getCategoryRankings
   = async (): Promise<ICategoryRankingResponse> => {
-    const res = await axiosInstance.get(`flow/ranking
-	`);
+    const res = await axiosInstance.get('flow/ranking');
 
     return res.data;
   };
