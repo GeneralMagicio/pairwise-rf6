@@ -29,6 +29,8 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
   const [delegates, setDelegateAmount] = useState< IDelegates[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [hasSignedIn, setHasSignedIn] = useState(false);
+
   useEffect(() => {
     if (isOpen && !isConnected) {
       // Establish the relay connection when modal opens
@@ -37,13 +39,16 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
   }, [isOpen, isConnected]);
 
   useEffect(() => {
-    if (isConnected && !isSuccess) {
+    if (isConnected && !isSuccess && !hasSignedIn) {
+      console.log('connected');
       signIn();
+      setHasSignedIn(true);
     }
-  }, [isConnected, signIn]);
+  }, [isConnected, signIn, isSuccess, hasSignedIn]);
 
   useEffect(() => {
     if (data) {
+      console.log('set data');
       setDelegateAmount([
         {
           username: 'username1',
@@ -73,7 +78,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
         <div className="relative flex flex-col items-center space-y-4 p-2 text-center">
           <button
             onClick={onClose}
-            className="absolute right-2 top-2 size-8 rounded-full text-sm text-gray-500 shadow-md hover:bg-gray-200"
+            className="absolute right-2 top-2 size-8 text-sm text-gray-500 hover:bg-gray-200"
             aria-label="Close"
           >
             <span className="flex size-full items-center justify-center">&times;</span>
@@ -86,7 +91,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
           <p className="text-nowrap text-lg font-semibold">Sign In With Farcaster</p>
-          <p className="w-fit text-wrap text-sm text-gray-600">
+          <p className="w-max grow text-wrap text-sm text-gray-600">
             Scan the QR code with your phone or enter the link on your mobile browser
           </p>
           <button

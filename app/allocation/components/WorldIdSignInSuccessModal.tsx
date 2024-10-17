@@ -22,7 +22,7 @@ const WorldIdSignInSuccessModal: React.FC<FarcasterModalProps> = ({
           </div>
         </div>
         <div className="w-full text-center font-semibold text-primary">
-          <div className="text-base ">Your current voting power</div>
+          <div className="text-sm ">You earned a new badge</div>
           <div className="p-3 text-5xl font-bold text-primary">{20000}</div>
         </div>
         <button
