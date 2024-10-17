@@ -22,6 +22,12 @@ export const convertCategoryToLabel = (category: JWTPayload['category']) => {
   return labels[category] || 'OP Stack';
 };
 
+export const categoryIdSlugMap = new Map([
+  [1, 'OP_STACK_RESEARCH_AND_DEVELOPMENT'],
+  [2, 'ETHEREUM_CORE_CONTRIBUTIONS'],
+  [3, 'OP_STACK_TOOLING'],
+]);
+
 export const getCategoryCount = (category: JWTPayload['category']) => {
   const labels = {
     ETHEREUM_CORE_CONTRIBUTIONS: 30,

@@ -1,6 +1,15 @@
-export const LockIcon = () => {
+import { FC } from 'react';
+import { TIconProps } from './types';
+
+export const LockIcon: FC<TIconProps> = ({ color = '#344054', size = 20 }) => {
   return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         d="M14.1673 8.33333V6.66667C14.1673 4.36548 12.3018 2.5 10.0007 2.5C7.69946
       2.5 5.83398 4.36548 5.83398 6.66667V8.33333M10.0007 12.0833V13.75M7.33398 17.5H12.6673C14.0674
@@ -11,12 +20,11 @@ export const LockIcon = () => {
         10.2331 3.33398 10.9332 3.33398 12.3333V13.5C3.33398 14.9001 3.33398 15.6002 3.60647
         16.135C3.84615 16.6054 4.2286 16.9878 4.69901 17.2275C5.23379 17.5 5.93385 17.5 7.33398
         17.5Z"
-        stroke="#344054"
+        stroke={color}
         strokeWidth="1.66667"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>
-
   );
 };
