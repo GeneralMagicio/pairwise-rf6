@@ -44,9 +44,10 @@ export type TOAuthData = {
 
 type TEmailLoginModalProps = {
   closeModal: () => void
+  selectedCategoryId: number | null
 };
 
-const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
+const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalProps) => {
   const [otpData, setOtpData] = useState<TOTPData>({
     email: '',
     emailError: '',
@@ -208,7 +209,7 @@ const EmailLoginModal = ({ closeModal }: TEmailLoginModalProps) => {
   }
 
   if (step === Step.SUCCESS) {
-    return <SuccessModal closeModal={closeModal} />;
+    return <SuccessModal closeModal={closeModal} selectedCategoryId={selectedCategoryId} />;
   }
 };
 

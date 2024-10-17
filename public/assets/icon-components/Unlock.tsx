@@ -1,9 +1,5 @@
 import { FC } from 'react';
-
-type TIconProps = {
-  size?: number
-  color?: string
-};
+import { TIconProps } from './types';
 
 export const UnlockIcon: FC<TIconProps> = ({
   size = 20,
