@@ -55,24 +55,24 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
       </p>
 
       <IDKitWidget
-          app_id={appId}
-          action={actionId}
-          onSuccess={() => {
-            onConnectWorldID();
-          }}
-          handleVerify={handleVerify}
-          verification_level={VerificationLevel.Device}
-        >
-          {({ open }) => (
-            <button
-              onClick={open}
-        className="mb-4 flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] bg-gray-50 px-4 py-2 font-semibold text-gray-700"
+        app_id={appId}
+        action={actionId}
+        onSuccess={() => {
+          onConnectWorldID();
+        }}
+        handleVerify={handleVerify}
+        verification_level={VerificationLevel.Device}
       >
-        <WorldIdIcon />
-        Connect with WorldID
-      </button>
-          )}
-        </IDKitWidget>
+        {({ open }) => (
+          <button
+            onClick={open}
+            className="mb-4 flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] bg-gray-50 px-4 py-2 font-semibold text-gray-700"
+          >
+            <WorldIdIcon />
+            Connect with WorldID
+          </button>
+        )}
+      </IDKitWidget>
 
       <hr className="my-6" />
 

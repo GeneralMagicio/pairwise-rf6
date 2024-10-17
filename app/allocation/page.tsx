@@ -81,7 +81,8 @@ const AllocationPage = () => {
   const [totalValue, setTotalValue] = useState(2);
   const [percentageError, setPercentageError] = useState<string>();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
-  const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal] = useState(false);
+  const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal]
+    = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [allocatingBudget, setAllocatingBudget] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
@@ -159,7 +160,7 @@ const AllocationPage = () => {
         question="Which project had the greatest impact on the OP Stack?"
         isFirstSelection={false}
       />
-              <WorldIdSignInSuccessModal
+      <WorldIdSignInSuccessModal
         isOpen={isWorldIdSignSuccessModal}
         onClose={() => {
           setIsWorldIdSignSuccessModal(false);
@@ -283,22 +284,15 @@ const AllocationPage = () => {
           </div>
           <div className="max-w-[25%]">
             <ConnectBox
-              onConnectFarcaster={() => {}}
+              onConnectFarcaster={() => {
+                setIsOpenFarcasterModal(true);
+              }}
               onConnectTwitter={() => {}}
-              onConnectWorldID={() => {}}
+              onConnectWorldID={() => {
+                setIsWorldIdSignSuccessModal(true);
+              }}
             />
           </div>
-        </div>
-        <div className="w-fit gap-6 rounded-xl p-4">
-          <ConnectBox
-            onConnectFarcaster={() => {
-              setIsOpenFarcasterModal(true);
-            }}
-            onConnectTwitter={() => {}}
-            onConnectWorldID={() => {
-              setIsWorldIdSignSuccessModal(true);
-            }}
-          />
         </div>
       </div>
     </div>
