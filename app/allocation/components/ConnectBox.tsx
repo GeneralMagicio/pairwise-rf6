@@ -5,6 +5,7 @@ import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
 import { XIcon } from '@/public/assets/icon-components/XIcon';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { actionId, appId } from '@/app/lib/constants';
+import { axiosInstance } from '@/app/utils/axiosInstance';
 
 interface ConnectBoxProps {
   onConnectWorldID: () => void
@@ -18,17 +19,9 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectFarcaster,
 }) => {
   const handleVerify = async (proof: ISuccessResult) => {
-    const res = await fetch('/api/verifyWorldCoin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ proof }),
+    await axiosInstance.post('flow/connect/wid', {
+      proof,
     });
-    console.log(res);
-    if (!res.ok) {
-      throw new Error('Verification failed!');
-    }
   };
   return (
     <div className="max-w-md rounded-xl border bg-white p-6">
