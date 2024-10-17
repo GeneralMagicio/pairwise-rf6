@@ -15,6 +15,8 @@ import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { CustomizedSlider } from './components/Slider';
 import { categoryIdSlugMap } from '../comparison/utils/helpers';
 import { useCategories } from './components/hooks/getCategories';
+import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
+import FarcasterModal from './components/FarcasterModal';
 
 const Categories: Category[] = [
   {
@@ -78,6 +80,8 @@ const AllocationPage = () => {
   const [categoryRanking, setCategoryRanking] = useState(ranks);
   const [totalValue, setTotalValue] = useState(2);
   const [percentageError, setPercentageError] = useState<string>();
+  const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
+  const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [allocatingBudget, setAllocatingBudget] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
@@ -154,6 +158,18 @@ const AllocationPage = () => {
         category="category"
         question="Which project had the greatest impact on the OP Stack?"
         isFirstSelection={false}
+      />
+              <WorldIdSignInSuccessModal
+        isOpen={isWorldIdSignSuccessModal}
+        onClose={() => {
+          setIsWorldIdSignSuccessModal(false);
+        }}
+      />
+      <FarcasterModal
+        isOpen={isOpenFarcasterModal}
+        onClose={() => {
+          setIsOpenFarcasterModal(false);
+        }}
       />
       <div className="flex flex-col gap-6 p-16">
         {!allocatingBudget && (
@@ -272,6 +288,17 @@ const AllocationPage = () => {
               onConnectWorldID={() => {}}
             />
           </div>
+        </div>
+        <div className="w-fit gap-6 rounded-xl p-4">
+          <ConnectBox
+            onConnectFarcaster={() => {
+              setIsOpenFarcasterModal(true);
+            }}
+            onConnectTwitter={() => {}}
+            onConnectWorldID={() => {
+              setIsWorldIdSignSuccessModal(true);
+            }}
+          />
         </div>
       </div>
     </div>
