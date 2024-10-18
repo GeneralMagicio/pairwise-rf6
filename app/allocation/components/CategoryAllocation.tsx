@@ -7,13 +7,20 @@ import { useAuth } from '@/app/utils/wallet/AuthProvider';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRightIcon';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
-
+import {
+  CollectionProgressStatus,
+  CollectionProgressStatusEnum,
+} from '@/app/comparison/utils/types';
+import { CheckIcon } from '@/public/assets/icon-components/Check';
+import { UserColabGroupIcon } from '@/public/assets/icon-components/UserColabGroup';
 export interface Category {
   id: number
   imageSrc: string
   title: string
   description: string
   projectCount: number
+  status: CollectionProgressStatus
+  delegations: number
 }
 
 interface CategoryAllocationProps extends Category {
@@ -32,11 +39,13 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   title,
   description,
   projectCount,
+  status,
   allocationPercentage,
+  locked,
+  delegations,
   onDelegate,
   onScore,
   onLockClick,
-  locked,
   onPercentageChange,
 }) => {
   const { isAutoConnecting } = useAuth();
@@ -89,68 +98,137 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
         <div className="flex flex-col gap-2 border-l border-gray-200 pl-4"></div>
       </div>
       <div className="flex w-[24%] items-center justify-center gap-2">
-        {allocatingBudget
-          ? (
-              <div className="flex w-full items-start justify-center gap-6 p-2">
-                <div className="flex flex-col gap-2 text-gray-500">
-                  <div className="flex gap-2 rounded-md border px-6 py-1">
-                    <button
-                      onClick={handleMinus}
-                      className="font-bold text-gray-600"
-                    >
-                      -
-                    </button>
-                    <div className="flex gap-0 rounded bg-white text-dark-500">
-                      <input
-                        onChange={handleInputChange}
-                        ref={inputRef}
-                        className="w-20 bg-gray-50 text-center font-semibold outline-none"
-                        type="number"
-                        defaultValue={allocationPercentage}
-                      />
+        <div className="flex w-4/5 items-start justify-center">
+          {allocatingBudget
+            ? (
+                <div className="flex w-full items-start justify-center gap-6 p-2">
+                  <div className="flex flex-col gap-2 text-gray-500">
+                    <div className="flex gap-2 rounded-md border px-6 py-1">
+                      <button
+                        onClick={handleMinus}
+                        className="font-bold text-gray-600"
+                      >
+                        -
+                      </button>
+                      <div className="flex gap-0 rounded bg-white text-dark-500">
+                        <input
+                          onChange={handleInputChange}
+                          ref={inputRef}
+                          className="w-20 bg-gray-50 text-center font-semibold outline-none"
+                          type="number"
+                          defaultValue={allocationPercentage}
+                        />
+                      </div>
+                      <button
+                        onClick={handlePlus}
+                        className="font-bold text-gray-600"
+                      >
+                        +
+                      </button>
                     </div>
-                    <button
-                      onClick={handlePlus}
-                      className="font-bold text-gray-600"
-                    >
-                      +
-                    </button>
+                    <div className="flex justify-center rounded-md bg-gray-100 px-4 py-0.5 text-sm text-gray-600">
+                      <p className="w-fit text-center text-xs font-medium">
+                        {(allocationPercentage * 100000).toLocaleString() + ' OP'}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex justify-center rounded-md bg-gray-100 px-4 py-0.5 text-sm text-gray-600">
-                    <p className="w-fit text-center text-xs font-medium">
-                      {(allocationPercentage * 100000).toLocaleString() + ' OP'}
-                    </p>
-                  </div>
+                  <button
+                    onClick={onLockClick}
+                    className={`rounded-md p-1.5 ${
+                      locked ? 'bg-gray-700' : 'bg-transparent'
+                    }`}
+                  >
+                    {locked ? <LockIcon color="#fff" /> : <UnlockIcon />}
+                  </button>
                 </div>
-                <button onClick={onLockClick} className={`rounded-md p-1.5 ${locked ? 'bg-gray-700' : 'bg-transparent'}`}>
-                  {locked ? <LockIcon color="#fff" /> : <UnlockIcon />}
-                </button>
-              </div>
-            )
-          : (
-              <>
-                <button
-                  onClick={onScore}
-                  className={`whitespace-nowrap rounded-md px-8 py-2 text-sm font-medium ${
-                    isAutoConnecting
-                      ? 'border bg-gray-300 text-gray-600'
-                      : 'bg-primary text-white'
-                  }`}
-                  disabled={isAutoConnecting}
-                >
-                  Vote
-                </button>
-                <button
-                  onClick={onDelegate}
-                  className={`rounded-md border px-4 py-2 text-sm font-medium ${
-                    isAutoConnecting ? 'bg-gray-300 text-gray-600' : 'text-gray-700'
-                  }`}
-                  disabled={isAutoConnecting}
-                >
-                  Delegate
-                </button>
-              </>
-            )}
+              )
+            : status === CollectionProgressStatusEnum.Pending
+              ? (
+                  <div className="flex w-full flex-col items-center justify-center gap-2">
+                    <div className="flex w-full items-center justify-between">
+                      <button
+                        onClick={onScore}
+                        className={`w-[48%] whitespace-nowrap rounded-md py-3 text-sm font-medium ${
+                          isAutoConnecting
+                            ? 'border bg-gray-300 text-gray-600'
+                            : 'bg-primary text-white'
+                        }`}
+                        disabled={isAutoConnecting}
+                      >
+                        Vote
+                      </button>
+                      <button
+                        onClick={onDelegate}
+                        className={`w-[48%] rounded-md border py-3 text-sm font-medium ${
+                          isAutoConnecting
+                            ? 'bg-gray-300 text-gray-600'
+                            : 'text-gray-700'
+                        }`}
+                        disabled={isAutoConnecting}
+                      >
+                        Delegate
+                      </button>
+                    </div>
+                    {!!delegations && (
+                      <div className="flex w-full items-center justify-center gap-2 rounded-full bg-[#FFE6D5] p-1">
+                        <UserColabGroupIcon />
+                        <p className="text-xs font-medium text-gray-400">
+                          <strong className="text-dark-500">
+                            {delegations > 1
+                              ? delegations + ' people'
+                              : delegations + ' person'}
+                          </strong>
+                          {' '}
+                          delegated to you
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )
+              : status === CollectionProgressStatusEnum.Finished
+                ? (
+                    <div className="flex w-full flex-col items-center justify-center gap-4">
+                      <button className="flex w-full items-center justify-center gap-2 rounded-md border py-3 font-semibold">
+                        Edit
+                      </button>
+                      <div className="flex w-full justify-center gap-2 rounded-xl border border-[#17B26A] bg-[#ECFDF3] py-1">
+                        <p className="text-xs font-medium text-[#17B26A]">Voted</p>
+                        <CheckIcon size={15} />
+                      </div>
+                      <button
+                        onClick={onScore}
+                        className="whitespace-nowrap text-xs text-gray-600 underline"
+                        disabled={isAutoConnecting}
+                      >
+                        View attestation
+                      </button>
+                    </div>
+                  )
+                : (
+                    status === CollectionProgressStatusEnum.Delegated && (
+                      <div className="flex w-full flex-col items-center justify-center gap-4">
+                        <div className="flex w-full items-center justify-center gap-2 rounded-md border border-[#17B26A] bg-[#ECFDF3] py-3">
+                          <CheckIcon />
+                          <p className="font-semibold text-[#17B26A]">Delegated</p>
+                        </div>
+                        <div className="flex w-full justify-center gap-2 rounded-xl bg-gray-100 py-1">
+                          <p className="text-xs font-medium text-gray-400">
+                            You delegated to
+                            {' '}
+                            <strong className="text-dark-500">@username</strong>
+                          </p>
+                        </div>
+                        <button
+                          onClick={onScore}
+                          className="whitespace-nowrap text-xs text-gray-600 underline"
+                          disabled={isAutoConnecting}
+                        >
+                          Revoke
+                        </button>
+                      </div>
+                    )
+                  )}
+        </div>
       </div>
     </div>
   );
