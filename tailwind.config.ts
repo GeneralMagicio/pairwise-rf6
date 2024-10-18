@@ -59,7 +59,8 @@ const config: Config = {
           },
           'ready': {
             bgColor: '#ECFDF3',
-            textColor: '#17B26A',
+            textColor: '#079455',
+            border: '#17B26A',
           },
         },
       },

@@ -9,7 +9,7 @@ export const Checkbox = ({ checked, onChange }: TCheckboxProps) => {
       <label className="relative flex cursor-pointer items-center">
         <input
           type="checkbox"
-          className="peer size-4 cursor-pointer appearance-none rounded border border-slate-300 shadow transition-all checked:border-primary checked:bg-primary hover:shadow-md"
+          className="0 peer size-4 cursor-pointer appearance-none rounded border border-gray-400 shadow transition-all checked:border-primary checked:bg-primary hover:shadow-md"
           checked={checked}
           onChange={onChange}
         />

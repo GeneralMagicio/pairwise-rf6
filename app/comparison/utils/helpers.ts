@@ -28,6 +28,12 @@ export const categoryIdSlugMap = new Map([
   [3, 'OP_STACK_TOOLING'],
 ]);
 
+export const categoryIdTitleMap = new Map([
+  [1, 'OP Stack R&D'],
+  [2, 'Ethereum Core Contributors'],
+  [3, 'OP Stack Tooling'],
+]);
+
 export const getCategoryCount = (category: JWTPayload['category']) => {
   const labels = {
     ETHEREUM_CORE_CONTRIBUTIONS: 30,
