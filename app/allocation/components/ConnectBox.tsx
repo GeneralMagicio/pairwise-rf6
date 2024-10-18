@@ -23,7 +23,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectTwitter,
   onConnectFarcaster,
 }) => {
-  const connected = true; // tempo variable
+  const connected = false; // tempo variable
 
   const handleVerify = async (proof: ISuccessResult) => {
     await axiosInstance.post('flow/connect/wid', {
