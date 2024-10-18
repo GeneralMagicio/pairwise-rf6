@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import '@smastrom/react-rating/style.css';
 import { Inter } from 'next/font/google';
 import AppKitProvider from './utils/wallet/provider';
+import FarcasterProvider from '@/app/utils/FarcasterProvider';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -24,7 +25,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body>
-        <AppKitProvider>{children}</AppKitProvider>
+        <AppKitProvider>
+          <FarcasterProvider>
+            {children}
+          </FarcasterProvider>
+        </AppKitProvider>
         <div id="modal-root"></div>
       </body>
     </html>
