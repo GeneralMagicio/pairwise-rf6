@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import Image from 'next/image';
 import debounce from 'lodash.debounce';
-import { FarcasterUserByFid } from './types';
+import { FarcasterUserByFid, TargetDelegate } from './types';
 import { axiosInstance } from '@/app/utils/axiosInstance';
 
 interface Props {
   categoryName: string
-  categoryId: number
+  handleDelegate: (username: string, target: TargetDelegate) => void
 }
 
 function extractFarcasterUsername(input: string) {
@@ -24,7 +24,7 @@ function extractFarcasterUsername(input: string) {
   return trimmedInput;
 }
 
-export const FarcasterLookup: React.FC<Props> = ({ categoryName, categoryId }) => {
+export const FarcasterLookup: React.FC<Props> = ({ categoryName, handleDelegate }) => {
   const [username, setUsername] = useState('');
   const [isValid, setIsValid] = useState<null | false | FarcasterUserByFid['result']['user']>(null);
 
@@ -33,13 +33,6 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName, categoryId }) =
     const value = e.target.value;
     setUsername(value);
     if (value) checkUsernameValidity(extractFarcasterUsername(value));
-  };
-
-  const handleDelegate = async () => {
-    await axiosInstance.post('flow/delegate/farcaster', {
-      collectionId: categoryId,
-      targetUsername: extractFarcasterUsername(username),
-    });
   };
 
   const checkUsernameValidity = useCallback(debounce(async (username: string) => {
@@ -52,6 +45,13 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName, categoryId }) =
     }
   }
   , 1000), []);
+
+  const onDelegate = () => {
+    if (!isValid) return;
+    handleDelegate(extractFarcasterUsername(username), { displayName: isValid.displayName,
+      profilePicture: isValid.pfp.url,
+      username: isValid.username });
+  };
 
   return (
     <div className="mx-auto flex max-w-[500px] flex-col items-center justify-center gap-2 rounded-lg bg-white px-6 py-8">
@@ -73,7 +73,7 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName, categoryId }) =
         <span className="font-bold"> decision to someone you trust </span>
       </p>
       <p className="mb-4 text-center text-gray-600">
-        Enter username or past profile link to delegate voting power to someone on Farcaster
+        Enter username or paste profile link to delegate voting power to someone on Farcaster
       </p>
       <input
         type="text"
@@ -102,7 +102,7 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName, categoryId }) =
 
           : isValid === false ? <span className="text-primary"> No user found with this username  </span> : null}
       </div>
-      <button onClick={handleDelegate} className={`w-full rounded-md ${isValid ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}  py-2  transition-colors`}>
+      <button onClick={onDelegate} className={`w-full rounded-md ${isValid ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}  py-2  transition-colors`}>
         Delegate
       </button>
     </div>

@@ -7,6 +7,7 @@ interface Props {
   username: string
   displayName: string
   categoryName: string
+  onClose: () => void
 }
 
 const DelegationConfirmation: React.FC<Props> = ({
@@ -14,6 +15,7 @@ const DelegationConfirmation: React.FC<Props> = ({
   username,
   displayName,
   categoryName,
+  onClose,
 }) => {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center rounded-lg bg-white px-6 py-8 shadow-lg">
@@ -69,7 +71,7 @@ const DelegationConfirmation: React.FC<Props> = ({
         Post on Farcaster
       </button>
 
-      <button className="mt-4 w-full text-gray-700 transition-colors duration-200 hover:text-gray-700">
+      <button onClick={onClose} className="mt-4 w-full text-gray-700 transition-colors duration-200 hover:text-gray-700">
         Close
       </button>
     </div>

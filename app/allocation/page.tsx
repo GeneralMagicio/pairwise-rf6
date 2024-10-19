@@ -20,6 +20,11 @@ import { categoryIdSlugMap } from '../comparison/utils/helpers';
 import { useCategories } from './components/hooks/getCategories';
 import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
 import FarcasterModal from './components/FarcasterModal';
+import DelegateModal from '../delegation/DelegationModal';
+import { FarcasterLookup } from '../delegation/farcaster/FarcasterLookup';
+import FarcasterSuccess from '../delegation/farcaster/FarcasterSuccess';
+import { axiosInstance } from '../utils/axiosInstance';
+import { TargetDelegate } from '../delegation/farcaster/types';
 
 const budgetCategory: BudgetCategory = {
   title: 'Budget',
@@ -81,6 +86,13 @@ const ranks: RankItem[] = [
   },
 ];
 
+enum DelegationState {
+  Initial,
+  DelegationMethod,
+  Lookup,
+  Success,
+}
+
 const AllocationPage = () => {
   const wallet = useActiveWallet();
   const router = useRouter();
@@ -99,6 +111,22 @@ const AllocationPage = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
+
+  const [delegationState, setDelegationState] = useState(DelegationState.Initial);
+  const [categoryToDelegate, setCategoryToDelegate] = useState<Category>();
+  const [targetDelegate, setTargetDelegate] = useState<TargetDelegate>();
+
+  const handleDelegate = async (username: string, target: TargetDelegate) => {
+    if (!categoryToDelegate) return;
+
+    await axiosInstance.post('flow/delegate/farcaster', {
+      collectionId: categoryToDelegate.id,
+      targetUsername: username,
+    });
+
+    setTargetDelegate(target);
+    setDelegationState(DelegationState.Success);
+  };
 
   const handleLock = (id: RankItem['id']) => () => {
     try {
@@ -137,6 +165,12 @@ const AllocationPage = () => {
     }
   };
 
+  const resetDelegateState = () => {
+    setCategoryToDelegate(undefined);
+    setDelegationState(DelegationState.Initial);
+    setTargetDelegate(undefined);
+  };
+
   const handleScoreProjects = (id: RankItem['id']) => () => {
     setSelectedCategoryId(id);
 
@@ -150,6 +184,36 @@ const AllocationPage = () => {
 
   return (
     <div>
+      <Modal
+        isOpen={delegationState !== DelegationState.Initial && !!categoryToDelegate}
+        onClose={resetDelegateState}
+        showCloseButton={true}
+      >
+        {delegationState === DelegationState.DelegationMethod && (
+          <DelegateModal
+            categoryName={categoryToDelegate!.title}
+            onFindDelegatesFarcaster={() => { setDelegationState(DelegationState.Lookup); }}
+            onFindDelegatesTwitter={() => {}}
+          />
+        )}
+
+        {delegationState === DelegationState.Lookup && (
+          <FarcasterLookup
+            handleDelegate={handleDelegate}
+            categoryName={categoryToDelegate!.title}
+          />
+        )}
+        {delegationState === DelegationState.Success && targetDelegate && (
+          <FarcasterSuccess
+            categoryName={categoryToDelegate!.title}
+            displayName={targetDelegate.displayName}
+            username={targetDelegate.username}
+            profilePicture={targetDelegate.profilePicture}
+            onClose={resetDelegateState}
+          />
+        )}
+      </Modal>
+
       <Modal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
@@ -265,7 +329,10 @@ const AllocationPage = () => {
                     {...cat}
                     key={cat.title}
                     locked={cat.id === 0 ? true : rank.locked}
-                    onDelegate={() => {}}
+                    onDelegate={() => {
+                      setCategoryToDelegate(cat);
+                      setDelegationState(DelegationState.DelegationMethod);
+                    }}
                     onLockClick={handleLock(cat.id)}
                     allocatingBudget={allocatingBudget}
                     onScore={handleScoreProjects(cat.id)}

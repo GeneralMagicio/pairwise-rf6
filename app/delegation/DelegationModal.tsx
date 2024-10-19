@@ -49,7 +49,7 @@ const DelegateModal: React.FC<Props> = ({
       <div className="space-y-4">
         <button
           onClick={onFindDelegatesFarcaster}
-          className="flex w-full items-center justify-center space-x-2 rounded-lg border-2  py-3 text-white hover:bg-purple-300"
+          className="flex w-full items-center justify-center space-x-2 rounded-lg border-2  py-3 text-white hover:bg-gray-100"
         >
           <WarpcastIcon />
           <span className="text-black">Find delegates on Farcaster</span>
