@@ -13,15 +13,18 @@ export interface IProjectsRankingResponse {
 }
 
 export const getProjectsRankingByCategoryId = async (
-  cid: number
+  cid: number | undefined
 ): Promise<IProjectsRankingResponse> => {
+  if (!cid) {
+    throw new Error('Invalid category id');
+  }
   return (
     await axiosInstance.get(`flow/ranking?cid=${cid}
 `)
   ).data;
 };
 
-export const useProjectsRankingByCategoryId = (cid: number) => {
+export const useProjectsRankingByCategoryId = (cid: number | undefined) => {
   return useQuery({
     queryKey: ['projects-ranking', cid],
     queryFn: () => getProjectsRankingByCategoryId(cid),

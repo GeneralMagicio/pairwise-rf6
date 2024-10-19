@@ -6,7 +6,7 @@ import RankingRow from './components/RankingRow';
 import HeaderRF6 from '../../comparison/card/Header-RF6';
 import Spinner from '@/app/components/Spinner';
 import SearchBar from './components/SearchBar';
-import { categoryIdTitleMap } from '../../comparison/utils/helpers';
+import { categorySlugIdMap, categoryIdTitleMap } from '../../comparison/utils/helpers';
 import { Checkbox } from '@/app/utils/Checkbox';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import NotFoundComponent from '@/app/components/404';
@@ -30,7 +30,7 @@ const votingStatusMap = {
 const RankingPage = () => {
   const params = useParams();
 
-  const category = params ? Number(params.category) : 1;
+  const category = categorySlugIdMap.get((params?.category as string) || '');
 
   const [search, setSearch] = useState<string>('');
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
@@ -51,8 +51,7 @@ const RankingPage = () => {
     }
   };
 
-  if (categoryIdTitleMap.get(category) === undefined)
-    return <NotFoundComponent />;
+  if (!category) return <NotFoundComponent />;
 
   return (
     <div>

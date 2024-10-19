@@ -34,6 +34,12 @@ export const categoryIdTitleMap = new Map([
   [3, 'OP Stack Tooling'],
 ]);
 
+export const categorySlugIdMap = new Map([
+  ['OP_STACK_RESEARCH_AND_DEVELOPMENT', 1],
+  ['ETHEREUM_CORE_CONTRIBUTIONS', 2],
+  ['OP_STACK_TOOLING', 3],
+]);
+
 export const getCategoryCount = (category: JWTPayload['category']) => {
   const labels = {
     ETHEREUM_CORE_CONTRIBUTIONS: 30,
