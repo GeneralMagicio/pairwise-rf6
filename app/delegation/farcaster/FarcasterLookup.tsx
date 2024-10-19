@@ -6,6 +6,7 @@ import { axiosInstance } from '@/app/utils/axiosInstance';
 
 interface Props {
   categoryName: string
+  categoryId: number
 }
 
 function extractFarcasterUsername(input: string) {
@@ -23,7 +24,7 @@ function extractFarcasterUsername(input: string) {
   return trimmedInput;
 }
 
-export const FarcasterLookup: React.FC<Props> = ({ categoryName }) => {
+export const FarcasterLookup: React.FC<Props> = ({ categoryName, categoryId }) => {
   const [username, setUsername] = useState('');
   const [isValid, setIsValid] = useState<null | false | FarcasterUserByFid['result']['user']>(null);
 
@@ -34,9 +35,16 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName }) => {
     if (value) checkUsernameValidity(extractFarcasterUsername(value));
   };
 
+  const handleDelegate = async () => {
+    await axiosInstance.post('flow/delegate/farcaster', {
+      collectionId: categoryId,
+      targetUsername: extractFarcasterUsername(username),
+    });
+  };
+
   const checkUsernameValidity = useCallback(debounce(async (username: string) => {
     try {
-      const { data } = await axiosInstance.get<FarcasterUserByFid>(`http://5.78.53.71:8080/https://client.warpcast.com/v2/user-by-username?username=${username}`);
+      const { data } = await axiosInstance.get<FarcasterUserByFid>(`flow/farcaster/user-by-username?username=${username}`);
       setIsValid(data.result.user);
     }
     catch {
@@ -94,7 +102,7 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName }) => {
 
           : isValid === false ? <span className="text-primary"> No user found with this username  </span> : null}
       </div>
-      <button className={`w-full rounded-md ${isValid ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}  py-2  transition-colors`}>
+      <button onClick={handleDelegate} className={`w-full rounded-md ${isValid ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}  py-2  transition-colors`}>
         Delegate
       </button>
     </div>
