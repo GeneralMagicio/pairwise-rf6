@@ -75,7 +75,6 @@ const RankingPage = () => {
               <p className="text-sm font-normal text-gray-600">
                 OP calculations in this ballot are based on your budget of
                 {' '}
-                {' '}
                 <span className="underline">3,333,333</span>
               </p>
             </div>
