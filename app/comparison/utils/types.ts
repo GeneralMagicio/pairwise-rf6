@@ -776,7 +776,7 @@ export type ProjectMetadata =
     projectCoverImageUrl: string
     socialLinks: {
       website: string[]
-      farcaster: string[]
+      farcaster: null
       twitter: string
       mirror: null
     }
@@ -1090,7 +1090,7 @@ export type ProjectMetadata =
       website: string[]
       farcaster: string[]
       twitter: string
-      mirror: string
+      mirror: null
     }
     team: {
       fid: number
@@ -1379,4 +1379,16 @@ export type CollectionProgressStatus =
   | 'WIP'
   | 'Filtered'
   | 'Filtering'
-  | 'Pending';
+  | 'Pending'
+  | 'Delegated';
+
+export enum CollectionProgressStatusEnum {
+  Attested = 'Attested',
+  Finished = 'Finished',
+  WIPThreshold = 'WIP - Threshold',
+  WIP = 'WIP',
+  Filtered = 'Filtered',
+  Filtering = 'Filtering',
+  Pending = 'Pending',
+  Delegated = 'Delegated',
+}
