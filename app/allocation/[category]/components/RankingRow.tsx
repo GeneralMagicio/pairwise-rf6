@@ -41,7 +41,7 @@ const RankingRow: FC<IRankingRowProps> = ({ project, selected, onSelect }) => {
       </td>
       <td className="w-[50%] pb-8 pl-4 pt-4">
         <p className={`font-medium text-gray-700 ${styles.oneLineClamp}`}>
-          {project.name}
+          {project.project.name}
         </p>
         <p className={`text-sm text-gray-400 ${styles.oneLineClamp}`}>
           {project.project.description}

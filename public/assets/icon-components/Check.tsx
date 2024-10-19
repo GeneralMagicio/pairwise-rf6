@@ -13,9 +13,9 @@ export const CheckIcon: FC<TIconProps> = ({ size = 20, color = '#079455' }) => {
       <path
         d="M16.6663 5L7.49967 14.1667L3.33301 10"
         stroke={color}
-        stroke-width="1.66667"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.66667"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

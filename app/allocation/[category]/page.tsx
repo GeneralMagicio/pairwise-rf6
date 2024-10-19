@@ -11,21 +11,19 @@ import { Checkbox } from '@/app/utils/Checkbox';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import NotFoundComponent from '@/app/components/404';
 import { useProjectsRankingByCategoryId } from '@/app/comparison/utils/data-fetching/ranking';
+import { CheckIcon } from '@/public/assets/icon-components/Check';
 
 enum VotingStatus {
-  IN_PROGRESS,
+  VOTED,
   READY_TO_SUBMIT,
 }
 
 const votingStatusMap = {
-  [VotingStatus.IN_PROGRESS]: {
-    text: 'In progress',
-    styleClass:
-      'bg-voting-in-progress-bgColor text-voting-in-progress-textColor',
+  [VotingStatus.VOTED]: {
+    text: 'Voted',
   },
   [VotingStatus.READY_TO_SUBMIT]: {
     text: 'Ready to submit',
-    styleClass: 'bg-voting-ready-bgColor text-voting-ready-textColor',
   },
 };
 
@@ -76,15 +74,14 @@ const RankingPage = () => {
               </p>
               <p className="text-sm font-normal text-gray-600">
                 OP calculations in this ballot are based on your budget of
+                {' '}
+                {' '}
                 <span className="underline">3,333,333</span>
               </p>
             </div>
-            <div
-              className={`${
-                votingStatusMap[VotingStatus.IN_PROGRESS].styleClass
-              } rounded-2xl px-3 py-0.5`}
-            >
-              {votingStatusMap[VotingStatus.IN_PROGRESS].text}
+            <div className="flex items-center justify-center gap-2 rounded-2xl border border-voting-border bg-voting-bg px-3 py-1 text-xs text-voting-text">
+              {votingStatusMap[VotingStatus.READY_TO_SUBMIT].text}
+              <CheckIcon size={18} />
             </div>
           </div>
           <SearchBar search={search} setSearch={setSearch} />

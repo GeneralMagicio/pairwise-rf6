@@ -52,16 +52,10 @@ const config: Config = {
           active: '#FFD1D5',
           inactive: '#FBFCFE',
         },
-        'voting': {
-          'in-progress': {
-            bgColor: '#FFE0CC',
-            textColor: '#AD3700',
-          },
-          'ready': {
-            bgColor: '#ECFDF3',
-            textColor: '#079455',
-            border: '#17B26A',
-          },
+        'voting': { // voting status badge
+          bg: '#ECFDF3',
+          text: '#079455',
+          border: '#17B26A',
         },
       },
       fontFamily: {
