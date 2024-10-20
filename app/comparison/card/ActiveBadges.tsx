@@ -64,7 +64,7 @@ const ActiveBadges: FC<IActiveBadgesProps> = ({ activeBadges }) => {
         <div
           key={`${badge.type}-${badge.variation}`}
           className={`${styles.badgeContainer}`}
-          style={{ zIndex: activeBadges.length - index }} // Ensure proper stacking
+          style={{ zIndex: index }}
         >
           <Image
             src={getBadgeImage(badge)}

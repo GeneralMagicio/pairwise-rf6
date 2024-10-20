@@ -61,7 +61,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
         <h3 className="mb-2 text-sm font-semibold text-gray-600">
           Your badges
         </h3>
-        <button className="ml-3">
+        <button>
           <ActiveBadges activeBadges={activeBadges} />
         </button>
       </div>
