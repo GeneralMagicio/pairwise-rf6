@@ -11,12 +11,33 @@ import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { actionId, appId } from '@/app/lib/constants';
 import { axiosInstance } from '@/app/utils/axiosInstance';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
+import ActiveBadges, {
+  BadgesEnum,
+  IActiveBadge,
+} from '@/app/comparison/card/ActiveBadges';
 
 interface ConnectBoxProps {
   onConnectWorldID: () => void
   onConnectTwitter: () => void
   onConnectFarcaster: () => void
 }
+
+const activeBadges: IActiveBadge[] = [
+  {
+    type: BadgesEnum.HOLDER,
+    variation: 'whale',
+  },
+  {
+    type: BadgesEnum.DELEGATE,
+    variation: 'whale',
+  },
+  {
+    type: BadgesEnum.BADGE_HOLDER,
+  },
+  {
+    type: BadgesEnum.RECIPIENT,
+  },
+];
 
 const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectWorldID,
@@ -41,12 +62,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
           Your badges
         </h3>
         <button>
-          <Image
-            src="/assets/images/badges.svg"
-            alt="Badges"
-            width={64}
-            height={16}
-          />
+          <ActiveBadges activeBadges={activeBadges} />
         </button>
       </div>
 
