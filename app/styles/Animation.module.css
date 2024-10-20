@@ -41,3 +41,15 @@
   border-radius: 50%;
   animation: rotateBorder 1s linear infinite; /* Continuous rotation */
 }
+
+
+.badgeContainer {
+  margin-left: -10px; /* Adjust this value for overlap */
+  position: relative;
+  transition: transform 0.2s ease-in-out;
+}
+
+.badgeContainer:hover {
+  transform: scale(1.1); /* Optional hover effect */
+  z-index: 10; /* Ensure hovered badge comes to the front */
+}
