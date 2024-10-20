@@ -42,7 +42,7 @@ const badgeImages: Record<BadgesEnum, Record<BadgeVariation, string> | string>
     [BadgesEnum.RECIPIENT]: '/assets/images/badges/recipient.svg',
   };
 
-const getBadgeImage = (badge: IActiveBadge): string => {
+export const getBadgeImage = (badge: IActiveBadge): string => {
   const { type, variation } = badge;
   const image = badgeImages[type];
 
