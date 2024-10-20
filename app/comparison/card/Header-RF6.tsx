@@ -1,14 +1,14 @@
-import React from "react";
-import { ConnectButton } from "@/app/utils/wallet/Connect";
-import { PwLogo } from "@/public/assets/icon-components/PairwiseLogo";
-import { ThinExternalLinkIcon } from "@/public/assets/icon-components/ThinExternalLink";
-import ActiveBadges, { BadgesEnum, IActiveBadge } from "./ActiveBadges";
+import React from 'react';
+import { ConnectButton } from '@/app/utils/wallet/Connect';
+import { PwLogo } from '@/public/assets/icon-components/PairwiseLogo';
+import { ThinExternalLinkIcon } from '@/public/assets/icon-components/ThinExternalLink';
+import ActiveBadges, { BadgesEnum, IActiveBadge } from './ActiveBadges';
 
 interface HeaderProps {
-  progress: number;
-  category: string;
-  question: string;
-  isFirstSelection?: boolean;
+  progress: number
+  category: string
+  question: string
+  isFirstSelection?: boolean
 }
 
 const PAIRWISE_REPORT_URL = `https://github.com/GeneralMagicio/pairwise-rf6/issues/new?
@@ -17,11 +17,11 @@ const PAIRWISE_REPORT_URL = `https://github.com/GeneralMagicio/pairwise-rf6/issu
 const activeBadges: IActiveBadge[] = [
   {
     type: BadgesEnum.HOLDER,
-    variation: "whale",
+    variation: 'whale',
   },
   {
     type: BadgesEnum.DELEGATE,
-    variation: "whale",
+    variation: 'whale',
   },
   {
     type: BadgesEnum.BADGE_HOLDER,
@@ -48,10 +48,9 @@ const HeaderRF6: React.FC<HeaderProps> = ({ isFirstSelection, question }) => {
           </button>
           <ConnectButton />
           <button
-            className="flex mr-8 rounded-lg border border-gray-200 p-2 text-sm justify-center items-center gap-2 font-semibold"
+            className="mr-8 flex items-center justify-center gap-2 rounded-lg border border-gray-200 p-2 text-sm font-semibold"
             onClick={() =>
-              window.open(PAIRWISE_REPORT_URL + question, "_blank")
-            }
+              window.open(PAIRWISE_REPORT_URL + question, '_blank')}
           >
             Report an issue
             <ThinExternalLinkIcon />

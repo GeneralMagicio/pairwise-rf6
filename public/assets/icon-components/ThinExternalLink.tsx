@@ -1,8 +1,8 @@
-import { TIconProps } from "./types";
+import { TIconProps } from './types';
 
 export const ThinExternalLinkIcon = ({
   size = 20,
-  color = "#344054",
+  color = '#344054',
 }: TIconProps) => {
   return (
     <svg
