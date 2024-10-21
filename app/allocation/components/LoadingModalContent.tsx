@@ -15,7 +15,7 @@ const LoadingModalContent: React.FC<ModalProps> = ({ isFarcaster }) => {
           loop={true}
           autoplay={true}
         />
-        <div className="text-lg text-[#05060B]">
+        <div className="text-lg text-dark-900">
           Looking for Voting Power on
           {socialConnectionName}
         </div>

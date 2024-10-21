@@ -5,7 +5,7 @@ import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
 import { XIcon } from '@/public/assets/icon-components/XIcon';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { actionId, appId } from '@/app/lib/constants';
-import { axiosInstance } from '@/app/utils/axiosInstance';
+import { useWorldSignIn } from '@/app/utils/getConnectionStatus';
 
 interface ConnectBoxProps {
   onConnectWorldID: () => void
@@ -18,10 +18,9 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectTwitter,
   onConnectFarcaster,
 }) => {
+  const { mutateAsync: worldIdSignIn } = useWorldSignIn();
   const handleVerify = async (proof: ISuccessResult) => {
-    await axiosInstance.post('flow/connect/wid', {
-      proof,
-    });
+    return (await worldIdSignIn(proof));
   };
   return (
     <div className="max-w-md rounded-xl border bg-white p-6">

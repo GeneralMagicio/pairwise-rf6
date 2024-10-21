@@ -1,23 +1,26 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSignIn, QRCode } from '@farcaster/auth-kit';
 import Image from 'next/image';
 import Modal from '@/app/utils/Modal';
 import LoadingModalContent from './LoadingModalContent';
 import LoadedModalContent from './LoadedModalContent';
-import { axiosInstance } from '@/app/utils/axiosInstance';
-
+import { IUpdateFarcasterProps, useFarcasterSignIn, useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
 interface FarcasterModalProps {
   isOpen: boolean
   onClose: () => void
 }
-interface IDelegates {
-  username: string
-  points: Number
-}
 
 const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
-  // const queryClient = useQueryClient();
+  const { mutateAsync: connectFarcaster } = useFarcasterSignIn();
+  const onSuccessCallback = useCallback(
+    async ({ message, signature, custody }: IUpdateFarcasterProps) => {
+      if (terminate) return;
+      await connectFarcaster({ message, signature, custody });
+      setTerminate(true);
+    }, []);
+  const { isLoading, data: delegates } = useGetDelegationStatus();
+
   const {
     signIn,
     connect,
@@ -27,20 +30,10 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
     data,
     isPolling,
   } = useSignIn({
-    onSuccess: async ({ message, signature, custody }) => {
-      if (terminate) return;
-      setTerminate(true);
-      await axiosInstance.post('/flow/connect/farcaster', {
-        message,
-        signature,
-        address: custody,
-      });
-      // queryClient.refetchQueries({ queryKey: ['connect-status'] });
-    },
+    onSuccess: onSuccessCallback,
   });
-  const [delegates, setDelegateAmount] = useState< IDelegates[] | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
 
+  console.log(delegates);
   const [terminate, setTerminate] = useState(false);
 
   useEffect(() => {
@@ -54,23 +47,6 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
       signIn();
     }
   }, [isOpen, isPolling, isConnected, isSuccess, signIn, terminate]);
-
-  useEffect(() => {
-    if (data) {
-      console.log('set data');
-      setDelegateAmount([
-        {
-          username: 'username1',
-          points: 200,
-        },
-        {
-          username: 'username2',
-          points: 300,
-        },
-      ]);
-      setIsLoading(false);
-    }
-  }, [data]);
 
   const handleCopyLink = async () => {
     try {
@@ -112,7 +88,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
           : (
               <LoadedModalContent
                 isFarcaster
-                numDelegates={delegates?.length ?? 0}
+                numDelegates={delegates?.toYou.budget.length ?? 0}
                 onClose={onClose}
                 displayName={data?.displayName}
                 username={data?.displayName}

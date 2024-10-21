@@ -223,12 +223,6 @@ export const useAuth = () => {
     [chainId, connectedAddress]
   );
 
-  useEffect(() => {
-    if (loggedToPw === LogginToPwBackendState.LoggedIn) {
-      redirectToComparisonPage();
-    }
-  }, [loggedToPw, redirectToComparisonPage]);
-
   // Set up axios interceptors
   useEffect(() => {
     const interceptor = axiosInstance.interceptors.response.use(

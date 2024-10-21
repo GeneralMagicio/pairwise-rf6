@@ -19,6 +19,7 @@ export type BadgeData = {
   delegateAmount?: number
   holderType?: MedalTypes
   delegateType?: MedalTypes
+  worldCoinVerified?: boolean
 };
 
 export const getBadgeMedal = (
@@ -31,6 +32,7 @@ export const getBadgeMedal = (
       ? badges.delegateType
       : undefined;
 };
+
 const getPublicBadges = async () => {
   const { data } = await axiosInstance.get<BadgeData>('/user/badges', {});
   return data;
@@ -41,4 +43,15 @@ export const useGetPublicBadges = () => {
     queryKey: ['publicBadges'],
     queryFn: () => getPublicBadges(),
   });
+};
+
+export const getBadgeAmount = (
+  key: BadgeCardEntryType['0'],
+  badges: BadgeData,
+) => {
+  return key === 'holderPoints'
+    ? badges.holderAmount
+    : key === 'delegatePoints'
+      ? badges.delegateAmount
+      : undefined;
 };

@@ -33,6 +33,7 @@ const config: Config = {
         dark: {
           500: '#05060B',
           600: '#101828',
+          900: '#050608',
         },
         status: {
           border: {

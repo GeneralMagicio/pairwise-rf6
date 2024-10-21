@@ -1,18 +1,27 @@
 'use client';
 
-import React from 'react';
-import { usePathname } from 'next/navigation';
+import React, { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
+import { IDKitWidget, ISuccessResult, VerificationLevel } from '@worldcoin/idkit';
 import Modal from '../Modal';
 import ConnectLoading from './modals/ConnectLoading';
 import NotBadgeHolder from './modals/NotBhModal';
 import SignInWithWallet from './modals/SignInModal';
 import { LogginToPwBackendState, useAuth } from './AuthProvider';
 import NewWalletModal from './modals/NewWalletModal';
+import WorldIdSignInSuccessModal from '@/app/allocation/components/WorldIdSignInSuccessModal';
+import FarcasterModal from '@/app/allocation/components/FarcasterModal';
+import { useWorldSignIn } from '../getConnectionStatus';
+import { actionId, appId } from '@/app/lib/constants';
 
 export default function Modals() {
   const path = usePathname();
+  const router = useRouter();
   const { address } = useAccount();
+  const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
+  const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal]
+    = useState(false);
   const {
     loggedToPw,
     loginInProgress,
@@ -22,12 +31,18 @@ export default function Modals() {
     signOut,
   } = useAuth();
 
+  const { mutateAsync: worldIdSignIn } = useWorldSignIn();
+
+  const handleVerify = async (proof: ISuccessResult) => {
+    return (await worldIdSignIn(proof));
+  };
+
   const notBhOpen
     = loggedToPw === LogginToPwBackendState.LoggedIn
-    && !path?.includes('comparison');
+    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal;
 
   const signInModalOpen
-    = (!!address ?? false) && loggedToPw === LogginToPwBackendState.Error;
+    = (address ?? false) && loggedToPw === LogginToPwBackendState.Error;
 
   const handleNewWalletCancel = () => {
     setLoginAddress({ ...loginAddress, confirmed: true });
@@ -44,9 +59,21 @@ export default function Modals() {
 
   return (
     <>
+      <WorldIdSignInSuccessModal
+        isOpen={isWorldIdSignSuccessModal}
+        onClose={() => {
+          setIsWorldIdSignSuccessModal(false);
+        }}
+      />
+      <FarcasterModal
+        isOpen={isOpenFarcasterModal}
+        onClose={() => {
+          setIsOpenFarcasterModal(false);
+        }}
+      />
       <Modal
         isOpen={
-          loginAddress.value !== address && loginAddress.confirmed === false
+          loginAddress.value !== address || loginAddress.confirmed === false
         }
         onClose={() => {}}
       >
@@ -55,9 +82,37 @@ export default function Modals() {
           onCancel={handleNewWalletCancel}
         />
       </Modal>
-      <Modal isOpen={notBhOpen} onClose={() => {}}>
-        {notBhOpen && <NotBadgeHolder />}
-      </Modal>
+      <IDKitWidget
+        app_id={appId}
+        action={actionId}
+        onSuccess={() => {
+          setIsWorldIdSignSuccessModal(true);
+        }}
+        handleVerify={handleVerify}
+        verification_level={VerificationLevel.Device}
+      >
+        {({ open }) => (
+          <Modal
+            isOpen={notBhOpen}
+            onClose={() => {
+              router.push('/allocation');
+            }}
+          >
+            {notBhOpen
+
+            && (
+              <NotBadgeHolder
+                open={open}
+                onConnectFarcaster={() => {
+                  setIsOpenFarcasterModal(true);
+                }}
+                onConnectTwitter={() => {}}
+              />
+            )}
+          </Modal>
+        )}
+
+      </IDKitWidget>
       <Modal isOpen={signInModalOpen} onClose={() => {}}>
         {signInModalOpen && <SignInWithWallet />}
       </Modal>

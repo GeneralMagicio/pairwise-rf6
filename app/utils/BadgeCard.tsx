@@ -5,8 +5,9 @@ import { MedalTypes } from './getBadges';
 interface BadgeCardProps {
   type: BadgeType
   points: number
-  medal: MedalTypes
+  medal?: MedalTypes
   amount?: number
+  worldCoinVerified?: boolean
 }
 
 export type BadgeCardEntryType = [
@@ -28,6 +29,7 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
   points,
   medal,
   amount,
+  worldCoinVerified,
 }) => {
   const formatAmount = (amount: number | undefined) => {
     if (amount === undefined) return '';
@@ -38,9 +40,9 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
   const handleBadgesImage = () => {
     switch (type) {
       case 'holderPoints':
-        return '/images/badges/holder/' + medal.toLowerCase() + '/128.svg';
+        return '/images/badges/holder/' + medal?.toLowerCase() + '/128.svg';
       case 'delegatePoints':
-        return '/images/badges/delegate/' + medal.toLowerCase() + '/128.svg';
+        return '/images/badges/delegate/' + medal?.toLowerCase() + '/128.svg';
       case 'recipientsPoints':
         return '/images/badges/recipient/128.svg';
       case 'badgeholderPoints':
@@ -53,6 +55,16 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
   const handleBadgeInfo = (amount?: number, points?: number) => {
     switch (type) {
       case 'holderPoints':
+        if (worldCoinVerified) {
+          return (
+            <div>
+              <div className="flex items-center gap-1 text-xs  font-normal leading-4">
+                <p>Verified WorldID</p>
+              </div>
+            </div>
+          );
+        }
+        break;
       case 'delegatePoints':
         return (
           <div>
@@ -91,7 +103,7 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
 
   return (
     <div className="">
-      <div className="mr-4 min-h-full w-[148px] flex-none  flex-col rounded-lg border bg-[#F2F3F8] p-4">
+      <div className="mr-4 h-fit w-[148px] flex-none  flex-col rounded-lg border bg-[#F2F3F8] p-4">
         <Image
           className="mx-auto"
           src={handleBadgesImage()}
@@ -117,8 +129,9 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
             </div>
           )}
         </div>
-        <div className="flex flex-col gap-2">
-          <p className="mt-2 text-xs font-semibold">BADGE INFO</p>
+        <hr />
+        <div className="flex flex-col justify-start gap-2">
+          <p className="mt-2 text-left text-xs font-semibold">BADGE INFO</p>
           {handleBadgeInfo(amount, points)}
         </div>
       </div>
