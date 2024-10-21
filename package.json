@@ -33,6 +33,7 @@
     "react": "^18",
     "react-collapsed": "^4.1.2",
     "react-dom": "^18",
+    "react-number-format": "^5.4.2",
     "react-switch": "^7.0.0",
     "siwe": "^2.3.2",
     "thirdweb": "^5.61.5",

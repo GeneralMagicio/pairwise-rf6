@@ -12,8 +12,8 @@ const config: Config = {
         mxl: ['1,375rem', '2.125rem'],
       },
       colors: {
-        primary: '#FF0420',
-        gray: {
+        'primary': '#FF0420',
+        'gray': {
           50: '#FBFCFE',
           100: '#F2F3F8',
           200: '#E0E2EB',
@@ -25,16 +25,16 @@ const config: Config = {
           placeholder: '#667085',
           border: '#EAECF0',
         },
-        blue: {
+        'blue': {
           foreground: '#3374DB',
           background: '#D6E4FF',
           link: '#3374DB',
         },
-        dark: {
+        'dark': {
           500: '#05060B',
           600: '#101828',
         },
-        status: {
+        'status': {
           border: {
             success: '#75E0A7',
             error: '#FDA29B',
@@ -47,6 +47,15 @@ const config: Config = {
           bg: {
             error: '#FEF3F2',
           },
+        },
+        'category-tab': {
+          active: '#FFD1D5',
+          inactive: '#FBFCFE',
+        },
+        'voting': { // voting status badge
+          bg: '#ECFDF3',
+          text: '#079455',
+          border: '#17B26A',
         },
       },
       fontFamily: {

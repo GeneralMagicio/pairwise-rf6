@@ -27,7 +27,7 @@ export const WalletConnectIcon = () => {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(7.43866e-05 12.5004) scale(24)"
         >
-          <stop stop-color="#5D9DF6" />
+          <stop stopColor="#5D9DF6" />
           <stop offset="1" stopColor="#006FFF" />
         </radialGradient>
       </defs>

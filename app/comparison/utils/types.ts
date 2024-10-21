@@ -776,7 +776,7 @@ export type ProjectMetadata =
     projectCoverImageUrl: string
     socialLinks: {
       website: string[]
-      farcaster: string[]
+      farcaster: null
       twitter: string
       mirror: null
     }
@@ -1090,7 +1090,7 @@ export type ProjectMetadata =
       website: string[]
       farcaster: string[]
       twitter: string
-      mirror: string
+      mirror: null
     }
     team: {
       fid: number
@@ -1355,6 +1355,16 @@ export interface IProject {
   metadata: ProjectMetadata
   createdAt: string
   type: 'collection' | 'project'
+}
+
+export interface IProjectRanking {
+  project: IProject
+  projectId: number
+  rank: number
+  star: number
+  name: string
+  share: number
+  locked: boolean
 }
 
 export type ProjectAiSummary = {
