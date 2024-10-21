@@ -1,17 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import RankingRow from './components/RankingRow';
 import HeaderRF6 from '../../comparison/card/Header-RF6';
 import Spinner from '@/app/components/Spinner';
 import SearchBar from './components/SearchBar';
-import { categorySlugIdMap, categoryIdTitleMap } from '../../comparison/utils/helpers';
+import {
+  categorySlugIdMap,
+  categoryIdTitleMap,
+} from '../../comparison/utils/helpers';
 import { Checkbox } from '@/app/utils/Checkbox';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import NotFoundComponent from '@/app/components/404';
 import { useProjectsRankingByCategoryId } from '@/app/comparison/utils/data-fetching/ranking';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
+import { IProjectRanking } from '@/app/comparison/utils/types';
+import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
+import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
 
 enum VotingStatus {
   VOTED,
@@ -29,14 +35,15 @@ const votingStatusMap = {
 
 const RankingPage = () => {
   const params = useParams();
+  const router = useRouter();
 
   const category = categorySlugIdMap.get((params?.category as string) || '');
 
   const [search, setSearch] = useState<string>('');
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
+  const [projects, setProjects] = useState<IProjectRanking[] | null>(null);
 
   const { data: ranking, isLoading } = useProjectsRankingByCategoryId(category);
-  const projects = ranking?.ranking;
 
   console.log(projects);
 
@@ -50,6 +57,24 @@ const RankingPage = () => {
       setCheckedItems(projects.map(project => project.projectId));
     }
   };
+
+  const handleVote = (id: number, share: number) => {
+    if (!projects) return;
+
+    const updatedProjects = projects.map(project =>
+      project.projectId === id ? { ...project, share } : project
+    );
+
+    setProjects(updatedProjects);
+  };
+
+  const submitVotes = () => {
+    console.log(projects);
+  };
+
+  useEffect(() => {
+    if (ranking) setProjects(ranking?.ranking);
+  }, [ranking]);
 
   if (!category) return <NotFoundComponent />;
 
@@ -135,6 +160,7 @@ const RankingPage = () => {
                               setCheckedItems([...checkedItems, id]);
                             }
                           }}
+                          onVote={handleVote}
                         />
                       ))}
                     </tbody>
@@ -143,6 +169,28 @@ const RankingPage = () => {
               : (
                   <p className="text-center text-gray-400">No projects found</p>
                 )}
+
+          <div className="flex justify-end gap-4">
+            <p className="text-sm font-medium text-primary">
+              Percentages must add up to 100% (remove 5.4% from your ballot)
+            </p>
+          </div>
+          <div className="flex justify-between">
+            <button
+              className="flex items-center justify-center gap-3 rounded-lg border bg-gray-50 px-4 py-2 font-semibold text-gray-700"
+              onClick={() => router.push('/allocation')}
+            >
+              <ArrowLeft2Icon />
+              Back to Categories
+            </button>
+            <button
+              className="flex items-center justify-center gap-3 rounded-lg bg-primary px-10 py-2 font-semibold text-white"
+              onClick={submitVotes}
+            >
+              Submit Vote
+              <ArrowRightIcon size={20} />
+            </button>
+          </div>
         </div>
       </div>
     </div>

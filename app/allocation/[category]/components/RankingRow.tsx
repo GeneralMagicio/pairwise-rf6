@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import Image from 'next/image';
 import { NumericFormat } from 'react-number-format';
 import { IProjectRanking } from '@/app/comparison/utils/types';
@@ -7,17 +7,20 @@ import { ExpandVertical } from '@/public/assets/icon-components/ExpandVertical';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
 import styles from '@/app/styles/Project.module.css';
-// @ts-ignore
 
 interface IRankingRowProps {
   project: IProjectRanking
   selected: boolean
   onSelect: (id: number) => void
+  onVote: (id: number, share: number) => void
 }
 
-const RankingRow: FC<IRankingRowProps> = ({ project, selected, onSelect }) => {
-  const [value, setValue] = useState(0);
-
+const RankingRow: FC<IRankingRowProps> = ({
+  project,
+  selected,
+  onSelect,
+  onVote,
+}) => {
   const handleAllowdValue = (values: any) => {
     const { floatValue } = values;
     return !floatValue || floatValue <= 100;
@@ -61,9 +64,12 @@ const RankingRow: FC<IRankingRowProps> = ({ project, selected, onSelect }) => {
         <NumericFormat
           suffix="%"
           decimalScale={2}
-          value={value}
+          value={project.share * 100}
           onValueChange={(values) => {
-            setValue(values?.floatValue || 0);
+            onVote(
+              project.projectId,
+              values?.floatValue ? values.floatValue / 100 : 0
+            );
           }}
           className="w-24 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-center focus:outline-none focus:ring-1"
           placeholder="0.00%"
