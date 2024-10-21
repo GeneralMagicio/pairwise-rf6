@@ -1,29 +1,30 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/app/utils/axiosInstance';
+import { IProjectRanking } from '@/app/comparison/utils/types';
 
 export interface IProjectsRankingResponse {
-  ranking: { rank: number
-    star: number
-    name: string
-    share: number
-  }[]
+  ranking: IProjectRanking[]
   hasRanking: boolean
   isFinished: boolean
   progress: string
   name: string
   share: number
   id: number
-
 }
 
 export const getProjectsRankingByCategoryId = async (
-  cid: number,
+  cid: number | undefined
 ): Promise<IProjectsRankingResponse> => {
-  return (await axiosInstance.get(`flow/ranking?cid=${cid}
-`)).data;
+  if (!cid) {
+    throw new Error('Invalid category id');
+  }
+  return (
+    await axiosInstance.get(`flow/ranking?cid=${cid}
+`)
+  ).data;
 };
 
-export const useProjectsRankingByCategoryId = (cid: number) => {
+export const useProjectsRankingByCategoryId = (cid: number | undefined) => {
   return useQuery({
     queryKey: ['projects-ranking', cid],
     queryFn: () => getProjectsRankingByCategoryId(cid),

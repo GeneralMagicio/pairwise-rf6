@@ -26,6 +26,8 @@ const budgetCategory: BudgetCategory = {
   description:
     'Choose how much OP should be dedicated to this round, or delegate this decision to someone you trust.',
   imageSrc: '/assets/images/budget-card.svg',
+  status: 'Pending',
+  delegations: 0,
 };
 
 const Categories: Category[] = [
@@ -36,6 +38,8 @@ const Categories: Category[] = [
       'Infrastructure and tooling that powered governance or that made the usage of governance infrastructure more accessible.',
     imageSrc: '/assets/images/category-it.svg',
     projectCount: 20,
+    status: 'Pending',
+    delegations: 2,
   },
   {
     id: 2,
@@ -44,6 +48,8 @@ const Categories: Category[] = [
       'Analytics that enabled accountability, provided transparency into Collective operations, promoted improved performance, or aided in the design of the Collective.',
     imageSrc: '/assets/images/category-gra.svg',
     projectCount: 15,
+    status: 'Delegated',
+    delegations: 1,
   },
   {
     id: 3,
@@ -52,6 +58,8 @@ const Categories: Category[] = [
       'Demonstrated leadership in the Collective, including but not limited to, hosting community calls and/or participation in councils, boards and commissions beyond executing on basic responsibilities outlined in Token House Charters.',
     imageSrc: '/assets/images/category-gl.svg',
     projectCount: 30,
+    status: 'Finished',
+    delegations: 3,
   },
 ];
 
@@ -289,7 +297,10 @@ const AllocationPage = () => {
                   </div>
                 )
               : (
-                  <button className="w-fit self-end rounded-lg bg-primary px-4 py-3 text-white">
+                  <button
+                    className="w-fit self-end rounded-lg bg-primary px-4 py-3 text-white"
+                    onClick={() => {}}
+                  >
                     Update Ballot
                   </button>
                 )}
