@@ -13,6 +13,11 @@ const config: Config = {
       },
       colors: {
         'primary': '#FF0420',
+        'op': {
+          neutral: {
+            300: '#CBD5E0',
+          },
+        },
         'gray': {
           50: '#FBFCFE',
           100: '#F2F3F8',
