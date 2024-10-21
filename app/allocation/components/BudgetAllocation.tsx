@@ -8,6 +8,7 @@ import { CheckIcon } from '@/public/assets/icon-components/Check';
 import { UserColabGroupIcon } from '@/public/assets/icon-components/UserColabGroup';
 
 export interface BudgetCategory {
+  id: number
   imageSrc: string
   title: string
   description: string
