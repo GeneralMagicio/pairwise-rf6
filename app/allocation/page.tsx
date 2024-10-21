@@ -27,6 +27,7 @@ import { axiosInstance } from '../utils/axiosInstance';
 import { TargetDelegate } from '../delegation/farcaster/types';
 
 const budgetCategory: BudgetCategory = {
+  id: -1,
   title: 'Budget',
   description:
     'Choose how much OP should be dedicated to this round, or delegate this decision to someone you trust.',
@@ -113,7 +114,7 @@ const AllocationPage = () => {
   );
 
   const [delegationState, setDelegationState] = useState(DelegationState.Initial);
-  const [categoryToDelegate, setCategoryToDelegate] = useState<Category>();
+  const [categoryToDelegate, setCategoryToDelegate] = useState<Pick<Category, 'id' | 'title'>>();
   const [targetDelegate, setTargetDelegate] = useState<TargetDelegate>();
 
   const handleDelegate = async (username: string, target: TargetDelegate) => {
@@ -316,7 +317,10 @@ const AllocationPage = () => {
               {!allocatingBudget && (
                 <BudgetAllocation
                   {...budgetCategory}
-                  onDelegate={() => {}}
+                  onDelegate={() => {
+                    setCategoryToDelegate(budgetCategory);
+                    setDelegationState(DelegationState.DelegationMethod);
+                  }}
                   onScore={() => {
                     setAllocatingBudget(true);
                   }}
