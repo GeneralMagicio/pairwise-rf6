@@ -10,6 +10,10 @@ interface Props {
   onClose: () => void
 }
 
+const createWarpcastIntention = (categoryName: string, username: string) => {
+  return `https://warpcast.com/~/compose?text=I just delegated on @pairwise for Retro funding 6 ${categoryName} to @${username}. `;
+};
+
 const DelegationConfirmation: React.FC<Props> = ({
   profilePicture,
   username,
@@ -49,16 +53,13 @@ const DelegationConfirmation: React.FC<Props> = ({
       <div className="mb-4 rounded-lg border-2 border-op-neutral-300 p-3 pb-14">
         <p className="text-gray-400">
           I just delegated on
-          {' '}
-          <span className="text-primary">@pairwise</span>
-          {' '}
+          <span className="mx-1 text-primary">@pairwise</span>
           for Retro Funding 6
-          {' '}
-          {categoryName}
-          {' '}
+          <span className="mx-1">
+            {categoryName}
+          </span>
           to
-          {' '}
-          <span className="text-primary">
+          <span className="ml-1 text-primary">
             @
             {username}
           </span>
@@ -66,10 +67,12 @@ const DelegationConfirmation: React.FC<Props> = ({
         </p>
       </div>
 
-      <button className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-op-neutral-300 bg-white py-2 transition-colors duration-200 hover:bg-purple-50">
-        <WarpcastIcon />
-        Post on Farcaster
-      </button>
+      <a className="w-full" target="_blank" href={createWarpcastIntention(categoryName, username)}>
+        <button className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-op-neutral-300 bg-white py-2 transition-colors duration-200 hover:bg-purple-50">
+          <WarpcastIcon />
+          Post on Farcaster
+        </button>
+      </a>
 
       <button onClick={onClose} className="mt-4 w-full text-gray-700 transition-colors duration-200 hover:text-gray-700">
         Close
