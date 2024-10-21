@@ -10,7 +10,6 @@ interface Props {
 
 const DelegateModal: React.FC<Props> = ({
   categoryName,
-  onFindDelegatesTwitter,
   onFindDelegatesFarcaster,
 }) => {
   return (
