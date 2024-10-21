@@ -10,7 +10,6 @@ import { XIcon } from '@/public/assets/icon-components/XIcon';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { actionId, appId } from '@/app/lib/constants';
 import { useWorldSignIn } from '@/app/utils/getConnectionStatus';
-import { axiosInstance } from '@/app/utils/axiosInstance';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 import ActiveBadges, {
   BadgesEnum,

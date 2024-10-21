@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
-import { useAuth } from '../AuthProvider';
+import { useRouter } from 'next/navigation';
 import { shortenWalletAddress } from '../ConnectedButton';
 import { BadgeData, getBadgeAmount, getBadgeMedal, useGetPublicBadges } from '../../getBadges';
 import BadgeCard, { BadgeCardEntryType } from '../../BadgeCard';
@@ -15,9 +15,8 @@ interface SignedModalProps {
   open: () => void
 }
 const NotBadgeHolder: React.FC<SignedModalProps> = (
-  { onConnectFarcaster, onConnectTwitter }
+  { onConnectFarcaster, onConnectTwitter, open }
 ) => {
-  const { redirectToComparisonPage } = useAuth();
   const { address } = useAccount();
   const { data: badges } = useGetPublicBadges();
 
@@ -53,15 +52,16 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
       );
     });
   }, [badges]);
+  const router = useRouter();
   return (
-    <div className="relative flex flex-col items-center justify-center gap-6 rounded-lg bg-white bg-social-gradient px-24 py-14 text-center">
+    <div className="relative flex flex-col items-center justify-center gap-6 rounded-lg bg-white bg-social-gradient px-24 py-8 text-center">
       <h2 className="w-fit text-wrap text-4xl font-bold">Welcome to the Pairwise voting for "Retro Funding 6"</h2>
       {badges && Object.keys(badges).length > 0
         ? (
             <div className="items-between flex flex-col justify-center">
               <div className="flex flex-col gap-2 text-base">
 
-                <h2 className="w-full pb-2 text-lg font-semibold text-gray-700">
+                <h2 className="w-full text-lg font-semibold text-gray-700">
                   Your voting power
                 </h2>
                 <div className="text-gray-400">{address ? shortenWalletAddress(address) : null}</div>
@@ -81,7 +81,7 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
 
       <div className="flex w-full flex-col items-center justify-start gap-4">
         <div className="justify-cneter flex flex-col items-center gap-2">
-          <div className="text-2xl text-dark-900">Claim more voting power!</div>
+          <div className="text-2xl font-semibold text-dark-900">Claim more voting power!</div>
           <div className="text-center text-sm text-gray-400">
             <div>Check who delegated their voting power to you.</div>
             <div>Connects other accounts to claim more.</div>
@@ -89,24 +89,22 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
         </div>
         <div className="flex w-full flex-col justify-start gap-2">
 
-          <div>
-            <button
-              onClick={() => {
-                open();
-              }}
-              className="mb-4 flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] bg-gray-50 px-4 py-2 font-semibold text-gray-700"
-            >
-              <WorldIdIcon />
-              Connect with WorldID
-            </button>
-            <button
-              onClick={onConnectTwitter}
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
-            >
-              <XIcon />
-              Connect with X (Twitter)
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              open();
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] bg-gray-50 px-4 py-2 font-semibold text-gray-700"
+          >
+            <WorldIdIcon />
+            Connect with WorldID
+          </button>
+          <button
+            onClick={onConnectTwitter}
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
+          >
+            <XIcon />
+            Connect with X (Twitter)
+          </button>
           <div>
             <button
               onClick={onConnectFarcaster}
@@ -118,7 +116,7 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
           </div>
           <button
             onClick={() => {
-              redirectToComparisonPage();
+              router.push('/allocation');
             }}
             className="w-3/5 rounded-md bg-primary px-4
               py-2 text-white hover:bg-red-600 "
