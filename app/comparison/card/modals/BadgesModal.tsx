@@ -1,6 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-import { IActiveBadge, getBadgeImage } from '../ActiveBadges';
+import { BadgesEnum, IActiveBadge, getBadgeImage } from '../ActiveBadges';
+import { useGetPublicBadges } from '@/app/utils/getBadges';
+import { formatAmount } from '../GrantBox';
 
 interface BadgesModalProps {
   badges: IActiveBadge[]
@@ -14,13 +16,80 @@ const badgeNameNap: Record<string, string> = {
 };
 
 const BadgesModal = ({ badges }: BadgesModalProps) => {
+  const { data: allBadges } = useGetPublicBadges();
+
+  const handleBadgeInfo = (badge: IActiveBadge) => {
+    let amount: number | undefined = undefined;
+    let points: number | undefined = undefined;
+
+    switch (badge.type) {
+      case BadgesEnum.HOLDER:
+        amount = allBadges?.holderAmount;
+        points = allBadges?.holderPoints;
+        break;
+      case BadgesEnum.DELEGATE:
+        amount = allBadges?.delegateAmount;
+        points = allBadges?.delegatePoints;
+        break;
+      default:
+        amount = undefined;
+        points = undefined;
+    }
+    switch (badge.type) {
+      case BadgesEnum.HOLDER:
+        if (allBadges?.worldCoinVerified) {
+          return (
+            <div>
+              <div className="flex items-center gap-1 text-xs  font-normal leading-4">
+                <p>Verified WorldID</p>
+              </div>
+            </div>
+          );
+        }
+        // eslint-disable-next-line no-fallthrough
+      case BadgesEnum.DELEGATE:
+        return (
+          <div>
+            <div className="mb-2 flex items-center gap-2 text-sm">
+              <Image
+                src="/images/tokens/op.png"
+                width={16}
+                height={16}
+                alt="token"
+                className="size-4"
+              />
+              <p className="text-xs font-normal leading-4">
+                {amount && formatAmount(amount.toString())}
+              </p>
+            </div>
+            <div className="flex items-center gap-1 text-xs  font-normal leading-4">
+              <p>Weight</p>
+              <p className="text-primary">{points ?? 0}</p>
+            </div>
+          </div>
+        );
+      case BadgesEnum.BADGE_HOLDER:
+      case BadgesEnum.RECIPIENT:
+        return (
+          <div>
+            <div className="flex items-center gap-2 text-xs font-normal leading-4">
+              <p>1 Address</p>
+              <p className="text-primary">1 Vote</p>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-4 bg-conflict-loading bg-no-repeat px-6 py-12">
       <h2 className="text-2xl font-semibold text-dark-500">Your Badges</h2>
       <p className="text-gray-400">
         These are the badges associated with your wallet
       </p>
-      <div className="w-fll mt-4 grid grid-cols-4 gap-2">
+      <div className="m-auto mt-4 grid w-full grid-cols-4 gap-2">
         {badges.map(badge => (
           <div
             key={`${badge.type}-${badge.variation}`}
@@ -57,7 +126,7 @@ const BadgesModal = ({ badges }: BadgesModalProps) => {
                 <p className="font-semibold uppercase text-dark-500">
                   Badge info
                 </p>
-                <p className="text-gray-600">Recipient in Round 4</p>
+                {handleBadgeInfo(badge)}
               </div>
             </div>
           </div>

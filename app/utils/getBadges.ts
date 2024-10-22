@@ -5,10 +5,10 @@ import { BadgeCardEntryType } from './BadgeCard';
 export type MedalTypes =
   | 'Bronze'
   | 'Diamond'
-  | 'Platnium'
+  | 'Platinum'
   | 'Gold'
   | 'Silver'
-  | 'WHALE';
+  | 'Whale';
 
 export type BadgeData = {
   holderPoints?: number

@@ -23,7 +23,7 @@ interface ICollection {
 }
 export interface ISocialDelegateResponse {
   fromYou?: {
-    budget: IDelegateMetadata
+    budget: IDelegateMetadata | null
     collections: ICollection[]
   }
   toYou?: {
