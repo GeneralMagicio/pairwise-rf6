@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from './axiosInstance';
+import { BadgeCardEntryType } from './BadgeCard';
 
 export type MedalTypes =
   | 'Bronze'
@@ -18,18 +19,7 @@ export type BadgeData = {
   delegateAmount?: number
   holderType?: MedalTypes
   delegateType?: MedalTypes
-};
-
-export type BadgeCardEntryType = [
-  key: keyof typeof badgeTypeMapping,
-  value: number,
-];
-
-export const badgeTypeMapping = {
-  holderPoints: 'Holder',
-  delegatePoints: 'Delegate',
-  recipientsPoints: 'Recipient',
-  badgeholderPoints: 'Badgeholder',
+  worldCoinVerified?: boolean
 };
 
 export const getBadgeMedal = (
@@ -42,6 +32,7 @@ export const getBadgeMedal = (
       ? badges.delegateType
       : undefined;
 };
+
 const getPublicBadges = async () => {
   const { data } = await axiosInstance.get<BadgeData>('/user/badges', {});
   return data;
@@ -52,4 +43,15 @@ export const useGetPublicBadges = () => {
     queryKey: ['publicBadges'],
     queryFn: () => getPublicBadges(),
   });
+};
+
+export const getBadgeAmount = (
+  key: BadgeCardEntryType['0'],
+  badges: BadgeData,
+) => {
+  return key === 'holderPoints'
+    ? badges.holderAmount
+    : key === 'delegatePoints'
+      ? badges.delegateAmount
+      : undefined;
 };
