@@ -81,6 +81,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoginAddress,
         isAutoConnecting,
         setIsAutoConnecting,
+
       }}
     >
       {children}
@@ -108,7 +109,7 @@ export const useAuth = () => {
   const prevAddress = usePrevious(connectedAddress);
   const { signMessageAsync } = useSignMessage();
   const { disconnectAsync } = useDisconnect();
-
+  const [showBhModal, setShowBhModal] = useState(false);
   const router = useRouter();
   const path = usePathname();
   const { connect } = useConnect();
@@ -164,9 +165,14 @@ export const useAuth = () => {
     const validToken = await isLoggedIn();
     if (validToken) {
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
+      if (!showBhModal)
+        redirectToComparisonPage();
     }
-    else setLoggedToPw(LogginToPwBackendState.Error);
-  }, [loginAddress.value]);
+    else {
+      setShowBhModal(true);
+      setLoggedToPw(LogginToPwBackendState.Error);
+    }
+  }, [loginAddress.value, redirectToComparisonPage, showBhModal, setShowBhModal]);
 
   useEffect(() => {
     checkLoggedInToPw();
@@ -290,7 +296,8 @@ export const useAuth = () => {
     setLoginAddress,
     redirectToComparisonPage,
     isAutoConnecting,
-    // setShowBhModal,
+    showBhModal,
+    setShowBhModal,
     doLoginFlow,
   };
 };

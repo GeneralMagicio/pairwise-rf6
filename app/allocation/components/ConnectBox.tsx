@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import {
   IDKitWidget,
@@ -16,6 +16,7 @@ import ActiveBadges, {
   BadgesEnum,
   IActiveBadge,
 } from '@/app/comparison/card/ActiveBadges';
+import { useGetPublicBadges } from '@/app/utils/getBadges';
 
 interface ConnectBoxProps {
   onConnectWorldID: () => void
@@ -23,28 +24,45 @@ interface ConnectBoxProps {
   onConnectFarcaster: () => void
 }
 
-const activeBadges: IActiveBadge[] = [
-  {
-    type: BadgesEnum.HOLDER,
-    variation: 'whale',
-  },
-  {
-    type: BadgesEnum.DELEGATE,
-    variation: 'whale',
-  },
-  {
-    type: BadgesEnum.BADGE_HOLDER,
-  },
-  {
-    type: BadgesEnum.RECIPIENT,
-  },
-];
-
 const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectWorldID,
   onConnectTwitter,
   onConnectFarcaster,
 }) => {
+  const { data: badges } = useGetPublicBadges();
+  const activeBadges = useMemo(() => {
+    if (!badges) return [];
+    const {
+      recipientsPoints,
+      badgeholderPoints,
+      holderType,
+      delegateType,
+    } = badges;
+    const activeBadgesArray: IActiveBadge[] = [];
+    if (holderType) {
+      activeBadgesArray.push({
+        type: BadgesEnum.HOLDER,
+        variation: holderType,
+      });
+    }
+    if (delegateType) {
+      activeBadgesArray.push({
+        type: BadgesEnum.DELEGATE,
+        variation: delegateType,
+      });
+    }
+    if (badgeholderPoints) {
+      activeBadgesArray.push({
+        type: BadgesEnum.BADGE_HOLDER,
+      });
+    }
+    if (recipientsPoints) {
+      activeBadgesArray.push({
+        type: BadgesEnum.RECIPIENT,
+      });
+    }
+    return activeBadgesArray;
+  }, [badges]);
   const queryClient = useQueryClient();
   const refresh = useCallback(() => {
     queryClient.refetchQueries({ queryKey: ['connect-status'] });

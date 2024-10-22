@@ -29,6 +29,8 @@ export default function Modals() {
     setLoginAddress,
     doLoginFlow,
     signOut,
+    showBhModal,
+    setShowBhModal,
   } = useAuth();
 
   const { open: isOpen } = useIDKit();
@@ -41,7 +43,7 @@ export default function Modals() {
 
   const notBhOpen
     = loggedToPw === LogginToPwBackendState.LoggedIn
-    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen;
+    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && showBhModal;
 
   const signInModalOpen
     = !!address && loggedToPw === LogginToPwBackendState.Error;
@@ -61,67 +63,72 @@ export default function Modals() {
 
   return (
 
-    <IDKitWidget
-      app_id={appId}
-      action={actionId}
-      onSuccess={() => {
-        setIsWorldIdSignSuccessModal(true);
-      }}
-      handleVerify={handleVerify}
-      verification_level={VerificationLevel.Device}
-    >
-      {({ open }) => (
-        <>
-          <WorldIdSignInSuccessModal
-            isOpen={isWorldIdSignSuccessModal}
-            onClose={() => {
-              setIsWorldIdSignSuccessModal(false);
-            }}
-          />
-          <FarcasterModal
-            isOpen={isOpenFarcasterModal}
-            onClose={() => {
-              setIsOpenFarcasterModal(false);
-            }}
-          />
-          <Modal
-            isOpen={
-              !!loginAddress.value && !!address && (loginAddress.value !== address || loginAddress.confirmed === false)
-            }
-            onClose={() => {}}
-          >
-            <NewWalletModal
-              onSignIn={handleNewWalletSignIn}
-              onCancel={handleNewWalletCancel}
-            />
-          </Modal>
-          <Modal
-            isOpen={notBhOpen}
-            onClose={() => {
-              router.push('/allocation');
-            }}
-          >
-            {notBhOpen
-            && (
-              <NotBadgeHolder
-                open={() => {
-                  open();
-                }}
-                onConnectFarcaster={() => {
-                  setIsOpenFarcasterModal(true);
-                }}
-                onConnectTwitter={() => {}}
-              />
-            )}
-          </Modal>
-          <Modal isOpen={signInModalOpen} onClose={() => {}}>
-            {signInModalOpen && <SignInWithWallet />}
-          </Modal>
-          <Modal isOpen={loginInProgress || false} onClose={() => {}}>
-            {loginInProgress && <ConnectLoading />}
-          </Modal>
-        </>
-      )}
-    </IDKitWidget>
+    <>
+
+      <WorldIdSignInSuccessModal
+        isOpen={isWorldIdSignSuccessModal}
+        onClose={() => {
+          setIsWorldIdSignSuccessModal(false);
+        }}
+      />
+      <IDKitWidget
+        app_id={appId}
+        action={actionId}
+        onSuccess={() => {
+          setIsWorldIdSignSuccessModal(true);
+        }}
+        handleVerify={handleVerify}
+        verification_level={VerificationLevel.Device}
+      >
+        {({ open }) => (
+          <>
+            <Modal
+              isOpen={notBhOpen}
+              onClose={() => {
+                router.push('/allocation');
+              }}
+            >
+              {notBhOpen
+              && (
+                <NotBadgeHolder
+                  open={() => {
+                    open();
+                  }}
+                  onConnectFarcaster={() => {
+                    setIsOpenFarcasterModal(true);
+                    setShowBhModal(false);
+                  }}
+                  onConnectTwitter={() => {}}
+                />
+              )}
+            </Modal>
+          </>
+        )}
+      </IDKitWidget>
+      <FarcasterModal
+        isOpen={isOpenFarcasterModal}
+        onClose={() => {
+          setIsOpenFarcasterModal(false);
+        }}
+      />
+      <Modal
+        isOpen={
+          loginAddress.value !== address || loginAddress.confirmed === false
+        }
+        onClose={() => {}}
+      >
+        <NewWalletModal
+          onSignIn={handleNewWalletSignIn}
+          onCancel={handleNewWalletCancel}
+        />
+      </Modal>
+
+      <Modal isOpen={signInModalOpen} onClose={() => {}}>
+        {signInModalOpen && <SignInWithWallet />}
+      </Modal>
+      <Modal isOpen={loginInProgress || false} onClose={() => {}}>
+        {loginInProgress && <ConnectLoading />}
+      </Modal>
+    </>
   );
 }

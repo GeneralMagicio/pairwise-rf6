@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useDisconnect } from 'wagmi';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
 import { PwLogo } from '@/public/assets/icon-components/PairwiseLogo';
@@ -10,6 +10,7 @@ import Dropdown from './DropDown';
 import { shortenWalletAddress } from '@/app/comparison/utils/helpers';
 import { useAuth } from '@/app/utils/wallet/AuthProvider';
 import { PowerIcon } from '@/public/assets/icon-components/Power';
+import { useGetPublicBadges } from '@/app/utils/getBadges';
 
 interface HeaderProps {
   progress?: number
@@ -21,23 +22,6 @@ interface HeaderProps {
 const PAIRWISE_REPORT_URL
   = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
 
-const activeBadges: IActiveBadge[] = [
-  {
-    type: BadgesEnum.HOLDER,
-    variation: 'whale',
-  },
-  {
-    type: BadgesEnum.DELEGATE,
-    variation: 'whale',
-  },
-  {
-    type: BadgesEnum.BADGE_HOLDER,
-  },
-  {
-    type: BadgesEnum.RECIPIENT,
-  },
-];
-
 const HeaderRF6: React.FC<HeaderProps> = ({
   progress,
   category,
@@ -46,9 +30,44 @@ const HeaderRF6: React.FC<HeaderProps> = ({
 }) => {
   const { disconnectAsync } = useDisconnect();
   const { signOut, loginAddress } = useAuth();
+  const { data: badges } = useGetPublicBadges();
 
   const [isBadgesModalOpen, setIsBadgesModalOpen] = React.useState(false);
   const [isBarFixed, setIsBarFixed] = useState(false);
+
+  const activeBadges = useMemo(() => {
+    if (!badges) return [];
+    const {
+      recipientsPoints,
+      badgeholderPoints,
+      holderType,
+      delegateType,
+    } = badges;
+    const activeBadgesArray: IActiveBadge[] = [];
+    if (holderType) {
+      activeBadgesArray.push({
+        type: BadgesEnum.HOLDER,
+        variation: holderType,
+      });
+    }
+    if (delegateType) {
+      activeBadgesArray.push({
+        type: BadgesEnum.DELEGATE,
+        variation: delegateType,
+      });
+    }
+    if (badgeholderPoints) {
+      activeBadgesArray.push({
+        type: BadgesEnum.BADGE_HOLDER,
+      });
+    }
+    if (recipientsPoints) {
+      activeBadgesArray.push({
+        type: BadgesEnum.RECIPIENT,
+      });
+    }
+    return activeBadgesArray;
+  }, [badges]);
 
   useEffect(() => {
     const handleScroll = () => {

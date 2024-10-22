@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import Image from 'next/image';
 import styles from '../../styles/Animation.module.css';
+import { MedalTypes } from '@/app/utils/getBadges';
 
 export enum BadgesEnum {
   HOLDER = 'holder',
@@ -9,7 +10,7 @@ export enum BadgesEnum {
   RECIPIENT = 'recipient',
 }
 
-type BadgeVariation = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'whale';
+type BadgeVariation = MedalTypes;
 
 export interface IActiveBadge {
   type: BadgesEnum
@@ -23,20 +24,20 @@ interface IActiveBadgesProps {
 const badgeImages: Record<BadgesEnum, Record<BadgeVariation, string> | string>
   = {
     [BadgesEnum.HOLDER]: {
-      bronze: '/assets/images/badges/holder_bronze.svg',
-      silver: '/assets/images/badges/holder_silver.svg',
-      gold: '/assets/images/badges/holder_gold.svg',
-      platinum: '/assets/images/badges/holder_platinum.svg',
-      diamond: '/assets/images/badges/holder_diamond.svg',
-      whale: '/assets/images/badges/holder_whale.svg',
+      Bronze: '/assets/images/badges/holder_bronze.svg',
+      Silver: '/assets/images/badges/holder_silver.svg',
+      Gold: '/assets/images/badges/holder_gold.svg',
+      Platinum: '/assets/images/badges/holder_platinum.svg',
+      Diamond: '/assets/images/badges/holder_diamond.svg',
+      Whale: '/assets/images/badges/holder_whale.svg',
     },
     [BadgesEnum.DELEGATE]: {
-      bronze: '/assets/images/badges/delegate_bronze.svg',
-      silver: '/assets/images/badges/delegate_silver.svg',
-      gold: '/assets/images/badges/delegate_gold.svg',
-      platinum: '/assets/images/badges/delegate_platinum.svg',
-      diamond: '/assets/images/badges/delegate_diamond.svg',
-      whale: '/assets/images/badges/delegate_whale.svg',
+      Bronze: '/assets/images/badges/delegate_bronze.svg',
+      Silver: '/assets/images/badges/delegate_silver.svg',
+      Gold: '/assets/images/badges/delegate_gold.svg',
+      Platinum: '/assets/images/badges/delegate_platinum.svg',
+      Diamond: '/assets/images/badges/delegate_diamond.svg',
+      Whale: '/assets/images/badges/delegate_whale.svg',
     },
     [BadgesEnum.BADGE_HOLDER]: '/assets/images/badges/badgeholder.svg',
     [BadgesEnum.RECIPIENT]: '/assets/images/badges/recipient.svg',
