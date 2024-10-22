@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, ReactNode } from 'react';
+import React, { useState, useRef, useEffect, ReactNode } from 'react';
 
 interface DropdownProps {
   children: ReactNode
