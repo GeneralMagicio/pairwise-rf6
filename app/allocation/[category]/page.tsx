@@ -81,7 +81,7 @@ const RankingPage = () => {
   return (
     <div>
       <HeaderRF6 />
-      <div className="flex flex-col justify-between gap-4 px-72 py-16">
+      <div className="flex flex-col justify-between gap-4 px-6 py-16 lg:px-20 xl:px-52 2xl:px-72">
         <p className="mb-4 text-2xl font-semibold text-gray-700">
           Edit your votes
         </p>
