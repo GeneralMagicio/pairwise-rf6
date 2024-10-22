@@ -64,7 +64,7 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
             </div>
           );
         }
-        break;
+        // eslint-disable-next-line no-fallthrough
       case 'delegatePoints':
         return (
           <div>
