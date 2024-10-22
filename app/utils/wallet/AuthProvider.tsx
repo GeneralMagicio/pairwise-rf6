@@ -7,17 +7,18 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useAccount, useSignMessage } from 'wagmi';
+import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import { usePathname, useRouter } from 'next/navigation';
 import { WalletId, createWallet } from 'thirdweb/wallets';
 import { useConnect } from 'thirdweb/react';
+import { AxiosError } from 'axios';
 import {
   getMessageAndSignature,
   isLoggedIn,
   loginToPwBackend,
   logoutFromPwBackend,
 } from './pw-login';
-import { axiosInstance } from '../axiosInstance';
+import { API_URL, axiosInstance } from '../axiosInstance';
 import { usePrevious } from '../methods';
 import StorageLabel from '@/app/lib/localStorage';
 import { client, smartWalletConfig } from './provider';
@@ -106,6 +107,7 @@ export const useAuth = () => {
   const { address: connectedAddress, chainId } = useAccount();
   const prevAddress = usePrevious(connectedAddress);
   const { signMessageAsync } = useSignMessage();
+  const { disconnectAsync } = useDisconnect();
 
   const router = useRouter();
   const path = usePathname();
@@ -229,9 +231,13 @@ export const useAuth = () => {
       function (response) {
         return response;
       },
-      async function (error) {
+      async function (error: AxiosError) {
         if (error.response && error.response.status === 401) {
-          signOut();
+          // check the base url to prevent signing out when getting 401 from other origins
+          if (error?.config?.baseURL?.includes(API_URL)) {
+            await disconnectAsync();
+            signOut();
+          }
         }
         return Promise.reject(error);
       }
