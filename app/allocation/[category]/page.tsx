@@ -13,7 +13,11 @@ import {
 import { Checkbox } from '@/app/utils/Checkbox';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import NotFoundComponent from '@/app/components/404';
-import { useProjectsRankingByCategoryId } from '@/app/comparison/utils/data-fetching/ranking';
+import {
+  useProjectsRankingByCategoryId,
+  useUpdateProjectRanking,
+  IProjectRankingObj,
+} from '@/app/comparison/utils/data-fetching/ranking';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 import { IProjectRanking } from '@/app/comparison/utils/types';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
@@ -42,8 +46,14 @@ const RankingPage = () => {
   const [search, setSearch] = useState<string>('');
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [projects, setProjects] = useState<IProjectRanking[] | null>(null);
+  const [rankingArray, setRankingArray] = useState<IProjectRankingObj[]>([]);
+  const [totalShareError, setTotalShareError] = useState<string | null>(null);
 
   const { data: ranking, isLoading } = useProjectsRankingByCategoryId(category);
+  const { mutate: updateProjectRanking } = useUpdateProjectRanking({
+    cid: category,
+    ranking: rankingArray,
+  });
 
   console.log(projects);
 
@@ -69,7 +79,39 @@ const RankingPage = () => {
   };
 
   const submitVotes = () => {
-    console.log(projects);
+    if (!projects) return;
+
+    const totalShare = projects.reduce(
+      (acc, project) => acc + project.share * 100,
+      0
+    );
+
+    if (totalShare !== 100) {
+      if (totalShare > 100) {
+        setTotalShareError(
+          `Percentages must add up to 100% (remove ${
+            totalShare - 100
+          }% from your ballot)`
+        );
+      }
+      else {
+        setTotalShareError(
+          `Percentages must add up to 100% (add ${
+            100 - totalShare
+          }% to your ballot)`
+        );
+      }
+      return;
+    }
+
+    const rankingArray = projects.map(project => ({
+      id: project.projectId,
+      share: project.share,
+    }));
+
+    setRankingArray(rankingArray);
+
+    updateProjectRanking();
   };
 
   useEffect(() => {
@@ -165,11 +207,13 @@ const RankingPage = () => {
                   <p className="text-center text-gray-400">No projects found</p>
                 )}
 
-          <div className="flex justify-end gap-4">
-            <p className="text-sm font-medium text-primary">
-              Percentages must add up to 100% (remove 5.4% from your ballot)
-            </p>
-          </div>
+          {totalShareError && (
+            <div className="flex justify-end gap-4">
+              <p className="text-sm font-medium text-primary">
+                {totalShareError}
+              </p>
+            </div>
+          )}
           <div className="flex justify-between">
             <button
               className="flex items-center justify-center gap-3 rounded-lg border bg-gray-50 px-4 py-2 font-semibold text-gray-700"
