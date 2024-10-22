@@ -80,6 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoginAddress,
         isAutoConnecting,
         setIsAutoConnecting,
+        
       }}
     >
       {children}
@@ -106,7 +107,7 @@ export const useAuth = () => {
   const { address: connectedAddress, chainId } = useAccount();
   const prevAddress = usePrevious(connectedAddress);
   const { signMessageAsync } = useSignMessage();
-
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const router = useRouter();
   const path = usePathname();
   const { connect } = useConnect();
@@ -161,6 +162,7 @@ export const useAuth = () => {
 
     const validToken = await isLoggedIn();
     if (validToken) {
+      setIsRedirecting(true);
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
       redirectToComparisonPage()
     }
@@ -285,6 +287,7 @@ export const useAuth = () => {
     setLoginAddress,
     redirectToComparisonPage,
     isAutoConnecting,
+    isRedirecting,
     // setShowBhModal,
     doLoginFlow,
   };
