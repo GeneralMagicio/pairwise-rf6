@@ -1,6 +1,7 @@
 import debounce from 'lodash.debounce';
 import Image from 'next/image';
 import { ChangeEventHandler, FC, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { roundFractions } from '../utils';
 import { useAuth } from '@/app/utils/wallet/AuthProvider';
@@ -13,6 +14,8 @@ import {
 } from '@/app/comparison/utils/types';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 import { UserColabGroupIcon } from '@/public/assets/icon-components/UserColabGroup';
+import { categoryIdSlugMap } from '@/app/comparison/utils/helpers';
+
 export interface Category {
   id: number
   imageSrc: string
@@ -34,6 +37,7 @@ interface CategoryAllocationProps extends Category {
 }
 
 const CategoryAllocation: FC<CategoryAllocationProps> = ({
+  id,
   allocatingBudget,
   imageSrc,
   title,
@@ -49,6 +53,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   onPercentageChange,
 }) => {
   const { isAutoConnecting } = useAuth();
+  const router = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = debounce(
@@ -188,7 +193,11 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
               : status === CollectionProgressStatusEnum.Finished
                 ? (
                     <div className="flex w-full flex-col items-center justify-center gap-4">
-                      <button className="flex w-full items-center justify-center gap-2 rounded-md border py-3 font-semibold">
+                      <button
+                        className="flex w-full items-center justify-center gap-2 rounded-md border py-3 font-semibold"
+                        onClick={() =>
+                          router.push(`/allocation/${categoryIdSlugMap.get(id)}`)}
+                      >
                         Edit
                       </button>
                       <div className="flex w-full justify-center gap-2 rounded-xl border border-[#17B26A] bg-[#ECFDF3] py-1">

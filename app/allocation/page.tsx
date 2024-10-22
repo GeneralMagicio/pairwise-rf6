@@ -113,8 +113,11 @@ const AllocationPage = () => {
     null
   );
 
-  const [delegationState, setDelegationState] = useState(DelegationState.Initial);
-  const [categoryToDelegate, setCategoryToDelegate] = useState<Pick<Category, 'id' | 'title'>>();
+  const [delegationState, setDelegationState] = useState(
+    DelegationState.Initial
+  );
+  const [categoryToDelegate, setCategoryToDelegate]
+    = useState<Pick<Category, 'id' | 'title'>>();
   const [targetDelegate, setTargetDelegate] = useState<TargetDelegate>();
 
   const handleDelegate = async (username: string, target: TargetDelegate) => {
@@ -186,14 +189,18 @@ const AllocationPage = () => {
   return (
     <div>
       <Modal
-        isOpen={delegationState !== DelegationState.Initial && !!categoryToDelegate}
+        isOpen={
+          delegationState !== DelegationState.Initial && !!categoryToDelegate
+        }
         onClose={resetDelegateState}
         showCloseButton={true}
       >
         {delegationState === DelegationState.DelegationMethod && (
           <DelegateModal
             categoryName={categoryToDelegate!.title}
-            onFindDelegatesFarcaster={() => { setDelegationState(DelegationState.Lookup); }}
+            onFindDelegatesFarcaster={() => {
+              setDelegationState(DelegationState.Lookup);
+            }}
             onFindDelegatesTwitter={() => {}}
           />
         )}
@@ -225,12 +232,7 @@ const AllocationPage = () => {
           selectedCategoryId={selectedCategoryId}
         />
       </Modal>
-      <HeaderRF6
-        progress={30}
-        category="category"
-        question="Which project had the greatest impact on the OP Stack?"
-        isFirstSelection={false}
-      />
+      <HeaderRF6 />
       <WorldIdSignInSuccessModal
         isOpen={isWorldIdSignSuccessModal}
         onClose={() => {

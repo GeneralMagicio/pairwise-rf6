@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { shortenWalletAddress } from '../ConnectedButton';
+import { shortenWalletAddress } from '@/app/comparison/utils/helpers';
 import { BadgeData, getBadgeAmount, getBadgeMedal, useGetPublicBadges } from '../../getBadges';
 import BadgeCard, { BadgeCardEntryType } from '../../BadgeCard';
 import { XIcon } from '@/public/assets/icon-components/XIcon';

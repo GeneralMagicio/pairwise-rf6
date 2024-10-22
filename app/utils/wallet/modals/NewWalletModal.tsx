@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
-import { shortenWalletAddress } from '../ConnectedButton';
+import { shortenWalletAddress } from '@/app/comparison/utils/helpers';
 
 interface Props {
   onCancel: () => void
