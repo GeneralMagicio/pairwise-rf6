@@ -29,6 +29,7 @@ export default function Modals() {
     setLoginAddress,
     doLoginFlow,
     signOut,
+    isRedirecting
   } = useAuth();
 
   const { open: isOpen } = useIDKit();
@@ -41,7 +42,7 @@ export default function Modals() {
 
   const notBhOpen
     = loggedToPw === LogginToPwBackendState.LoggedIn
-    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen;
+    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && !isRedirecting;
 
   const signInModalOpen
     = (address ?? false) && loggedToPw === LogginToPwBackendState.Error;
