@@ -155,7 +155,7 @@ export const useAuth = () => {
 
   const redirectToComparisonPage = useCallback(() => {
     if (loggedToPw !== LogginToPwBackendState.LoggedIn) return;
-    // router.push('/allocation');
+    router.push('/allocation');
   }, [loggedToPw, router]);
 
   const checkLoggedInToPw = useCallback(async () => {
