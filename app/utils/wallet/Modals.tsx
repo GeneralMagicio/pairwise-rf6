@@ -45,7 +45,7 @@ export default function Modals() {
     && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && !isRedirecting;
 
   const signInModalOpen
-    = (address ?? false) && loggedToPw === LogginToPwBackendState.Error;
+    = !!address && loggedToPw === LogginToPwBackendState.Error;
 
   const handleNewWalletCancel = () => {
     setLoginAddress({ ...loginAddress, confirmed: true });
