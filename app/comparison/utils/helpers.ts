@@ -71,3 +71,10 @@ export function shortenWalletAddress(
   // Combine the parts with ellipsis
   return `${start}...${end}`;
 }
+
+export function formatBudget(budget: number | undefined): string {
+  if (budget === undefined) {
+    return 'N/A';
+  }
+  return budget.toLocaleString('en-US');
+}

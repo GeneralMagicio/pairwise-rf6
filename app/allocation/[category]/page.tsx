@@ -9,6 +9,7 @@ import SearchBar from './components/SearchBar';
 import {
   categorySlugIdMap,
   categoryIdTitleMap,
+  formatBudget,
 } from '../../comparison/utils/helpers';
 import { Checkbox } from '@/app/utils/Checkbox';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
@@ -16,6 +17,7 @@ import NotFoundComponent from '@/app/components/404';
 import {
   useProjectsRankingByCategoryId,
   useUpdateProjectRanking,
+  useCategoryRankings,
   IProjectRankingObj,
 } from '@/app/comparison/utils/data-fetching/ranking';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
@@ -48,14 +50,14 @@ const RankingPage = () => {
   const [projects, setProjects] = useState<IProjectRanking[] | null>(null);
   const [rankingArray, setRankingArray] = useState<IProjectRankingObj[]>([]);
   const [totalShareError, setTotalShareError] = useState<string | null>(null);
+  const [lockedItems, setLockedItems] = useState<number[]>([]);
 
+  const { data: categoryRankings } = useCategoryRankings();
   const { data: ranking, isLoading } = useProjectsRankingByCategoryId(category);
   const { mutate: updateProjectRanking } = useUpdateProjectRanking({
     cid: category,
     ranking: rankingArray,
   });
-
-  console.log(projects);
 
   const handleBulkSelection = () => {
     if (!projects) return;
@@ -76,6 +78,24 @@ const RankingPage = () => {
     );
 
     setProjects(updatedProjects);
+  };
+
+  const handleLocck = (id: number) => {
+    if (lockedItems.includes(id)) {
+      setLockedItems(lockedItems.filter(lockedId => lockedId !== id));
+    }
+    else {
+      setLockedItems([...lockedItems, id]);
+    }
+  };
+
+  const selectItem = (id: number) => {
+    if (checkedItems.includes(id)) {
+      setCheckedItems(checkedItems.filter(checkedId => checkedId !== id));
+    }
+    else {
+      setCheckedItems([...checkedItems, id]);
+    }
   };
 
   const submitVotes = () => {
@@ -136,7 +156,9 @@ const RankingPage = () => {
               <p className="text-sm font-normal text-gray-600">
                 OP calculations in this ballot are based on your budget of
                 {' '}
-                <span className="underline">3,333,333</span>
+                <span className="underline">
+                  {formatBudget(categoryRankings?.budget)}
+                </span>
               </p>
             </div>
             <div className="flex items-center justify-center gap-2 rounded-2xl border border-voting-border bg-voting-bg px-3 py-1 text-xs text-voting-text">
@@ -182,21 +204,16 @@ const RankingPage = () => {
               ? (
                   <table className="w-full">
                     <tbody className="flex flex-col gap-6">
-                      {projects.map(project => (
+                      {projects.map((project, index) => (
                         <RankingRow
                           key={project.projectId}
+                          index={index}
+                          budget={(categoryRankings?.budget || 0) * project.share}
                           project={project}
                           selected={checkedItems.includes(project.projectId)}
-                          onSelect={(id) => {
-                            if (checkedItems.includes(id)) {
-                              setCheckedItems(
-                                checkedItems.filter(checkedId => checkedId !== id)
-                              );
-                            }
-                            else {
-                              setCheckedItems([...checkedItems, id]);
-                            }
-                          }}
+                          locked={lockedItems.includes(project.projectId)}
+                          onLock={handleLocck}
+                          onSelect={selectItem}
                           onVote={handleVote}
                         />
                       ))}
