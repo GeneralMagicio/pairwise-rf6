@@ -44,7 +44,7 @@ export default function Modals() {
     && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen;
 
   const signInModalOpen
-    = (address ?? false) && loggedToPw === LogginToPwBackendState.Error;
+    = !!address && loggedToPw === LogginToPwBackendState.Error;
 
   const handleNewWalletCancel = () => {
     setLoginAddress({ ...loginAddress, confirmed: true });
@@ -86,7 +86,7 @@ export default function Modals() {
           />
           <Modal
             isOpen={
-              loginAddress.value !== address || loginAddress.confirmed === false
+              !!loginAddress.value && !!address && (loginAddress.value !== address || loginAddress.confirmed === false)
             }
             onClose={() => {}}
           >
