@@ -22,11 +22,11 @@ interface ICollection {
   metadata: IDelegateMetadata
 }
 export interface ISocialDelegateResponse {
-  fromYou: {
+  fromYou?: {
     budget: IDelegateMetadata
     collections: ICollection[]
   }
-  toYou: {
+  toYou?: {
     budget: IDelegateMetadata[]
     collections: ICollection[]
   }

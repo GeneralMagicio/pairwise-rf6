@@ -8,6 +8,8 @@ import BadgeCard, { BadgeCardEntryType } from '../../BadgeCard';
 import { XIcon } from '@/public/assets/icon-components/XIcon';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
+import { useGetConnectionStatus, useGetDelegationStatus } from '../../getConnectionStatus';
+import { CheckIcon } from '@/public/assets/icon-components/Check';
 
 interface SignedModalProps {
   onConnectTwitter: () => void
@@ -19,6 +21,8 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
 ) => {
   const { address } = useAccount();
   const { data: badges } = useGetPublicBadges();
+  const { data: connectionStatus } = useGetConnectionStatus();
+  const { data: delegates } = useGetDelegationStatus();
 
   const isWorldCoinVerified = badges?.worldCoinVerified ?? false;
   const badgeCards = useMemo(() => {
@@ -58,7 +62,7 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
       <h2 className="w-fit text-wrap text-4xl font-bold">Welcome to the Pairwise voting for "Retro Funding 6"</h2>
       {badges && Object.keys(badges).length > 0
         ? (
-            <div className="items-between flex flex-col justify-center">
+            <div className="flex flex-col justify-center">
               <div className="flex flex-col gap-2 text-base">
 
                 <h2 className="w-full text-lg font-semibold text-gray-700">
@@ -80,7 +84,7 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
           )}
 
       <div className="flex w-full flex-col items-center justify-start gap-4">
-        <div className="justify-cneter flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2">
           <div className="text-2xl font-semibold text-dark-900">Claim more voting power!</div>
           <div className="text-center text-sm text-gray-400">
             <div>Check who delegated their voting power to you.</div>
@@ -89,15 +93,31 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
         </div>
         <div className="flex w-full flex-col justify-start gap-2">
 
-          <button
-            onClick={() => {
-              open();
-            }}
-            className="flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] bg-gray-50 px-4 py-2 font-semibold text-gray-700"
-          >
-            <WorldIdIcon />
-            Connect with WorldID
-          </button>
+          <div>
+            <button
+              onClick={() => {
+                open();
+              }}
+              className={`flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] ${
+                connectionStatus?.worldId
+                  ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
+                  : 'border-[#CBD5E0] bg-gray-50 text-gray-700'
+              } px-4 py-2 font-semibold`}
+              disabled={(connectionStatus?.worldId ?? undefined) !== undefined}
+            >
+              <WorldIdIcon />
+              Connect with WorldID
+              {connectionStatus?.worldId && <CheckIcon />}
+            </button>
+            {connectionStatus?.worldId && (
+              <div className="flex w-full items-center justify-center">
+                <p className="text-center text-sm font-medium text-[#079455]">
+                  Your voting power increased. You earned a new Badge.
+                </p>
+
+              </div>
+            )}
+          </div>
           <button
             onClick={onConnectTwitter}
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
@@ -108,21 +128,52 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
           <div>
             <button
               onClick={onConnectFarcaster}
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
+              className={`flex w-full items-center ${
+                connectionStatus?.farcaster
+                  ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
+                  : 'border-[#CBD5E0] bg-gray-100 text-gray-700'
+              } justify-center gap-2 rounded-lg border px-4 py-2 font-semibold`}
+              disabled={(connectionStatus?.farcaster ?? undefined) !== undefined}
             >
               <WarpcastIcon />
               Connect with Farcaster
+              {connectionStatus?.farcaster && <CheckIcon />}
             </button>
+            {connectionStatus?.farcaster && (
+              <div className="flex w-full items-center justify-center">
+                <p className="text-center text-sm font-medium text-[#079455]">
+                  {delegates?.toYou?.budget.length ?? 'No'}
+                  {' '}
+                  people delegated to you
+                </p>
+
+              </div>
+            )}
           </div>
-          <button
-            onClick={() => {
-              router.push('/allocation');
-            }}
-            className="w-3/5 rounded-md bg-primary px-4
+
+          {(connectionStatus?.farcaster
+          && connectionStatus?.worldId)
+            ? (
+                <button
+                  onClick={() => {
+                    router.push('/allocation');
+                  }}
+                  className="w-3/5 rounded-md bg-primary px-4
               py-2 text-white hover:bg-red-600 "
-          >
-            Continue →
-          </button>
+                >
+                  Continue →
+                </button>
+              )
+            : (
+                <button
+                  onClick={() => {
+                    router.push('/allocation');
+                  }}
+                  className="w-full justify-center px-1 text-xs text-gray-600 underline"
+                >
+                  <p>I&#39;ll do it later</p>
+                </button>
+              )}
         </div>
       </div>
     </div>

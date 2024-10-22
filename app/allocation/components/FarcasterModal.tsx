@@ -88,7 +88,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
           : (
               <LoadedModalContent
                 isFarcaster
-                numDelegates={delegates?.toYou.budget.length ?? 0}
+                numDelegates={delegates?.toYou?.budget.length ?? 0}
                 onClose={onClose}
                 displayName={data?.displayName}
                 username={data?.displayName}

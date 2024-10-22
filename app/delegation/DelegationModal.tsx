@@ -39,7 +39,7 @@ const DelegateModal: React.FC<Props> = ({
         to someone you trust
       </h2>
 
-      <p className="mb-6 text-center text-gray-500 my-2">
+      <p className="my-2 mb-6 text-center text-gray-500">
         If you don't have the time or resources to actively
         participate in this decision, you can still make your voice
         heard by delegating your voting power to a delegate.
