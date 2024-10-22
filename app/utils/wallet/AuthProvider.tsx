@@ -233,7 +233,7 @@ export const useAuth = () => {
       },
       async function (error: AxiosError) {
         if (error.response && error.response.status === 401) {
-          // check the base url to prevent signing out if getting 401 from other origins
+          // check the base url to prevent signing out when getting 401 from other origins
           if (error?.config?.baseURL?.includes(API_URL)) {
             await disconnectAsync();
             signOut();
