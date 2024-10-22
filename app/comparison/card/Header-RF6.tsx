@@ -36,13 +36,10 @@ const HeaderRF6: React.FC<HeaderProps> = ({
   const [isBarFixed, setIsBarFixed] = useState(false);
 
   const activeBadges = useMemo(() => {
-    if (!badges) return [];
-    const {
-      recipientsPoints,
-      badgeholderPoints,
-      holderType,
-      delegateType,
-    } = badges;
+    if (!badges || !Object.keys(badges).length) return [];
+
+    const { recipientsPoints, badgeholderPoints, holderType, delegateType }
+      = badges;
     const activeBadgesArray: IActiveBadge[] = [];
     if (holderType) {
       activeBadgesArray.push({
@@ -126,12 +123,14 @@ const HeaderRF6: React.FC<HeaderProps> = ({
                 category ? 'hidden 2xl:flex' : 'flex'
               } items-center gap-4`}
             >
-              <button
-                onClick={() => setIsBadgesModalOpen(true)}
-                className="mr-3 flex items-center"
-              >
-                <ActiveBadges activeBadges={activeBadges} />
-              </button>
+              {activeBadges.length > 0 && (
+                <button
+                  onClick={() => setIsBadgesModalOpen(true)}
+                  className="mr-3 flex items-center"
+                >
+                  <ActiveBadges activeBadges={activeBadges} />
+                </button>
+              )}
               <ConnectButton />
               <button
                 className="flex items-center justify-center gap-2 rounded-lg border border-gray-200 p-2 text-sm font-semibold"
@@ -144,16 +143,20 @@ const HeaderRF6: React.FC<HeaderProps> = ({
 
             <Dropdown customClass={category ? '2xl:hidden' : 'hidden'}>
               <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between gap-2 py-2">
-                  <p className="text-sm text-gray-600">Your budges</p>
-                  <button
-                    onClick={() => setIsBadgesModalOpen(true)}
-                    className="mr-3 flex items-center"
-                  >
-                    <ActiveBadges activeBadges={activeBadges} />
-                  </button>
-                </div>
-                <hr className="my-2 border-t border-gray-200" />
+                {activeBadges.length > 0 && (
+                  <>
+                    <div className="flex items-center justify-between gap-2 py-2">
+                      <p className="text-sm text-gray-600">Your budges</p>
+                      <button
+                        onClick={() => setIsBadgesModalOpen(true)}
+                        className="mr-3 flex items-center"
+                      >
+                        <ActiveBadges activeBadges={activeBadges} />
+                      </button>
+                    </div>
+                    <hr className="my-2 border-t border-gray-200" />
+                  </>
+                )}
                 <div className="flex w-full items-center justify-center rounded-lg bg-gray-100 p-2 font-semibold">
                   {loginAddress?.value && (
                     <p className="text-dark-500">
