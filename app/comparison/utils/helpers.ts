@@ -48,3 +48,26 @@ export const getCategoryCount = (category: JWTPayload['category']) => {
   };
   return category in labels ? labels[category] : 30;
 };
+
+export function shortenWalletAddress(
+  address: string,
+  startLength: number = 7,
+  endLength: number = 7
+): string {
+  // Check if the address is valid (starts with '0x' and has 42 characters)
+  if (!address.startsWith('0x') || address.length !== 42) {
+    throw new Error('Invalid wallet address format');
+  }
+
+  // Ensure start and end lengths are not greater than half the remaining address length
+  const maxLength = Math.floor((address.length - 2) / 2);
+  startLength = Math.min(startLength, maxLength);
+  endLength = Math.min(endLength, maxLength);
+
+  // Extract the start and end parts of the address
+  const start = address.slice(0, startLength);
+  const end = address.slice(-endLength);
+
+  // Combine the parts with ellipsis
+  return `${start}...${end}`;
+}

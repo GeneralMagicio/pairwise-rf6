@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
 
-const PAIRWISE_REPPORT_URL
-  = `https://github.com/GeneralMagicio/pairwise-rpgf5/issues/new?
-  assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+`;
+const PAIRWISE_REPORT_URL = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
 
 interface HeaderProps {
   progress: number
@@ -72,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({
           <button
             className="rounded-lg border border-gray-200 p-2 text-sm"
             onClick={() =>
-              window.open(PAIRWISE_REPPORT_URL + question, '_blank')}
+              window.open(PAIRWISE_REPORT_URL, '_blank')}
           >
             Report an issue
           </button>

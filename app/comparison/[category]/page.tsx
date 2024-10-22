@@ -7,7 +7,7 @@ import { useAccount } from 'wagmi';
 import { JWTPayload } from '@/app/utils/wallet/types';
 import { AutoScrollAction, ProjectCard } from '../card/ProjectCard';
 import ConflictButton from '../card/CoIButton';
-import Header from '../card/Header';
+import HeaderRF6 from '../card/Header-RF6';
 import { Rating } from '../card/Rating';
 import UndoButton from '../card/UndoButton';
 import VoteButton from '../card/VoteButton';
@@ -476,7 +476,7 @@ export default function Home() {
           />
         )}
       </Modal>
-      <Header
+      <HeaderRF6
         progress={progress * 100}
         category={convertCategoryToLabel(category! as JWTPayload['category'])}
         question="Which project had the greatest impact on the OP Stack?"

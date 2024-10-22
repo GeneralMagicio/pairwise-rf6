@@ -80,12 +80,7 @@ const RankingPage = () => {
 
   return (
     <div>
-      <HeaderRF6
-        progress={30}
-        category="category"
-        question="Which project had the greatest impact on the OP Stack?"
-        isFirstSelection={false}
-      />
+      <HeaderRF6 />
       <div className="flex flex-col justify-between gap-4 px-72 py-16">
         <p className="mb-4 text-2xl font-semibold text-gray-700">
           Edit your votes
