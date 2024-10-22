@@ -162,9 +162,10 @@ export const useAuth = () => {
     const validToken = await isLoggedIn();
     if (validToken) {
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
+      redirectToComparisonPage()
     }
     else setLoggedToPw(LogginToPwBackendState.Error);
-  }, [loginAddress.value]);
+  }, [loginAddress.value, redirectToComparisonPage]);
 
   useEffect(() => {
     checkLoggedInToPw();
