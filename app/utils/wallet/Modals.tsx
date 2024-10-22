@@ -29,7 +29,8 @@ export default function Modals() {
     setLoginAddress,
     doLoginFlow,
     signOut,
-    isRedirecting
+    showBhModal,
+    setShowBhModal,
   } = useAuth();
 
   const { open: isOpen } = useIDKit();
@@ -42,7 +43,7 @@ export default function Modals() {
 
   const notBhOpen
     = loggedToPw === LogginToPwBackendState.LoggedIn
-    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && !isRedirecting;
+    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && showBhModal;
 
   const signInModalOpen
     = !!address && loggedToPw === LogginToPwBackendState.Error;
@@ -95,6 +96,7 @@ export default function Modals() {
                   }}
                   onConnectFarcaster={() => {
                     setIsOpenFarcasterModal(true);
+                    setShowBhModal(false);
                   }}
                   onConnectTwitter={() => {}}
                 />
