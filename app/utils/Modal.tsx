@@ -37,7 +37,7 @@ const Modal: FC<ModalProps> = ({
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative rounded-lg bg-white shadow-lg">
+      <div className="relative max-w-[60%] rounded-lg bg-white shadow-lg">
         {showCloseButton && (
           <div className="absolute right-5 top-5 z-10">
             <button

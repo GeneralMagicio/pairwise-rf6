@@ -1,52 +1,180 @@
-import React from 'react';
-import { useDisconnect } from 'wagmi';
-import { NotBhCharacter } from '@/public/assets/icon-components/NotBhCharacter';
-import { ArrowLeftIcon } from '@/public/assets/icon-components/ArrowLeft';
-import { useAuth } from '../AuthProvider';
+import React, { useMemo } from 'react';
+import { useAccount } from 'wagmi';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { shortenWalletAddress } from '../ConnectedButton';
+import { BadgeData, getBadgeAmount, getBadgeMedal, useGetPublicBadges } from '../../getBadges';
+import BadgeCard, { BadgeCardEntryType } from '../../BadgeCard';
+import { XIcon } from '@/public/assets/icon-components/XIcon';
+import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
+import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
+import { useGetConnectionStatus, useGetDelegationStatus } from '../../getConnectionStatus';
+import { CheckIcon } from '@/public/assets/icon-components/Check';
 
-const NotBadgeHolder: React.FC = () => {
-  const { signOut, redirectToComparisonPage } = useAuth();
-  const { disconnectAsync } = useDisconnect();
+interface SignedModalProps {
+  onConnectTwitter: () => void
+  onConnectFarcaster: () => void
+  open: () => void
+}
+const NotBadgeHolder: React.FC<SignedModalProps> = (
+  { onConnectFarcaster, onConnectTwitter, open }
+) => {
+  const { address } = useAccount();
+  const { data: badges } = useGetPublicBadges();
+  const { data: connectionStatus } = useGetConnectionStatus();
+  const { data: delegates } = useGetDelegationStatus();
 
-  const handleLogout = async () => {
-    await disconnectAsync();
-    signOut();
-  };
-
+  const isWorldCoinVerified = badges?.worldCoinVerified ?? false;
+  const badgeCards = useMemo(() => {
+    if (!badges) return null;
+    const {
+      delegateAmount,
+      holderAmount,
+      holderType,
+      delegateType,
+      worldCoinVerified,
+      ...rest
+    }: BadgeData = badges;
+    const badgePoints = { ...rest };
+    return Object.entries(badgePoints).map(([el1, el2]) => {
+      const [key, value] = [
+        el1,
+        el2,
+      ] as BadgeCardEntryType;
+      return (
+        <BadgeCard
+          key={key}
+          points={value}
+          type={key}
+          medal={getBadgeMedal(key, badges)}
+          amount={getBadgeAmount(
+            key,
+            badges,
+          )}
+          worldCoinVerified={isWorldCoinVerified}
+        />
+      );
+    });
+  }, [badges]);
+  const router = useRouter();
   return (
-    <div className="relative flex w-[300px] flex-col items-center justify-center rounded-lg bg-white p-8 text-center shadow-md md:w-[420px]">
-      {/* <Image
-        src="assets/images/vector3.svg"
-        alt="vector"
-        width={220}
-        height={220}
-        className="absolute -left-16 -top-16 overflow-hidden"
-      /> */}
-      <NotBhCharacter />
-      <h2 className="mb-4 text-2xl font-bold">This is not a badgeholder</h2>
-      <p className="mb-8 text-gray-600">
-        The wallet you are connecting is not included as a badgeholder. You can
-        participate as a guest, knowing that your vote will not be used to
-        distribute funding this time.
-      </p>
-      <div className="flex justify-between gap-4">
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-4 rounded-md border
-        border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100"
-        >
-          <ArrowLeftIcon />
-          <span> Back </span>
-        </button>
-        <button
-          onClick={() => {
-            redirectToComparisonPage();
-          }}
-          className="rounded-md bg-primary px-4
-        py-2 text-white hover:bg-red-600"
-        >
-          Continue as a guest →
-        </button>
+    <div className="relative flex flex-col items-center justify-center gap-6 rounded-lg bg-white bg-social-gradient px-24 py-8 text-center">
+      <h2 className="w-fit text-wrap text-4xl font-bold">Welcome to the Pairwise voting for "Retro Funding 6"</h2>
+      {badges && Object.keys(badges).length > 0
+        ? (
+            <div className="flex flex-col justify-center">
+              <div className="flex flex-col gap-2 text-base">
+
+                <h2 className="w-full text-lg font-semibold text-gray-700">
+                  Your voting power
+                </h2>
+                <div className="text-gray-400">{address ? shortenWalletAddress(address) : null}</div>
+              </div>
+              <div className="flex flex-row gap-3">{badgeCards}</div>
+            </div>
+          )
+        : (
+            <div className="flex flex-col items-center justify-center gap-4">
+              <Image src="/assets/images/noBadges.svg" alt="no badges" width={144} height={112} />
+              <div className="flex flex-col gap-2 text-base">
+                <div className="text-gray-400">{address ? shortenWalletAddress(address) : null}</div>
+                <div className="text-primary">No voting power associated with this address</div>
+              </div>
+            </div>
+          )}
+
+      <div className="flex w-full flex-col items-center justify-start gap-4">
+        <div className="flex flex-col items-center gap-2">
+          <div className="text-2xl font-semibold text-dark-900">Claim more voting power!</div>
+          <div className="text-center text-sm text-gray-400">
+            <div>Check who delegated their voting power to you.</div>
+            <div>Connects other accounts to claim more.</div>
+          </div>
+        </div>
+        <div className="flex w-full flex-col justify-start gap-2">
+
+          <div>
+            <button
+              onClick={() => {
+                open();
+              }}
+              className={`flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] ${
+                connectionStatus?.worldId
+                  ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
+                  : 'border-[#CBD5E0] bg-gray-50 text-gray-700'
+              } px-4 py-2 font-semibold`}
+              disabled={(connectionStatus?.worldId ?? undefined) !== undefined}
+            >
+              <WorldIdIcon />
+              Connect with WorldID
+              {connectionStatus?.worldId && <CheckIcon />}
+            </button>
+            {connectionStatus?.worldId && (
+              <div className="flex w-full items-center justify-center">
+                <p className="text-center text-sm font-medium text-[#079455]">
+                  Your voting power increased. You earned a new Badge.
+                </p>
+
+              </div>
+            )}
+          </div>
+          <button
+            onClick={onConnectTwitter}
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
+          >
+            <XIcon />
+            Connect with X (Twitter)
+          </button>
+          <div>
+            <button
+              onClick={onConnectFarcaster}
+              className={`flex w-full items-center ${
+                connectionStatus?.farcaster
+                  ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
+                  : 'border-[#CBD5E0] bg-gray-100 text-gray-700'
+              } justify-center gap-2 rounded-lg border px-4 py-2 font-semibold`}
+              disabled={(connectionStatus?.farcaster ?? undefined) !== undefined}
+            >
+              <WarpcastIcon />
+              Connect with Farcaster
+              {connectionStatus?.farcaster && <CheckIcon />}
+            </button>
+            {connectionStatus?.farcaster && (
+              <div className="flex w-full items-center justify-center">
+                <p className="text-center text-sm font-medium text-[#079455]">
+                  {delegates?.toYou?.budget.length ?? 'No'}
+                  {' '}
+                  people delegated to you
+                </p>
+
+              </div>
+            )}
+          </div>
+
+          {(connectionStatus?.farcaster
+          && connectionStatus?.worldId)
+            ? (
+                <button
+                  onClick={() => {
+                    router.push('/allocation');
+                  }}
+                  className="w-3/5 rounded-md bg-primary px-4
+              py-2 text-white hover:bg-red-600 "
+                >
+                  Continue →
+                </button>
+              )
+            : (
+                <button
+                  onClick={() => {
+                    router.push('/allocation');
+                  }}
+                  className="w-full justify-center px-1 text-xs text-gray-600 underline"
+                >
+                  <p>I&#39;ll do it later</p>
+                </button>
+              )}
+        </div>
       </div>
     </div>
   );
