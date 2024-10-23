@@ -22,9 +22,9 @@ const WorldIdSignInSuccessModal: React.FC<WorldIdModalProps> = ({
             </div>
           )
         : (
-            <div className="flex w-full flex-col items-center justify-center gap-6 px-14 py-10">
+            <div className="mt-6 flex w-[300px] flex-col items-center justify-center gap-6 px-14 py-10 md:w-[480px]">
               <div className="flex flex-col content-between items-center gap-2">
-                <div className="text-2xl font-semibold text-dark-500">Your voting power has been increased</div>
+                <div className="text-center text-2xl font-semibold text-dark-500">Your voting power has been increased</div>
                 <div className="text-sm text-[#232634]">Successfully connected to your World ID</div>
               </div>
               <div className="w-full text-center font-semibold">

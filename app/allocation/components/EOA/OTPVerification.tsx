@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { Wallet } from 'thirdweb/wallets';
+import { useConnect } from 'thirdweb/react';
 import { TOTPData, OtpStatus, Step } from './EmailLoginModal';
 import { EditIcon } from '@/public/assets/icon-components/Edit';
 import { BackArrowIcon } from '@/public/assets/icon-components/BackArrow';
@@ -13,6 +14,7 @@ import {
   createEmailEoa,
   createSmartWalletFromEOA,
 } from '@/app/lib/third-web/methods';
+import StorageLabel from '@/app/lib/localStorage';
 
 interface IOTPVerificationProps {
   otpData: TOTPData
@@ -21,10 +23,11 @@ interface IOTPVerificationProps {
   setEoaWallet: (wallet: Wallet) => void
   setStep: (step: number) => void
   resendOTP: () => void
+  closeModal: () => void
 }
 
-const FIVE_MINUTES = 5 * 60 * 1000;
-const INITIAL_TIMER = 5 * 60;
+const FIVE_MINUTES = 1 * 60 * 1000;
+const INITIAL_TIMER = 1 * 60;
 
 export const OTPVerification: FC<IOTPVerificationProps> = ({
   otpData,
@@ -33,7 +36,10 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
   setEoaWallet,
   setStep,
   resendOTP,
+  closeModal,
 }) => {
+  const { connect } = useConnect();
+
   const [timer, setTimer] = useState<number>(INITIAL_TIMER);
 
   useEffect(() => {
@@ -95,6 +101,16 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
       return;
     }
 
+    if (otpData.sentAt && otpData.sentAt < Date.now() - FIVE_MINUTES) {
+      setOtpData({
+        ...otpData,
+        loading: false,
+        otpStatus: OtpStatus.EXPIRED,
+      });
+      setStep(Step.OTP);
+      return;
+    }
+
     try {
       const emailEoa = await createEmailEoa(email, verificationCode);
       const account = emailEoa.getAccount();
@@ -102,8 +118,19 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
       if (!account) throw new Error('Unable to create an email EOA');
 
       const smartWallet = await createSmartWalletFromEOA(account);
-      setEoaWallet(smartWallet);
-      setStep(Step.CONNECT_EOA);
+
+      const personalWalletId = localStorage.getItem(
+        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+      );
+
+      if (!personalWalletId) {
+        setEoaWallet(smartWallet);
+        setStep(Step.CONNECT_EOA);
+      }
+      else {
+        connect(smartWallet);
+        closeModal();
+      }
     }
     catch {
       setOtpData({
@@ -115,18 +142,17 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
     }
   };
 
-  const statusBorderClassSuffix: Record<OtpStatus, string> = {
-    [OtpStatus.VERIFIED]: 'success',
-    [OtpStatus.INCORRECT]: 'error',
-    [OtpStatus.FAILED]: 'error',
-    [OtpStatus.EXPIRED]: 'expired',
-    [OtpStatus.SENT]: '',
+  const statusClasses: Record<OtpStatus, string> = {
+    [OtpStatus.VERIFIED]:
+      'border-2 border-status-border-success bg-status-bg-success',
+    [OtpStatus.INCORRECT]:
+      'border-2 border-status-border-error bg-status-bg-error',
+    [OtpStatus.FAILED]:
+      'border-2 border-status-border-error bg-status-bg-error',
+    [OtpStatus.EXPIRED]:
+      'border-2 border-status-border-expired bg-status-bg-expired',
+    [OtpStatus.SENT]: 'border border-gray-300',
   };
-
-  const borderColour
-    = `border-2 border-status-border-${
-      statusBorderClassSuffix[otpData.otpStatus]
-    }` || 'border border-gray-300';
 
   const otpCodeFilled = otpData.verificationCode.length === 6;
 
@@ -160,7 +186,9 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
               key={index}
               type="text"
               maxLength={1}
-              className={`size-16 rounded-md text-center text-4xl font-semibold outline-none transition duration-300 placeholder:opacity-45 ${borderColour}`}
+              className={`size-16 rounded-md text-center text-4xl font-semibold outline-none transition duration-300 placeholder:opacity-45 ${
+                statusClasses[otpData.otpStatus]
+              }`}
               onChange={handleVerificationCodeChange}
               onKeyUp={handleKeyPress(
                 index === 5 ? '' : String(index + 1),

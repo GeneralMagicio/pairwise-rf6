@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { shortenWalletAddress } from '../ConnectedButton';
+import { shortenWalletAddress } from '@/app/comparison/utils/helpers';
 import { BadgeData, getBadgeAmount, getBadgeMedal, useGetPublicBadges } from '../../getBadges';
 import BadgeCard, { BadgeCardEntryType } from '../../BadgeCard';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
@@ -55,7 +55,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
   }, [badges]);
   const router = useRouter();
   return (
-    <div className="relative flex flex-col items-center justify-center gap-6 rounded-lg bg-white bg-social-gradient px-24 py-8 text-center">
+    <div className="relative flex w-[600px] flex-col items-center justify-center gap-6 rounded-lg bg-white bg-social-gradient px-24 py-8 text-center md:w-[820px]">
       <h2 className="w-fit text-wrap text-4xl font-bold">Welcome to the Pairwise voting for "Retro Funding 6"</h2>
       {badges && Object.keys(badges).length > 0
         ? (

@@ -1,6 +1,7 @@
 import React, { FC, FormEvent } from 'react';
 import Image from 'next/image';
 import { Wallet } from 'thirdweb/wallets';
+import { useConnect } from 'thirdweb/react';
 import {
   createSmartWalletFromEOA,
   createSocialEoa,
@@ -8,6 +9,7 @@ import {
 } from '@/app/lib/third-web/methods';
 import { TOTPData, TOAuthData, Step } from './EmailLoginModal';
 import { InfoIcon } from '@/public/assets/icon-components/Info';
+import StorageLabel from '@/app/lib/localStorage';
 
 interface IMethodSelectionProps {
   pickedMethod: Strategy | 'email' | null
@@ -19,6 +21,7 @@ interface IMethodSelectionProps {
   setOtpData: (data: TOTPData) => void
   sendOTP: () => void
   setStep: (step: Step) => void
+  closeModal: () => void
 }
 
 export const MethodSelection: FC<IMethodSelectionProps> = ({
@@ -31,7 +34,10 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
   setOtpData,
   sendOTP,
   setStep,
+  closeModal,
 }) => {
+  const { connect } = useConnect();
+
   const handleOAuthConnect = (strategy: Strategy) => async () => {
     try {
       setPickedMethod(strategy);
@@ -42,20 +48,30 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
       if (!account) throw new Error(`Unable to create a ${strategy} EOA`);
 
       const smartWallet = await createSmartWalletFromEOA(account);
-      console.log('Connected EOA wallet ==> ', smartWallet);
       setEoaWallet(smartWallet);
       setOAuthData({ ...oAuthData, loading: false });
-      setStep(Step.CONNECT_EOA);
-      setPickedMethod(null);
+
+      const personalWalletId = localStorage.getItem(
+        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+      );
+
+      if (!personalWalletId) {
+        setStep(Step.CONNECT_EOA);
+        setPickedMethod(null);
+      }
+      else {
+        console.log('Connecting to smart wallet');
+        connect(smartWallet);
+        closeModal();
+      }
     }
     catch (error: any) {
-      if (error.message === 'User closed login window') dismissOAuthError();
-      else
-        setOAuthData({
-          ...oAuthData,
-          loading: true,
-          error: 'There was a problem connecting to your Google account',
-        });
+      console.error(error);
+      setOAuthData({
+        ...oAuthData,
+        loading: true,
+        error: 'There was a problem connecting to your Google account',
+      });
     }
   };
 
@@ -137,7 +153,7 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
                   )
                 : (
                     <button
-                      className="my-4 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 font-semibold text-gray-600"
+                      className="my-4 flex w-full items-center justify-center gap-2 rounded-lg border border-gray-200 px-4 py-2 font-semibold text-gray-600 shadow-sm"
                       onClick={handleOAuthConnect(Strategy.Google)}
                     >
                       <Image
@@ -173,7 +189,7 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
                     onChange={handleEmailChange}
                     onBlur={handleEmailBlur}
                     placeholder="Enter your email"
-                    className={`w-full rounded-lg border px-4 py-2 placeholder:text-gray-400 
+                    className={`w-full rounded-lg border px-4 py-2 placeholder:text-gray-500 
           ${otpData.emailError ? 'border-red-500' : 'border-gray-200'} 
           focus:outline-none ${
             otpData.email && otpData.emailError
@@ -195,9 +211,9 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
                 )}
               </div>
               <button
-                className={`w-full rounded-lg border px-4 py-2 font-semibold ${
+                className={`w-full rounded-lg border px-4 py-2 text-sm font-semibold shadow-sm ${
                   !otpData.email || otpData.emailError
-                    ? 'bg-gray-300 text-gray-500'
+                    ? 'text-gray-500'
                     : 'bg-primary text-white'
                 } transition duration-300`}
                 onClick={sendOTP}

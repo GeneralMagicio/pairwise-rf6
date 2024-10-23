@@ -43,15 +43,16 @@ const config: Config = {
         'status': {
           border: {
             success: '#75E0A7',
-            error: '#FDA29B',
+            error: '#FF99A1',
             expired: '#FEC84B',
           },
           text: {
-            error: '#D92D20',
+            error: '#FF0420',
             expired: '#DC6803',
           },
           bg: {
             error: '#FEF3F2',
+            expired: '#FFFAEB',
           },
         },
         'category-tab': {
