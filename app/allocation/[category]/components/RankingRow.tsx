@@ -35,7 +35,11 @@ const RankingRow: FC<IRankingRowProps> = ({
   };
 
   return (
-    <tr className="flex w-full items-center justify-around border-b border-gray-200 bg-gray-50">
+    <tr
+      className={`flex w-full items-center justify-around rounded-lg border border-gray-200 ${
+        locked && 'bg-gray-100'
+      }`}
+    >
       <td className="pb-8 pl-4 pt-4">
         <Checkbox
           checked={selected}
@@ -64,7 +68,11 @@ const RankingRow: FC<IRankingRowProps> = ({
         </div>
       </td>
       <td className="pb-8 pl-4 pt-4">
-        <div className="flex items-center justify-center rounded-md border border-gray-200 bg-gray-50 px-4 py-2">
+        <div
+          className={`flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 ${
+            locked && 'bg-gray-100'
+          }`}
+        >
           <p className="text-gray-700">{index + 1}</p>
         </div>
       </td>
@@ -79,9 +87,12 @@ const RankingRow: FC<IRankingRowProps> = ({
               values?.floatValue ? values.floatValue / 100 : 0
             );
           }}
-          className="w-24 rounded-md border border-gray-200 bg-gray-50 px-4 py-2 text-center focus:outline-none focus:ring-1"
+          className={`w-24 rounded-md border border-gray-200 px-4 py-2 text-center focus:outline-none focus:ring-1 ${
+            locked && 'bg-gray-100'
+          }`}
           placeholder="0.00%"
           isAllowed={values => handleAllowdValue(values)}
+          disabled={locked}
         />
         <span className="absolute bottom-2 right-7 text-xs text-gray-400">
           {formatBudget(budget)}
@@ -91,9 +102,7 @@ const RankingRow: FC<IRankingRowProps> = ({
         <button
           className={`flex items-center justify-center rounded-md border p-2
         ${
-    locked
-      ? 'rounded-md border-[#232634] bg-[#232634]'
-      : 'border-gray-50'
+    locked ? 'rounded-md border-[#232634] bg-[#232634]' : 'border-gray-50'
     }`}
           onClick={() => onLock(project.projectId)}
         >
