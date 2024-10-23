@@ -102,8 +102,8 @@ const RankingRow: FC<IRankingRowProps> = ({
         <button
           className={`flex items-center justify-center rounded-md border p-2
         ${
-          locked ? 'rounded-md border-[#232634] bg-[#232634]' : 'border-gray-50'
-        }`}
+    locked ? 'rounded-md border-[#232634] bg-[#232634]' : 'border-gray-50'
+    }`}
           onClick={() => onLock(project.projectId)}
         >
           {locked ? <LockIcon color="#fff" /> : <UnlockIcon />}
