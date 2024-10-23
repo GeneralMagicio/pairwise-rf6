@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import { IDKitWidget, ISuccessResult, useIDKit, VerificationLevel } from '@worldcoin/idkit';
 import Modal from '../Modal';
 import ConnectLoading from './modals/ConnectLoading';
-import NotBadgeHolder from './modals/NotBhModal';
+import BadgeHolderModal from './modals/NotBhModal';
 import SignInWithWallet from './modals/SignInModal';
 import { LogginToPwBackendState, useAuth } from './AuthProvider';
 import NewWalletModal from './modals/NewWalletModal';
@@ -90,15 +90,14 @@ export default function Modals() {
             >
               {notBhOpen
               && (
-                <NotBadgeHolder
+                <BadgeHolderModal
                   open={() => {
                     open();
                   }}
                   onConnectFarcaster={() => {
                     setIsOpenFarcasterModal(true);
-                    setShowBhModal(false);
                   }}
-                  onConnectTwitter={() => {}}
+
                 />
               )}
             </Modal>
@@ -109,6 +108,7 @@ export default function Modals() {
         isOpen={isOpenFarcasterModal}
         onClose={() => {
           setIsOpenFarcasterModal(false);
+          setShowBhModal(false);
         }}
       />
       <Modal

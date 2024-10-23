@@ -5,26 +5,24 @@ import { useRouter } from 'next/navigation';
 import { shortenWalletAddress } from '../ConnectedButton';
 import { BadgeData, getBadgeAmount, getBadgeMedal, useGetPublicBadges } from '../../getBadges';
 import BadgeCard, { BadgeCardEntryType } from '../../BadgeCard';
-import { XIcon } from '@/public/assets/icon-components/XIcon';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
 import { useGetConnectionStatus, useGetDelegationStatus } from '../../getConnectionStatus';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 
-interface SignedModalProps {
-  onConnectTwitter: () => void
+interface BhModalProps {
   onConnectFarcaster: () => void
   open: () => void
 }
-const NotBadgeHolder: React.FC<SignedModalProps> = (
-  { onConnectFarcaster, onConnectTwitter, open }
+
+const BadgeHolderModal: React.FC<BhModalProps> = (
+  { onConnectFarcaster, open }
 ) => {
   const { address } = useAccount();
   const { data: badges } = useGetPublicBadges();
   const { data: connectionStatus } = useGetConnectionStatus();
   const { data: delegates } = useGetDelegationStatus();
 
-  const isWorldCoinVerified = badges?.worldCoinVerified ?? false;
   const badgeCards = useMemo(() => {
     if (!badges) return null;
     const {
@@ -51,7 +49,6 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
             key,
             badges,
           )}
-          worldCoinVerified={isWorldCoinVerified}
         />
       );
     });
@@ -118,13 +115,6 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
               </div>
             )}
           </div>
-          <button
-            onClick={onConnectTwitter}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
-          >
-            <XIcon />
-            Connect with X (Twitter)
-          </button>
           <div>
             <button
               onClick={onConnectFarcaster}
@@ -180,4 +170,4 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
   );
 };
 
-export default NotBadgeHolder;
+export default BadgeHolderModal;

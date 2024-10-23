@@ -37,16 +37,6 @@ const BadgesModal = ({ badges }: BadgesModalProps) => {
     }
     switch (badge.type) {
       case BadgesEnum.HOLDER:
-        if (allBadges?.worldCoinVerified) {
-          return (
-            <div>
-              <div className="flex items-center gap-1 text-xs  font-normal leading-4">
-                <p>Verified WorldID</p>
-              </div>
-            </div>
-          );
-        }
-        // eslint-disable-next-line no-fallthrough
       case BadgesEnum.DELEGATE:
         return (
           <div>
