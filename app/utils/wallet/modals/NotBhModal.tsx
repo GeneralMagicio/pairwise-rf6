@@ -5,26 +5,24 @@ import { useRouter } from 'next/navigation';
 import { shortenWalletAddress } from '@/app/comparison/utils/helpers';
 import { BadgeData, getBadgeAmount, getBadgeMedal, useGetPublicBadges } from '../../getBadges';
 import BadgeCard, { BadgeCardEntryType } from '../../BadgeCard';
-import { XIcon } from '@/public/assets/icon-components/XIcon';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
 import { useGetConnectionStatus, useGetDelegationStatus } from '../../getConnectionStatus';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 
-interface SignedModalProps {
-  onConnectTwitter: () => void
+interface BhModalProps {
   onConnectFarcaster: () => void
   open: () => void
 }
-const NotBadgeHolder: React.FC<SignedModalProps> = (
-  { onConnectFarcaster, onConnectTwitter, open }
+
+const BadgeHolderModal: React.FC<BhModalProps> = (
+  { onConnectFarcaster, open }
 ) => {
   const { address } = useAccount();
   const { data: badges } = useGetPublicBadges();
   const { data: connectionStatus } = useGetConnectionStatus();
   const { data: delegates } = useGetDelegationStatus();
 
-  const isWorldCoinVerified = badges?.worldCoinVerified ?? false;
   const badgeCards = useMemo(() => {
     if (!badges) return null;
     const {
@@ -51,14 +49,13 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
             key,
             badges,
           )}
-          worldCoinVerified={isWorldCoinVerified}
         />
       );
     });
   }, [badges]);
   const router = useRouter();
   return (
-    <div className="relative flex w-[600px] flex-col items-center justify-center gap-6 rounded-lg bg-white bg-social-gradient px-24 py-8 text-center md:w-[820px]">
+    <div className="relative flex flex-col items-center justify-center gap-6 rounded-lg bg-white bg-social-gradient px-24 py-8 text-center">
       <h2 className="w-fit text-wrap text-4xl font-bold">Welcome to the Pairwise voting for "Retro Funding 6"</h2>
       {badges && Object.keys(badges).length > 0
         ? (
@@ -118,13 +115,6 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
               </div>
             )}
           </div>
-          <button
-            onClick={onConnectTwitter}
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
-          >
-            <XIcon />
-            Connect with X (Twitter)
-          </button>
           <div>
             <button
               onClick={onConnectFarcaster}
@@ -142,9 +132,7 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
             {connectionStatus?.farcaster && (
               <div className="flex w-full items-center justify-center">
                 <p className="text-center text-sm font-medium text-[#079455]">
-                  {delegates?.toYou?.budget.length ?? 'No'}
-                  {' '}
-                  people delegated to you
+                  {(delegates?.toYou?.budget.length) ? '' : ''}
                 </p>
 
               </div>
@@ -180,4 +168,4 @@ const NotBadgeHolder: React.FC<SignedModalProps> = (
   );
 };
 
-export default NotBadgeHolder;
+export default BadgeHolderModal;

@@ -41,7 +41,6 @@ const WorldIdSignInSuccessModal: React.FC<WorldIdModalProps> = ({
                         'holderPoints',
                         badges,
                       )}
-                      worldCoinVerified={badges?.worldCoinVerified}
                     />
                   </div>
                 )}

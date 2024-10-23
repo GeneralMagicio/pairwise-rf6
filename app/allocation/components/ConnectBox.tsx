@@ -7,8 +7,6 @@ import {
 } from '@worldcoin/idkit';
 import { useQueryClient } from '@tanstack/react-query';
 import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
-import { XIcon } from '@/public/assets/icon-components/XIcon';
-import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { actionId, appId } from '@/app/lib/constants';
 import { useGetConnectionStatus, useWorldSignIn, useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
@@ -26,7 +24,6 @@ interface ConnectBoxProps {
 
 const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectWorldID,
-  onConnectTwitter,
   onConnectFarcaster,
 }) => {
   const { data: badges } = useGetPublicBadges();
@@ -71,7 +68,6 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   const { mutateAsync: worldIdSignIn } = useWorldSignIn();
   const { data: connectionStatus } = useGetConnectionStatus();
   const { data: delegates } = useGetDelegationStatus();
-  const connected = false; // tempo variable
 
   const handleVerify = async (proof: ISuccessResult) => {
     return (await worldIdSignIn(proof));
@@ -147,49 +143,21 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
             ? 'Connect your X and Farcaster account to find out if someone delegated their voting power to you.'
             : 'Some people have delegated their voting power to you. With great power comes great responsibility. Use it wisely.'}
         </p>
-        {connected
-          ? (
-              <div className="flex w-full items-center justify-between">
-                <XIcon />
-                <div className="flex flex-col items-end justify-center gap-2">
-                  <div className="flex items-center justify-center gap-2 rounded-full border border-[#079455] bg-[#17B26A] px-4 py-1">
-                    <p className="text-sm text-gray-50">
-                      <span className="font-semibold"> 5 people</span>
-                      {' '}
-                      delegated to
-                      you
-                    </p>
-                  </div>
-                  <button onClick={refresh} className="px-1 text-xs text-gray-600 underline">
-                    Refresh
-                  </button>
-                </div>
-              </div>
-            )
-          : (
-              <button
-                onClick={onConnectTwitter}
-                className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
-              >
-                <XIcon />
-                Connect with X (Twitter)
-              </button>
-            )}
         {connectionStatus?.farcaster
           ? (
               <div className="flex w-full items-center justify-between">
-                <WarpcastIcon />
+                <Image
+                  src="/assets/images/farcaster.svg"
+                  alt="Farcaster Icon"
+                  width={32}
+                  height={32}
+                />
                 <div className="flex flex-col items-end justify-center gap-2">
                   <div className="flex items-center justify-center gap-2 rounded-full border border-[#079455] bg-[#17B26A] px-4 py-1">
                     <p className="text-sm text-gray-50">
                       <span className="font-semibold">
-                        {delegates?.toYou?.budget.length ?? 'No'}
-                        {' '}
-                        people
+                        {delegates?.toYou?.budget.length ? `${delegates?.toYou?.budget.length} people delegated to you` : 'You have no delegations'}
                       </span>
-                      {' '}
-                      delegated to
-                      you
                     </p>
                   </div>
                   <button onClick={refresh} className="px-1 text-xs text-gray-600 underline">
@@ -203,7 +171,12 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                 onClick={onConnectFarcaster}
                 className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
               >
-                <WarpcastIcon />
+                <Image
+                  src="/assets/images/farcaster.svg"
+                  alt="Farcaster Icon"
+                  width={20}
+                  height={20}
+                />
                 Connect with Farcaster
               </button>
             )}

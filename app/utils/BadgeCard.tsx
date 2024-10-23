@@ -7,7 +7,6 @@ interface BadgeCardProps {
   points: number
   medal?: MedalTypes
   amount?: number
-  worldCoinVerified?: boolean
 }
 
 export type BadgeCardEntryType = [
@@ -24,12 +23,33 @@ export const badgeTypeMapping = {
 
 type BadgeType = keyof typeof badgeTypeMapping;
 
+const badgeImages: Record<BadgeType, Record<MedalTypes, string> | string>
+  = {
+    holderPoints: {
+      Bronze: '/assets/images/badges/holder_bronze.svg',
+      Silver: '/assets/images/badges/holder_silver.svg',
+      Gold: '/assets/images/badges/holder_gold.svg',
+      Platinum: '/assets/images/badges/holder_platinum.svg',
+      Diamond: '/assets/images/badges/holder_diamond.svg',
+      Whale: '/assets/images/badges/holder_whale.svg',
+    },
+    delegatePoints: {
+      Bronze: '/assets/images/badges/delegate_bronze.svg',
+      Silver: '/assets/images/badges/delegate_silver.svg',
+      Gold: '/assets/images/badges/delegate_gold.svg',
+      Platinum: '/assets/images/badges/delegate_platinum.svg',
+      Diamond: '/assets/images/badges/delegate_diamond.svg',
+      Whale: '/assets/images/badges/delegate_whale.svg',
+    },
+    badgeholderPoints: '/assets/images/badges/badgeholder.svg',
+    recipientsPoints: '/assets/images/badges/recipient.svg',
+  };
+
 const BadgeCard: React.FC<BadgeCardProps> = ({
   type,
   points,
   medal,
   amount,
-  worldCoinVerified,
 }) => {
   const formatAmount = (amount: number | undefined) => {
     if (amount === undefined) return '';
@@ -38,39 +58,25 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
       : amount.toString();
   };
   const handleBadgesImage = () => {
-    switch (type) {
-      case 'holderPoints':
-        return '/images/badges/holder/' + medal?.toLowerCase() + '/128.svg';
-      case 'delegatePoints':
-        return '/images/badges/delegate/' + medal?.toLowerCase() + '/128.svg';
-      case 'recipientsPoints':
-        return '/images/badges/recipient/128.svg';
-      case 'badgeholderPoints':
-        return '/images/badges/badgeholder/128.svg';
-      default:
-        return '/images/badges/1.png';
+    const image = badgeImages[type];
+    if (typeof image === 'string') {
+      return image;
     }
+    if (medal) {
+      return image[medal];
+    }
+    throw new Error(`Badge of type ${type} requires a medal.`);
   };
 
   const handleBadgeInfo = (amount?: number, points?: number) => {
     switch (type) {
       case 'holderPoints':
-        if (worldCoinVerified) {
-          return (
-            <div>
-              <div className="flex items-center gap-1 text-xs  font-normal leading-4">
-                <p>Verified WorldID</p>
-              </div>
-            </div>
-          );
-        }
-        // eslint-disable-next-line no-fallthrough
       case 'delegatePoints':
         return (
           <div>
             <div className="mb-2 flex items-center gap-2 text-sm">
               <Image
-                src="/images/tokens/op.png"
+                src="/assets/images/tokens/op.png"
                 width={16}
                 height={16}
                 alt="token"
