@@ -85,6 +85,7 @@ export default function Modals() {
             <Modal
               isOpen={notBhOpen}
               onClose={() => {
+                setShowBhModal(false);
                 router.push('/allocation');
               }}
             >
@@ -108,7 +109,6 @@ export default function Modals() {
         isOpen={isOpenFarcasterModal}
         onClose={() => {
           setIsOpenFarcasterModal(false);
-          setShowBhModal(false);
         }}
       />
       <Modal
