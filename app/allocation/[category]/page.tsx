@@ -13,6 +13,7 @@ import {
 } from '../../comparison/utils/helpers';
 import { Checkbox } from '@/app/utils/Checkbox';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
+import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
 import NotFoundComponent from '@/app/components/404';
 import {
   useProjectsRankingByCategoryId,
@@ -51,6 +52,8 @@ const RankingPage = () => {
   const [rankingArray, setRankingArray] = useState<IProjectRankingObj[]>([]);
   const [totalShareError, setTotalShareError] = useState<string | null>(null);
   const [lockedItems, setLockedItems] = useState<number[]>([]);
+  const [isLocked, setIsLocked] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
 
   const { data: categoryRankings } = useCategoryRankings();
   const { data: ranking, isLoading } = useProjectsRankingByCategoryId(category);
@@ -87,6 +90,30 @@ const RankingPage = () => {
     else {
       setLockedItems([...lockedItems, id]);
     }
+  };
+
+  const lockSelection = () => {
+    if (!projects) return;
+
+    const lockedProjects = checkedItems.filter(
+      checkedId => !lockedItems.includes(checkedId)
+    );
+
+    setLockedItems([...lockedItems, ...lockedProjects]);
+    setCheckedItems([]);
+  };
+
+  const unlockSelection = () => {
+    if (!projects) return;
+
+    const unlockedProjects = checkedItems.filter(checkedId =>
+      lockedItems.includes(checkedId)
+    );
+
+    setLockedItems(
+      lockedItems.filter(lockedId => !unlockedProjects.includes(lockedId))
+    );
+    setCheckedItems([]);
   };
 
   const selectItem = (id: number) => {
@@ -133,6 +160,40 @@ const RankingPage = () => {
 
     updateProjectRanking();
   };
+
+  useEffect(() => {
+    if (!projects || projects.length === 0) {
+      setIsLocked(false);
+      setIsUnlocked(true);
+      return;
+    }
+
+    const allLocked = lockedItems.length === projects.length;
+    const noneLocked = lockedItems.length === 0;
+    const checkedLocked = checkedItems.every(id => lockedItems.includes(id));
+    const checkedUnlocked = checkedItems.every(
+      id => !lockedItems.includes(id)
+    );
+    const someLocked = checkedItems.some(id => lockedItems.includes(id));
+    const someUnlocked = checkedItems.some(id => !lockedItems.includes(id));
+
+    if (allLocked || checkedLocked) {
+      setIsLocked(true);
+      setIsUnlocked(false);
+    }
+    else if (noneLocked || checkedUnlocked) {
+      setIsLocked(false);
+      setIsUnlocked(true);
+    }
+    else if (someLocked || someUnlocked) {
+      setIsLocked(true);
+      setIsUnlocked(true);
+    }
+    else {
+      setIsLocked(false);
+      setIsUnlocked(false);
+    }
+  }, [projects, lockedItems, checkedItems]);
 
   useEffect(() => {
     if (ranking) setProjects(ranking?.ranking);
@@ -184,15 +245,38 @@ const RankingPage = () => {
                   items selected
                 </p>
               </div>
-              <div className="h-6 border-r border-gray-200"></div>
-              <button className="flex items-center justify-center gap-2">
-                <LockIcon />
-                <p className="text-sm text-gray-600">Lock allocation</p>
-              </button>
+              {projects?.length && checkedItems.length > 0 && (
+                <>
+                  <div className="h-6 border-r border-gray-200" />
+                  {isLocked && (
+                    <button
+                      className="flex items-center justify-center gap-2"
+                      onClick={unlockSelection}
+                    >
+                      <UnlockIcon />
+                      <p className="text-sm text-gray-600">Unlock selection</p>
+                    </button>
+                  )}
+                  {isLocked && isUnlocked && (
+                    <div className="h-6 border-r border-gray-200" />
+                  )}
+                  {isUnlocked && (
+                    <button
+                      className="flex items-center justify-center gap-2"
+                      onClick={lockSelection}
+                    >
+                      <LockIcon />
+                      <p className="text-sm text-gray-600">Lock selection</p>
+                    </button>
+                  )}
+                </>
+              )}
             </div>
             <div className="flex gap-4">
               <p className="text-sm font-medium text-gray-400">
-                0 items locked
+                {lockedItems.length}
+                {' '}
+                items locked
               </p>
             </div>
           </div>
