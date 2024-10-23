@@ -145,7 +145,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
         </p>
         {connectionStatus?.farcaster
           ? (
-              <div className="flex w-full items-center justify-between items-center">
+              <div className="flex w-full items-center justify-between">
                 <Image
                   src="/assets/images/farcaster.svg"
                   alt="Farcaster Icon"
@@ -156,7 +156,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                   <div className="flex items-center justify-center gap-2 rounded-full border border-[#079455] bg-[#17B26A] px-4 py-1">
                     <p className="text-sm text-gray-50">
                       <span className="font-semibold">
-                        {delegates?.toYou?.budget.length ?`${delegates?.toYou?.budget.length} people delegated to you`: "You have no delegations"}
+                        {delegates?.toYou?.budget.length ? `${delegates?.toYou?.budget.length} people delegated to you` : 'You have no delegations'}
                       </span>
                     </p>
                   </div>

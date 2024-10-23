@@ -55,7 +55,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
   }, [badges]);
   const router = useRouter();
   return (
-    <div className="relative flex w-[600px] flex-col items-center justify-center gap-6 rounded-lg bg-white bg-social-gradient px-24 py-8 text-center md:w-[820px]">
+    <div className="relative flex flex-col items-center justify-center gap-6 rounded-lg bg-white bg-social-gradient px-24 py-8 text-center">
       <h2 className="w-fit text-wrap text-4xl font-bold">Welcome to the Pairwise voting for "Retro Funding 6"</h2>
       {badges && Object.keys(badges).length > 0
         ? (
@@ -132,9 +132,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
             {connectionStatus?.farcaster && (
               <div className="flex w-full items-center justify-center">
                 <p className="text-center text-sm font-medium text-[#079455]">
-                  {delegates?.toYou?.budget.length ?? 'No'}
-                  {' '}
-                  people delegated to you
+                  {(delegates?.toYou?.budget.length) ? '' : ''}
                 </p>
 
               </div>
