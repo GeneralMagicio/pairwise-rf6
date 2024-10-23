@@ -176,6 +176,7 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
                     setOAuthData={setOAuthData}
                     sendOTP={sendOTP}
                     setStep={setStep}
+                    closeModal={closeModal}
                   />
                 )
               : (
@@ -186,6 +187,7 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
                     setEoaWallet={setEoaWallet}
                     setStep={setStep}
                     resendOTP={sendOTP}
+                    closeModal={closeModal}
                   />
                 )}
           </div>
