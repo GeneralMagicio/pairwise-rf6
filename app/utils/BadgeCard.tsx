@@ -76,7 +76,7 @@ const BadgeCard: React.FC<BadgeCardProps> = ({
           <div>
             <div className="mb-2 flex items-center gap-2 text-sm">
               <Image
-                src="/images/tokens/op.png"
+                src="/assets/images/tokens/op.png"
                 width={16}
                 height={16}
                 alt="token"
