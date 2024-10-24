@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useRevokeDelegation } from '@/app/comparison/utils/data-fetching/delegation';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 
@@ -12,7 +13,21 @@ const DelegatedCategory = ({
   isAutoConnecting,
   username,
 }: TDelegatedCategoryProps) => {
-  const { mutate: revokeDelegation } = useRevokeDelegation(id);
+  const { mutateAsync: revokeDelegation } = useRevokeDelegation(id);
+  const queryClient = useQueryClient();
+
+  const handleRevoke = async () => {
+    await revokeDelegation();
+    queryClient.refetchQueries(({
+      queryKey: ['fetch-delegates'],
+    }));
+    queryClient.refetchQueries(({
+      queryKey: ['category-ranking'],
+    }));
+    queryClient.refetchQueries(({
+      queryKey: ['categories'],
+    }));
+  };
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4">
@@ -30,7 +45,7 @@ const DelegatedCategory = ({
         </div>
       )}
       <button
-        onClick={() => revokeDelegation()}
+        onClick={handleRevoke}
         className="whitespace-nowrap text-xs text-gray-600 underline"
         disabled={isAutoConnecting}
       >
