@@ -35,6 +35,7 @@
     "react-dom": "^18",
     "react-number-format": "^5.4.2",
     "react-switch": "^7.0.0",
+    "react-toastify": "^10.0.6",
     "siwe": "^2.3.2",
     "thirdweb": "^5.61.5",
     "viem": "^2.16.1",

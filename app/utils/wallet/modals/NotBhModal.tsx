@@ -132,7 +132,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
             {connectionStatus?.farcaster && (
               <div className="flex w-full items-center justify-center">
                 <p className="text-center text-sm font-medium text-[#079455]">
-                  {(delegates?.toYou?.budget.length) ? '' : ''}
+                  {(delegates?.toYou?.budget.length) ? `${(delegates?.toYou?.budget.length)} people delegated to you` : 'You have no delegations'}
                 </p>
 
               </div>

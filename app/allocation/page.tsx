@@ -112,6 +112,7 @@ const AllocationPage = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
+  const [isWorldIdSignErrorModal, setIsWorldIdSignErrorModal] = useState(false);
 
   const [delegationState, setDelegationState] = useState(
     DelegationState.Initial
@@ -237,7 +238,9 @@ const AllocationPage = () => {
         isOpen={isWorldIdSignSuccessModal}
         onClose={() => {
           setIsWorldIdSignSuccessModal(false);
+          setIsWorldIdSignErrorModal(false);
         }}
+        isError={isWorldIdSignErrorModal}
       />
       <FarcasterModal
         isOpen={isOpenFarcasterModal}
@@ -384,8 +387,11 @@ const AllocationPage = () => {
                 setIsOpenFarcasterModal(true);
               }}
               onConnectTwitter={() => {}}
-              onConnectWorldID={() => {
+              onConnectWorldID={(isError?: boolean) => {
                 setIsWorldIdSignSuccessModal(true);
+                if (isError) {
+                  setIsWorldIdSignErrorModal(true);
+                }
               }}
             />
           </div>

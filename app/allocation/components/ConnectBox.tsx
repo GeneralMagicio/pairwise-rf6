@@ -17,7 +17,7 @@ import ActiveBadges, {
 import { useGetPublicBadges } from '@/app/utils/getBadges';
 
 interface ConnectBoxProps {
-  onConnectWorldID: () => void
+  onConnectWorldID: (isError?: boolean) => void
   onConnectTwitter: () => void
   onConnectFarcaster: () => void
 }
@@ -96,6 +96,9 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
         action={actionId}
         onSuccess={() => {
           onConnectWorldID();
+        }}
+        onError={() => {
+          onConnectWorldID(true);
         }}
         handleVerify={handleVerify}
         verification_level={VerificationLevel.Device}

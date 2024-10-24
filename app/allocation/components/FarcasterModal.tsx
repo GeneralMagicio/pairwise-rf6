@@ -2,10 +2,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSignIn, QRCode } from '@farcaster/auth-kit';
 import Image from 'next/image';
+import { toast } from 'react-toastify';
 import Modal from '@/app/utils/Modal';
 import LoadingModalContent from './LoadingModalContent';
 import LoadedModalContent from './LoadedModalContent';
 import { IUpdateFarcasterProps, useFarcasterSignIn, useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
+import 'react-toastify/dist/ReactToastify.css';
 interface FarcasterModalProps {
   isOpen: boolean
   onClose: () => void
@@ -13,12 +15,21 @@ interface FarcasterModalProps {
 
 const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
   const { mutateAsync: connectFarcaster } = useFarcasterSignIn();
+  const [terminate, setTerminate] = useState(false);
   const onSuccessCallback = useCallback(
     async ({ message, signature, custody }: IUpdateFarcasterProps) => {
       if (terminate) return;
-      await connectFarcaster({ message, signature, custody });
+      const response = await connectFarcaster({ message, signature, custody });
+      console.log(response);
+      if (response.error) {
+        toast.error('Error on sign in with Farcaster', {
+          position: 'top-center',
+          autoClose: 15000,
+        });
+        throw new Error(response.error.message);
+      }
       setTerminate(true);
-    }, []);
+    }, [terminate]);
   const { isLoading, data: delegates } = useGetDelegationStatus();
 
   const {
@@ -26,15 +37,19 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
     connect,
     isConnected,
     isSuccess,
+    isError,
     url,
     data,
     isPolling,
   } = useSignIn({
     onSuccess: onSuccessCallback,
+    onError: () => {
+      toast.error('Error on sign in with Farcaster', {
+        position: 'top-center',
+        autoClose: 15000,
+      });
+    },
   });
-
-  console.log(delegates);
-  const [terminate, setTerminate] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -59,7 +74,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} showCloseButton>
-      {url && !isSuccess && (
+      {url && (!isSuccess || isError) && (
         <div className="flex w-[300px] flex-col items-center space-y-4 px-6 pb-6 pt-16 text-center md:w-[420px]">
           <div className="relative size-auto">
             <QRCode uri={url} />
@@ -80,7 +95,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
       )}
-      {isSuccess && data?.username && data?.displayName && (
+      {isSuccess && !isError && data?.username && data?.displayName && (
         isLoading
           ? (
               <LoadingModalContent isFarcaster />
@@ -91,7 +106,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
                 numDelegates={delegates?.toYou?.budget.length ?? 0}
                 onClose={onClose}
                 displayName={data?.displayName}
-                username={data?.displayName}
+                username={data?.username}
               />
             )
       )}
