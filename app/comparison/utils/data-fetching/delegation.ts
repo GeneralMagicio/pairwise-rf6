@@ -27,7 +27,7 @@ interface DelegateStatusData {
 }
 
 export const getDelegations = async (): Promise<DelegateStatusData> => {
-  const res = await axiosInstance.get('delegate/status');
+  const res = await axiosInstance.get('flow/delegate/status');
   return res.data;
 };
 
@@ -39,7 +39,7 @@ export const useGetDelegations = () => {
 };
 
 export const revokeDelegation = async (collectionId: number) => {
-  await axiosInstance.post('delegate/revoke', { collectionId });
+  await axiosInstance.post('flow/delegate/revoke', { collectionId });
 };
 
 export const useRevokeDelegation = (collectionId: number) => {
