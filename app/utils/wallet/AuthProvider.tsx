@@ -81,7 +81,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoginAddress,
         isAutoConnecting,
         setIsAutoConnecting,
-
       }}
     >
       {children}
@@ -156,7 +155,9 @@ export const useAuth = () => {
 
   const redirectToComparisonPage = useCallback(() => {
     if (loggedToPw !== LogginToPwBackendState.LoggedIn) return;
-    router.push('/allocation');
+    if (path === '/') {
+      router.push('/allocation');
+    }
   }, [loggedToPw, router]);
 
   const checkLoggedInToPw = useCallback(async () => {
@@ -165,14 +166,18 @@ export const useAuth = () => {
     const validToken = await isLoggedIn();
     if (validToken) {
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
-      if (!showBhModal)
-        redirectToComparisonPage();
+      if (!showBhModal) redirectToComparisonPage();
     }
     else {
       setShowBhModal(true);
       setLoggedToPw(LogginToPwBackendState.Error);
     }
-  }, [loginAddress.value, redirectToComparisonPage, showBhModal, setShowBhModal]);
+  }, [
+    loginAddress.value,
+    redirectToComparisonPage,
+    showBhModal,
+    setShowBhModal,
+  ]);
 
   useEffect(() => {
     checkLoggedInToPw();

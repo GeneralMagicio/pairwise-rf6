@@ -33,7 +33,6 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
     onSuccess: onSuccessCallback,
   });
 
-  console.log(delegates);
   const [terminate, setTerminate] = useState(false);
 
   useEffect(() => {
