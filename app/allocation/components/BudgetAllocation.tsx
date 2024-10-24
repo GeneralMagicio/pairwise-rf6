@@ -1,146 +1,112 @@
-import { FC } from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useAuth } from '@/app/utils/wallet/AuthProvider';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRightIcon';
 import { CollectionProgressStatusEnum } from '@/app/comparison/utils/types';
-import { CheckIcon } from '@/public/assets/icon-components/Check';
-import { UserColabGroupIcon } from '@/public/assets/icon-components/UserColabGroup';
+import Loading from '@/app/components/Loading';
+import VotedCategory from './ProgressCards/VotedCategory';
+import DelegatedCategory from './ProgressCards/DelegatedCategory';
+import PendingCategory from './ProgressCards/PendingCategory';
 
 export interface BudgetCategory {
   id: number
   imageSrc: string
-  title: string
+  name: string
   description: string
-  status: string
-  delegations: number
 }
 
-interface BudgetAllocationProps extends BudgetCategory {
+interface IBudgetAllocationProps extends BudgetCategory {
+  progress: CollectionProgressStatusEnum
+  delegations: number
+  loading: boolean
+  username?: string
   onDelegate: () => void
   onScore: () => void
 }
 
-const BudgetAllocation: FC<BudgetAllocationProps> = ({
+const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
+  id,
   imageSrc,
-  title,
+  name,
   description,
   delegations,
-  status,
-  onDelegate,
+  loading,
+  progress = CollectionProgressStatusEnum.Pending,
+  username,
   onScore,
+  onDelegate,
 }) => {
   const { isAutoConnecting } = useAuth();
 
+  const renderProgressState = useMemo(() => {
+    switch (progress) {
+      case CollectionProgressStatusEnum.Finished:
+        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
+      case CollectionProgressStatusEnum.Delegated:
+        return (
+          <DelegatedCategory id={id} isAutoConnecting={isAutoConnecting} username={username} />
+        );
+      case CollectionProgressStatusEnum.Pending:
+      default:
+        return (
+          <PendingCategory
+            onScore={onScore}
+            onDelegate={onDelegate}
+            delegations={delegations}
+            isAutoConnecting={isAutoConnecting}
+          />
+        );
+    }
+  }, [progress, delegations, isAutoConnecting]);
+
   return (
     <div className="flex justify-between rounded-lg border bg-gray-50 p-4">
-      <div className="flex w-[76%] justify-between">
-        <div className="flex space-x-4">
-          <div className=" rounded-lg">
-            <Image src={imageSrc} alt={title} width={64} height={64} />
-          </div>
-          <div className="flex max-w-[70%] flex-col gap-2">
-            <Link className="flex items-center gap-2 font-medium" href="#">
-              {title}
-              <ArrowRightIcon color="#05060B" size={24} />
-            </Link>
-            <p className="text-sm text-gray-400">{description}</p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2 border-l border-gray-200 pl-4"></div>
+      <div className="flex w-[74%] space-x-4">
+        <ImageContainer src={imageSrc} alt={name} />
+        <ProjectInfo
+          name={name}
+          description={description}
+          onScore={onScore}
+          isDelegated={progress === CollectionProgressStatusEnum.Delegated}
+        />
       </div>
-      <div className="flex w-[24%] items-center justify-center gap-2">
+      <div className="flex w-[26%] items-center justify-center border-l border-gray-200">
         <div className="flex w-4/5 items-start justify-center">
-          {status === CollectionProgressStatusEnum.Pending
-            ? (
-                <div className="flex w-full flex-col items-center justify-center gap-2">
-                  <div className="flex w-full items-center justify-between">
-                    <button
-                      onClick={onScore}
-                      className={`w-[48%] whitespace-nowrap rounded-md py-3 text-sm font-medium ${
-                        isAutoConnecting
-                          ? 'border bg-gray-300 text-gray-600'
-                          : 'bg-primary text-white'
-                      }`}
-                      disabled={isAutoConnecting}
-                    >
-                      Vote
-                    </button>
-                    <button
-                      onClick={onDelegate}
-                      className={`w-[48%] rounded-md border py-3 text-sm font-medium ${
-                        isAutoConnecting
-                          ? 'bg-gray-300 text-gray-600'
-                          : 'text-gray-700'
-                      }`}
-                      disabled={isAutoConnecting}
-                    >
-                      Delegate
-                    </button>
-                  </div>
-                  {!!delegations && (
-                    <div className="flex w-full items-center justify-center gap-2 rounded-full bg-[#FFE6D5] p-1">
-                      <UserColabGroupIcon />
-                      <p className="text-xs font-medium text-gray-400">
-                        <strong className="text-dark-500">
-                          {delegations > 1
-                            ? delegations + ' people'
-                            : delegations + ' person'}
-                        </strong>
-                        {' '}
-                        delegated to you
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )
-            : status === CollectionProgressStatusEnum.Finished
-              ? (
-                  <div className="flex w-full flex-col items-center justify-center gap-4">
-                    <button className="flex w-full items-center justify-center gap-2 rounded-md border py-3 font-semibold">
-                      Edit
-                    </button>
-                    <div className="flex w-full justify-center gap-2 rounded-xl border border-[#17B26A] bg-[#ECFDF3] py-1">
-                      <p className="text-xs font-medium text-[#17B26A]">Voted</p>
-                      <CheckIcon size={15} />
-                    </div>
-                    <button
-                      onClick={onScore}
-                      className="whitespace-nowrap text-xs text-gray-600 underline"
-                      disabled={isAutoConnecting}
-                    >
-                      View attestation
-                    </button>
-                  </div>
-                )
-              : (
-                  status === CollectionProgressStatusEnum.Delegated && (
-                    <div className="flex w-full flex-col items-center justify-center gap-4">
-                      <div className="flex w-full items-center justify-center gap-2 rounded-md border border-[#17B26A] bg-[#ECFDF3] py-3">
-                        <CheckIcon />
-                        <p className="font-semibold text-[#17B26A]">Delegated</p>
-                      </div>
-                      <div className="flex w-full justify-center gap-2 rounded-xl bg-gray-100 py-1">
-                        <p className="text-xs font-medium text-gray-400">
-                          You delegated to
-                          {' '}
-                          <strong className="text-dark-500">@username</strong>
-                        </p>
-                      </div>
-                      <button
-                        onClick={onScore}
-                        className="whitespace-nowrap text-xs text-gray-600 underline"
-                        disabled={isAutoConnecting}
-                      >
-                        Revoke
-                      </button>
-                    </div>
-                  )
-                )}
+          {loading ? <Loading /> : renderProgressState}
         </div>
       </div>
     </div>
   );
 };
+
+const ImageContainer: React.FC<{ src: string, alt: string }> = ({
+  src,
+  alt,
+}) => (
+  <div className="rounded-lg">
+    <Image src={src} alt={alt} width={64} height={64} />
+  </div>
+);
+
+const ProjectInfo: React.FC<{
+  name: string
+  description: string
+  isDelegated?: boolean
+  onScore?: () => void
+}> = ({ name, description, isDelegated, onScore }) => (
+  <div
+    className={`flex max-w-[70%] flex-col gap-2 ${isDelegated && 'opacity-40'}`}
+  >
+    <button
+      className="flex items-center gap-2 font-medium"
+      onClick={onScore}
+      disabled={isDelegated}
+    >
+      {name}
+      <ArrowRightIcon color="#05060B" size={24} />
+    </button>
+    <p className="text-sm text-gray-400">{description}</p>
+  </div>
+);
 
 export default BudgetAllocation;

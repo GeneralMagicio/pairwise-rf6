@@ -2,6 +2,7 @@ export interface RankItem {
   id: number
   percentage: number
   locked: boolean
+  budget: number
 }
 
 export const roundFractions = (value: number, fractions: number) => {
@@ -14,8 +15,6 @@ export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): 
   const currIndex = values.findIndex(el => el.id === newValue.id);
 
   if (currIndex === -1) throw ({ msg: 'New value id not found' });
-
-  console.log(values, newValue);
 
   const newValueDifference = newValue.percentage - values[currIndex].percentage;
 
@@ -32,6 +31,7 @@ export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): 
     else return {
       ...item,
       percentage: roundFractions(item.percentage + (-1 * newValueDifference * item.percentage / restSum), 2),
+      budget: roundFractions(item.budget + (-1 * newValueDifference * item.budget / restSum), 2),
     };
   });
 
