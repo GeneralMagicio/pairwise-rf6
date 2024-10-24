@@ -1,7 +1,8 @@
-import { ChangeEventHandler, FC, useEffect, useRef } from 'react';
+import { FC } from 'react';
 import debounce from 'lodash.debounce';
 import Link from 'next/link';
 import Image from 'next/image';
+import { NumericFormat } from 'react-number-format';
 import { roundFractions } from '../utils';
 import { useAuth } from '@/app/utils/wallet/AuthProvider';
 import { CollectionProgressStatusEnum } from '@/app/comparison/utils/types';
@@ -58,43 +59,39 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   onPercentageChange,
 }) => {
   const { isAutoConnecting } = useAuth();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const hrefLink
     = progress === CollectionProgressStatusEnum.Finished
       ? `/allocation/${categoryIdSlugMap.get(id)}`
       : `/comparison/${categoryIdSlugMap.get(id)}`;
 
-  const handleInputChange: ChangeEventHandler<HTMLInputElement> = debounce(
-    (event) => {
-      const value = event.target.value;
-      onPercentageChange(roundFractions(Number(value), 2));
-    },
-    1500
-  );
+  const handleAllowedValue = (values: any) => {
+    const { floatValue } = values;
+    return floatValue === undefined || (floatValue >= 0 && floatValue <= 100);
+  };
 
-  const handlePlus = debounce(() => {
-    const value = allocationPercentage;
-    onPercentageChange(Number(Math.min(value + 1, 100)));
+  const handleInputChange = debounce((value: number) => {
+    onPercentageChange(roundFractions(value, 2));
   }, 150);
 
-  const handleMinus = debounce(() => {
-    const value = allocationPercentage;
-    onPercentageChange(Math.max(Number(value - 1), 0));
-  }, 150);
+  const handlePlus = () => {
+    onPercentageChange(Math.min(allocationPercentage + 1, 100));
+  };
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.value = `${allocationPercentage}`;
-    }
-  }, [allocationPercentage]);
+  const handleMinus = () => {
+    onPercentageChange(Math.max(allocationPercentage - 1, 0));
+  };
 
   const renderProgressState = () => {
     if (loading) return <Loading />;
     switch (progress) {
       case CollectionProgressStatusEnum.Delegated:
         return (
-          <DelegatedCategory id={id} isAutoConnecting={isAutoConnecting} username={username} />
+          <DelegatedCategory
+            id={id}
+            isAutoConnecting={isAutoConnecting}
+            username={username}
+          />
         );
       case CollectionProgressStatusEnum.Finished:
         return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
@@ -137,13 +134,19 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
                       >
                         -
                       </button>
-                      <div className="flex gap-0 rounded bg-white text-dark-500">
-                        <input
-                          onChange={handleInputChange}
-                          ref={inputRef}
-                          className="w-20 bg-gray-50 text-center font-semibold outline-none"
-                          type="number"
-                          defaultValue={allocationPercentage}
+                      <div className="flex rounded bg-white text-dark-500">
+                        <NumericFormat
+                          value={allocationPercentage}
+                          suffix="%"
+                          decimalScale={2}
+                          fixedDecimalScale
+                          allowNegative={false}
+                          isAllowed={handleAllowedValue}
+                          onValueChange={({ floatValue }) => {
+                            handleInputChange(floatValue ?? 0);
+                          }}
+                          className="w-20 bg-gray-50 text-center font-semibold focus:outline-none"
+                          placeholder="0.00%"
                         />
                       </div>
                       <button
