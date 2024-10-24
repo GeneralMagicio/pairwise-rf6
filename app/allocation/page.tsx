@@ -152,7 +152,7 @@ const AllocationPage = () => {
 
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     if (typeof newValue === 'number') {
-      setTotalValue(newValue);
+      setTotalValue(newValue * 1_000_000);
     }
   };
 
