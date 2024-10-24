@@ -17,17 +17,22 @@ interface IDelegateMetadata {
   username: string
   profileUrl: string
 }
+
+interface IBudget {
+  metadata: IDelegateMetadata
+}
+
 interface ICollection {
   collectionId: number
   metadata: IDelegateMetadata
 }
 export interface ISocialDelegateResponse {
   fromYou?: {
-    budget: IDelegateMetadata | null
+    budget: IBudget | null
     collections: ICollection[]
   }
   toYou?: {
-    budget: IDelegateMetadata[]
+    budget: IBudget[]
     collections: ICollection[]
   }
 }

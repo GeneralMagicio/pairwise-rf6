@@ -1,13 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveWallet } from 'thirdweb/react';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import Modal from '../utils/Modal';
 import EmailLoginModal from './components/EOA/EmailLoginModal';
 
-import CategoryAllocation, { Category } from './components/CategoryAllocation';
+import CategoryAllocation from './components/CategoryAllocation';
 import BudgetAllocation, {
   BudgetCategory,
 } from './components/BudgetAllocation';
@@ -16,8 +16,8 @@ import { modifyPercentage, RankItem } from './utils';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { CustomizedSlider } from './components/Slider';
-import { categoryIdSlugMap } from '../comparison/utils/helpers';
-import { useCategories } from './components/hooks/getCategories';
+import { categoryIdSlugMap, formatBudget } from '../comparison/utils/helpers';
+import { useCategories } from '../comparison/utils/data-fetching/categories';
 import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
 import FarcasterModal from './components/FarcasterModal';
 import DelegateModal from '../delegation/DelegationModal';
@@ -25,67 +25,21 @@ import { FarcasterLookup } from '../delegation/farcaster/FarcasterLookup';
 import FarcasterSuccess from '../delegation/farcaster/FarcasterSuccess';
 import { axiosInstance } from '../utils/axiosInstance';
 import { TargetDelegate } from '../delegation/farcaster/types';
+import { useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
+import { ICategory, CollectionProgressStatusEnum } from '../comparison/utils/types';
+import SmallSpinner from '../components/SmallSpinner';
+import {
+  useCategoryRankings,
+  useUpdateCategoriesRanking,
+} from '@/app/comparison/utils/data-fetching/ranking';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
-  title: 'Budget',
+  name: 'Budget',
   description:
     'Choose how much OP should be dedicated to this round, or delegate this decision to someone you trust.',
   imageSrc: '/assets/images/budget-card.svg',
-  status: 'Pending',
-  delegations: 0,
 };
-
-const Categories: Category[] = [
-  {
-    id: 1,
-    title: 'Governance Infrastructure & Tooling',
-    description:
-      'Infrastructure and tooling that powered governance or that made the usage of governance infrastructure more accessible.',
-    imageSrc: '/assets/images/category-it.svg',
-    projectCount: 20,
-    status: 'Pending',
-    delegations: 2,
-  },
-  {
-    id: 2,
-    title: 'Governance Analytics',
-    description:
-      'Analytics that enabled accountability, provided transparency into Collective operations, promoted improved performance, or aided in the design of the Collective.',
-    imageSrc: '/assets/images/category-gra.svg',
-    projectCount: 15,
-    status: 'Delegated',
-    delegations: 1,
-  },
-  {
-    id: 3,
-    title: 'Governance Leadership',
-    description:
-      'Demonstrated leadership in the Collective, including but not limited to, hosting community calls and/or participation in councils, boards and commissions beyond executing on basic responsibilities outlined in Token House Charters.',
-    imageSrc: '/assets/images/category-gl.svg',
-    projectCount: 30,
-    status: 'Finished',
-    delegations: 3,
-  },
-];
-
-const ranks: RankItem[] = [
-  {
-    id: 1,
-    locked: false,
-    percentage: 33.4,
-  },
-  {
-    id: 2,
-    locked: false,
-    percentage: 33.3,
-  },
-  {
-    id: 3,
-    locked: false,
-    percentage: 33.3,
-  },
-];
 
 enum DelegationState {
   Initial,
@@ -98,11 +52,17 @@ const AllocationPage = () => {
   const wallet = useActiveWallet();
   const router = useRouter();
 
-  const { data: categories, isLoading } = useCategories();
-  console.log('categories => ', categories, isLoading);
+  const { data: categories, isLoading: categoriesLoading } = useCategories();
+  const { data: delegations, isLoading: delegationsLoading }
+    = useGetDelegationStatus();
+  const { data: categoryRankings } = useCategoryRankings();
 
-  const [categoryRanking, setCategoryRanking] = useState(ranks);
-  const [totalValue, setTotalValue] = useState(2);
+  const colDelegationToYou = delegations?.toYou?.collections;
+  const colDelegationFromYou = delegations?.fromYou?.collections;
+  const budgetDelegateToYou = delegations?.toYou?.budget;
+  const budgetDelegateFromYou = delegations?.fromYou?.budget;
+
+  const [totalValue, setTotalValue] = useState(categoryRankings?.budget || 0);
   const [percentageError, setPercentageError] = useState<string>();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
   const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal]
@@ -112,13 +72,23 @@ const AllocationPage = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
+  const [categoriesRanking, setCategoriesRanking] = useState<RankItem[]>();
+  const [dbudgetProgress, setDbudgetProgress]
+    = useState<CollectionProgressStatusEnum>(
+      CollectionProgressStatusEnum.Pending
+    );
 
   const [delegationState, setDelegationState] = useState(
     DelegationState.Initial
   );
   const [categoryToDelegate, setCategoryToDelegate]
-    = useState<Pick<Category, 'id' | 'title'>>();
+    = useState<Pick<ICategory, 'id' | 'name'>>();
   const [targetDelegate, setTargetDelegate] = useState<TargetDelegate>();
+
+  const { mutate: updateCategoriesRanking } = useUpdateCategoriesRanking({
+    budget: totalValue,
+    allocationPercentages: categoriesRanking?.map(el => el.percentage / 100) || [],
+  });
 
   const handleDelegate = async (username: string, target: TargetDelegate) => {
     if (!categoryToDelegate) return;
@@ -134,12 +104,14 @@ const AllocationPage = () => {
 
   const handleLock = (id: RankItem['id']) => () => {
     try {
-      const currValue = categoryRanking.find(el => el.id === id)!;
-      const newRanking = modifyPercentage(categoryRanking, {
+      if (!categoriesRanking) return;
+
+      const currValue = categoriesRanking.find(el => el.id === id)!;
+      const newRanking = modifyPercentage(categoriesRanking, {
         ...currValue,
         locked: !currValue.locked,
       });
-      setCategoryRanking(newRanking);
+      setCategoriesRanking(newRanking);
       setPercentageError(undefined);
     }
     catch (e: any) {
@@ -149,12 +121,15 @@ const AllocationPage = () => {
 
   const handleNewValue = (id: RankItem['id']) => (percentage: number) => {
     try {
-      const currValue = categoryRanking.find(el => el.id === id)!;
-      const newRanking = modifyPercentage(categoryRanking, {
+      if (!categoriesRanking) return;
+
+      const currValue = categoriesRanking?.find(el => el.id === id)!;
+      const newRanking = modifyPercentage(categoriesRanking, {
         ...currValue,
         percentage,
+        budget: currValue.budget * (percentage / currValue.percentage),
       });
-      setCategoryRanking(newRanking);
+      setCategoriesRanking(newRanking);
       setPercentageError(undefined);
     }
     catch (e: any) {
@@ -186,6 +161,37 @@ const AllocationPage = () => {
     router.push(`/comparison/${categoryIdSlugMap.get(id)}`);
   };
 
+  const getColNumOfDelegations = (id: number) => {
+    const colDelegation = colDelegationToYou?.filter(
+      el => el.collectionId === id
+    );
+    return colDelegation?.length || 0;
+  };
+
+  useEffect(() => {
+    if (delegations) {
+      const budgetDelegateFromYou = delegations?.fromYou?.budget;
+
+      if (budgetDelegateFromYou?.metadata?.username) {
+        setDbudgetProgress(CollectionProgressStatusEnum.Delegated);
+      }
+    }
+  }, [delegations]);
+
+  useEffect(() => {
+    if (categoryRankings) {
+      setCategoriesRanking(
+        categoryRankings.ranking.map(el => ({
+          id: el.projectId,
+          percentage: Math.round(el.share * 100 * 100) / 100,
+          locked: false,
+          budget: categoryRankings.budget * el.share,
+        }))
+      );
+      setTotalValue(categoryRankings.budget);
+    }
+  }, [categoryRankings]);
+
   return (
     <div>
       <Modal
@@ -197,7 +203,7 @@ const AllocationPage = () => {
       >
         {delegationState === DelegationState.DelegationMethod && (
           <DelegateModal
-            categoryName={categoryToDelegate!.title}
+            categoryName={categoryToDelegate!.name}
             onFindDelegatesFarcaster={() => {
               setDelegationState(DelegationState.Lookup);
             }}
@@ -208,12 +214,12 @@ const AllocationPage = () => {
         {delegationState === DelegationState.Lookup && (
           <FarcasterLookup
             handleDelegate={handleDelegate}
-            categoryName={categoryToDelegate!.title}
+            categoryName={categoryToDelegate!.name}
           />
         )}
         {delegationState === DelegationState.Success && targetDelegate && (
           <FarcasterSuccess
-            categoryName={categoryToDelegate!.title}
+            categoryName={categoryToDelegate!.name}
             displayName={targetDelegate.displayName}
             username={targetDelegate.username}
             profilePicture={targetDelegate.profilePicture}
@@ -287,7 +293,7 @@ const AllocationPage = () => {
                       <span> 2M </span>
                       <CustomizedSlider
                         className="my-2 min-w-[55%]"
-                        value={totalValue}
+                        value={totalValue / 1_000_000}
                         onChange={handleSliderChange}
                         shiftStep={0.1}
                         step={0.1}
@@ -297,7 +303,7 @@ const AllocationPage = () => {
                       />
                       <span> 8M </span>
                       <div className="w-64 whitespace-nowrap rounded-md border bg-gray-50 py-2 text-center text-sm text-gray-500">
-                        {(totalValue * 1_000_000).toLocaleString()}
+                        {formatBudget(totalValue)}
                         {' '}
                         OP
                       </div>
@@ -315,39 +321,66 @@ const AllocationPage = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-col gap-4">
-              {!allocatingBudget && (
-                <BudgetAllocation
-                  {...budgetCategory}
-                  onDelegate={() => {
-                    setCategoryToDelegate(budgetCategory);
-                    setDelegationState(DelegationState.DelegationMethod);
-                  }}
-                  onScore={() => {
-                    setAllocatingBudget(true);
-                  }}
-                />
-              )}
-              {Categories.map((cat) => {
-                const rank = categoryRanking.find(el => el.id === cat.id)!;
-                return (
-                  <CategoryAllocation
-                    {...cat}
-                    key={cat.title}
-                    locked={cat.id === 0 ? true : rank.locked}
-                    onDelegate={() => {
-                      setCategoryToDelegate(cat);
-                      setDelegationState(DelegationState.DelegationMethod);
-                    }}
-                    onLockClick={handleLock(cat.id)}
-                    allocatingBudget={allocatingBudget}
-                    onScore={handleScoreProjects(cat.id)}
-                    allocationPercentage={cat.id === 0 ? 0 : rank.percentage}
-                    onPercentageChange={handleNewValue(cat.id)}
-                  />
-                );
-              })}
-            </div>
+            {categoriesLoading
+              ? (
+                  <div className="h-96 w-full">
+                    <SmallSpinner />
+                  </div>
+                )
+              : (
+                  categories
+                  && categories.length > 0 && (
+                    <div className="flex flex-col gap-4">
+                      {!allocatingBudget && (
+                        <BudgetAllocation
+                          {...budgetCategory}
+                          progress={dbudgetProgress}
+                          delegations={budgetDelegateToYou?.length || 0}
+                          loading={delegationsLoading}
+                          onDelegate={() => {
+                            setCategoryToDelegate(budgetCategory);
+                            setDelegationState(DelegationState.DelegationMethod);
+                          }}
+                          onScore={() => {
+                            setAllocatingBudget(true);
+                          }}
+                          username={
+                            budgetDelegateFromYou?.metadata?.username
+                          }
+                        />
+                      )}
+                      {categories.map((cat) => {
+                        const rank = categoriesRanking?.find(
+                          el => el.id === cat.id
+                        );
+                        return (
+                          <CategoryAllocation
+                            {...cat}
+                            key={cat.name}
+                            locked={rank?.locked || false}
+                            delegations={getColNumOfDelegations(cat.id)}
+                            allocatingBudget={allocatingBudget}
+                            allocationPercentage={rank?.percentage || 0}
+                            allocationBudget={rank?.budget || 0}
+                            loading={delegationsLoading}
+                            onDelegate={() => {
+                              setCategoryToDelegate(cat);
+                              setDelegationState(DelegationState.DelegationMethod);
+                            }}
+                            onLockClick={handleLock(cat.id)}
+                            onScore={handleScoreProjects(cat.id)}
+                            onPercentageChange={handleNewValue(cat.id)}
+                            username={
+                              colDelegationFromYou?.find(
+                                el => el.collectionId === cat.id
+                              )?.metadata?.username
+                            }
+                          />
+                        );
+                      })}
+                    </div>
+                  )
+                )}
             {allocatingBudget && (
               <span className='className="w-fit h-4 self-end text-primary'>
                 {percentageError ? `Error: ${percentageError}` : ''}
@@ -363,7 +396,12 @@ const AllocationPage = () => {
                       <ArrowLeft2Icon />
                       Back to Categories
                     </button>
-                    <button className="flex items-center justify-center gap-3 rounded-lg bg-primary px-10 py-2 font-semibold text-white">
+                    <button
+                      className="flex items-center justify-center gap-3 rounded-lg bg-primary px-10 py-2 font-semibold text-white"
+                      onClick={() => {
+                        updateCategoriesRanking();
+                      }}
+                    >
                       Submit Vote
                       <ArrowRightIcon size={20} />
                     </button>

@@ -1,61 +1,70 @@
-import debounce from 'lodash.debounce';
-import Image from 'next/image';
 import { ChangeEventHandler, FC, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import debounce from 'lodash.debounce';
 import Link from 'next/link';
+import Image from 'next/image';
 import { roundFractions } from '../utils';
 import { useAuth } from '@/app/utils/wallet/AuthProvider';
+import { CollectionProgressStatusEnum } from '@/app/comparison/utils/types';
+import { TCategory } from '@/app/comparison/utils/data-fetching/categories';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRightIcon';
-import { LockIcon } from '@/public/assets/icon-components/Lock';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
+import { LockIcon } from '@/public/assets/icon-components/Lock';
+import Loading from '@/app/components/Loading';
+import VotedCategory from './ProgressCards/VotedCategory';
+import DelegatedCategory from './ProgressCards/DelegatedCategory';
+import PendingCategory from './ProgressCards/PendingCategory';
 import {
-  CollectionProgressStatus,
-  CollectionProgressStatusEnum,
-} from '@/app/comparison/utils/types';
-import { CheckIcon } from '@/public/assets/icon-components/Check';
-import { UserColabGroupIcon } from '@/public/assets/icon-components/UserColabGroup';
-import { categoryIdSlugMap } from '@/app/comparison/utils/helpers';
+  categoryIdSlugMap,
+  formatBudget,
+} from '@/app/comparison/utils/helpers';
 
-export interface Category {
-  id: number
-  imageSrc: string
-  title: string
-  description: string
-  projectCount: number
-  status: CollectionProgressStatus
-  delegations: number
-}
+// Image source map for collections
+const collectionsImageSrc = new Map<number, string>([
+  [1, '/assets/images/category-it.svg'],
+  [2, '/assets/images/category-gra.svg'],
+  [3, '/assets/images/category-gl.svg'],
+]);
 
-interface CategoryAllocationProps extends Category {
+interface CategoryAllocationProps extends TCategory {
   allocationPercentage: number
   allocatingBudget: boolean
+  allocationBudget: number
+  locked: boolean
+  delegations: number
+  loading: boolean
+  username?: string
   onDelegate: () => void
   onScore: () => void
   onLockClick: () => void
-  locked: boolean
   onPercentageChange: (value: number) => void
 }
 
 const CategoryAllocation: FC<CategoryAllocationProps> = ({
   id,
   allocatingBudget,
-  imageSrc,
-  title,
+  name,
   description,
   projectCount,
-  status,
+  progress,
   allocationPercentage,
+  allocationBudget,
   locked,
   delegations,
+  loading,
+  username,
   onDelegate,
   onScore,
   onLockClick,
   onPercentageChange,
 }) => {
   const { isAutoConnecting } = useAuth();
-  const router = useRouter();
-
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const hrefLink
+    = progress === CollectionProgressStatusEnum.Finished
+      ? `/allocation/${categoryIdSlugMap.get(id)}`
+      : `/comparison/${categoryIdSlugMap.get(id)}`;
+
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = debounce(
     (event) => {
       const value = event.target.value;
@@ -75,34 +84,47 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   }, 150);
 
   useEffect(() => {
-    if (inputRef.current?.value) {
+    if (inputRef.current) {
       inputRef.current.value = `${allocationPercentage}`;
     }
   }, [allocationPercentage]);
 
+  const renderProgressState = () => {
+    if (loading) return <Loading />;
+    switch (progress) {
+      case CollectionProgressStatusEnum.Delegated:
+        return (
+          <DelegatedCategory id={id} isAutoConnecting={isAutoConnecting} username={username} />
+        );
+      case CollectionProgressStatusEnum.Finished:
+        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
+      case CollectionProgressStatusEnum.Pending:
+      default:
+        return (
+          <PendingCategory
+            onScore={onScore}
+            onDelegate={onDelegate}
+            isAutoConnecting={isAutoConnecting}
+            delegations={delegations}
+          />
+        );
+    }
+  };
+
   return (
     <div className="flex justify-between rounded-lg border bg-gray-50 p-4">
-      <div className="flex w-[76%] justify-between">
-        <div className="flex space-x-4">
-          <div className=" rounded-lg">
-            <Image src={imageSrc} alt={title} width={64} height={64} />
-          </div>
-          <div className="flex max-w-[70%] flex-col gap-2">
-            <Link className="flex items-center gap-2 font-medium" href="#">
-              {title}
-              <ArrowRightIcon color="#05060B" size={24} />
-            </Link>
-            <p className="text-sm text-gray-400">{description}</p>
-            {projectCount && (
-              <p className="mt-2 w-fit rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700">
-                {`${projectCount} project${projectCount > 1 ? 's' : ''}`}
-              </p>
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col gap-2 border-l border-gray-200 pl-4"></div>
+      <div className="flex w-[74%] space-x-4">
+        <ImageContainer src={collectionsImageSrc.get(id) || ''} alt={name} />
+        <ProjectInfo
+          name={name}
+          description={description}
+          projectCount={projectCount}
+          hrefLink={hrefLink}
+          isDelegated={progress === CollectionProgressStatusEnum.Delegated}
+        />
       </div>
-      <div className="flex w-[24%] items-center justify-center gap-2">
+
+      <div className="flex w-[26%] items-center justify-center gap-2 border-l border-gray-200">
         <div className="flex w-4/5 items-start justify-center">
           {allocatingBudget
             ? (
@@ -132,8 +154,10 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
                       </button>
                     </div>
                     <div className="flex justify-center rounded-md bg-gray-100 px-4 py-0.5 text-sm text-gray-600">
-                      <p className="w-fit text-center text-xs font-medium">
-                        {(allocationPercentage * 100000).toLocaleString() + ' OP'}
+                      <p className="text-xs font-medium">
+                        {formatBudget(allocationBudget)}
+                        {' '}
+                        OP
                       </p>
                     </div>
                   </div>
@@ -147,100 +171,51 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
                   </button>
                 </div>
               )
-            : status === CollectionProgressStatusEnum.Pending
-              ? (
-                  <div className="flex w-full flex-col items-center justify-center gap-2">
-                    <div className="flex w-full items-center justify-between">
-                      <button
-                        onClick={onScore}
-                        className={`w-[48%] whitespace-nowrap rounded-md py-3 text-sm font-medium ${
-                          isAutoConnecting
-                            ? 'border bg-gray-300 text-gray-600'
-                            : 'bg-primary text-white'
-                        }`}
-                        disabled={isAutoConnecting}
-                      >
-                        Vote
-                      </button>
-                      <button
-                        onClick={onDelegate}
-                        className={`w-[48%] rounded-md border py-3 text-sm font-medium ${
-                          isAutoConnecting
-                            ? 'bg-gray-300 text-gray-600'
-                            : 'text-gray-700'
-                        }`}
-                        disabled={isAutoConnecting}
-                      >
-                        Delegate
-                      </button>
-                    </div>
-                    {!!delegations && (
-                      <div className="flex w-full items-center justify-center gap-2 rounded-full bg-[#FFE6D5] p-1">
-                        <UserColabGroupIcon />
-                        <p className="text-xs font-medium text-gray-400">
-                          <strong className="text-dark-500">
-                            {delegations > 1
-                              ? delegations + ' people'
-                              : delegations + ' person'}
-                          </strong>
-                          {' '}
-                          delegated to you
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )
-              : status === CollectionProgressStatusEnum.Finished
-                ? (
-                    <div className="flex w-full flex-col items-center justify-center gap-4">
-                      <button
-                        className="flex w-full items-center justify-center gap-2 rounded-md border py-3 font-semibold"
-                        onClick={() =>
-                          router.push(`/allocation/${categoryIdSlugMap.get(id)}`)}
-                      >
-                        Edit
-                      </button>
-                      <div className="flex w-full justify-center gap-2 rounded-xl border border-[#17B26A] bg-[#ECFDF3] py-1">
-                        <p className="text-xs font-medium text-[#17B26A]">Voted</p>
-                        <CheckIcon size={15} />
-                      </div>
-                      <button
-                        onClick={onScore}
-                        className="whitespace-nowrap text-xs text-gray-600 underline"
-                        disabled={isAutoConnecting}
-                      >
-                        View attestation
-                      </button>
-                    </div>
-                  )
-                : (
-                    status === CollectionProgressStatusEnum.Delegated && (
-                      <div className="flex w-full flex-col items-center justify-center gap-4">
-                        <div className="flex w-full items-center justify-center gap-2 rounded-md border border-[#17B26A] bg-[#ECFDF3] py-3">
-                          <CheckIcon />
-                          <p className="font-semibold text-[#17B26A]">Delegated</p>
-                        </div>
-                        <div className="flex w-full justify-center gap-2 rounded-xl bg-gray-100 py-1">
-                          <p className="text-xs font-medium text-gray-400">
-                            You delegated to
-                            {' '}
-                            <strong className="text-dark-500">@username</strong>
-                          </p>
-                        </div>
-                        <button
-                          onClick={onScore}
-                          className="whitespace-nowrap text-xs text-gray-600 underline"
-                          disabled={isAutoConnecting}
-                        >
-                          Revoke
-                        </button>
-                      </div>
-                    )
-                  )}
+            : (
+                renderProgressState()
+              )}
         </div>
       </div>
     </div>
   );
 };
+
+const ImageContainer: FC<{ src: string, alt: string }> = ({ src, alt }) => (
+  <div className="rounded-lg">
+    <Image src={src} alt={alt} width={64} height={64} />
+  </div>
+);
+
+const ProjectInfo: FC<{
+  name: string
+  description: string
+  projectCount?: number
+  hrefLink: string
+  isDelegated?: boolean
+}> = ({ name, description, projectCount, hrefLink, isDelegated }) => (
+  <div
+    className={`flex max-w-[70%] flex-col gap-2 ${isDelegated && 'opacity-40'}`}
+  >
+    {isDelegated
+      ? (
+          <p className="flex items-center gap-2 font-medium">
+            {name}
+            <ArrowRightIcon color="#05060B" size={24} />
+          </p>
+        )
+      : (
+          <Link className="flex items-center gap-2 font-medium" href={hrefLink}>
+            {name}
+            <ArrowRightIcon color="#05060B" size={24} />
+          </Link>
+        )}
+    <p className="text-sm text-gray-400">{description}</p>
+    {projectCount && (
+      <p className="mt-2 w-fit rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700">
+        {`${projectCount} project${projectCount > 1 ? 's' : ''}`}
+      </p>
+    )}
+  </div>
+);
 
 export default CategoryAllocation;
