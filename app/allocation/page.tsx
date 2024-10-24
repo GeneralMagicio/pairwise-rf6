@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveWallet } from 'thirdweb/react';
+import { useQueryClient } from '@tanstack/react-query';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import Modal from '../utils/Modal';
 import EmailLoginModal from './components/EOA/EmailLoginModal';
@@ -57,6 +58,8 @@ const AllocationPage = () => {
     = useGetDelegationStatus();
   const { data: categoryRankings } = useCategoryRankings();
 
+  const queryClient = useQueryClient();
+
   const colDelegationToYou = delegations?.toYou?.collections;
   const colDelegationFromYou = delegations?.fromYou?.collections;
   const budgetDelegateToYou = delegations?.toYou?.budget;
@@ -98,6 +101,15 @@ const AllocationPage = () => {
       targetUsername: username,
     });
 
+    queryClient.refetchQueries(({
+      queryKey: ['fetch-delegates'],
+    }));
+    queryClient.refetchQueries(({
+      queryKey: ['category-ranking'],
+    }));
+    queryClient.refetchQueries(({
+      queryKey: ['categories'],
+    }));
     setTargetDelegate(target);
     setDelegationState(DelegationState.Success);
   };
