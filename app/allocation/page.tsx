@@ -25,7 +25,7 @@ import { FarcasterLookup } from '../delegation/farcaster/FarcasterLookup';
 import FarcasterSuccess from '../delegation/farcaster/FarcasterSuccess';
 import { axiosInstance } from '../utils/axiosInstance';
 import { TargetDelegate } from '../delegation/farcaster/types';
-import { useGetDelegations } from '../comparison/utils/data-fetching/delegation';
+import { useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
 import { ICategory, CollectionProgressStatusEnum } from '../comparison/utils/types';
 import SmallSpinner from '../components/SmallSpinner';
 import {
@@ -54,7 +54,7 @@ const AllocationPage = () => {
 
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: delegations, isLoading: delegationsLoading }
-    = useGetDelegations();
+    = useGetDelegationStatus();
   const { data: categoryRankings } = useCategoryRankings();
 
   const colDelegationToYou = delegations?.toYou?.collections;
