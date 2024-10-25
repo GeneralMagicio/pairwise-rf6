@@ -2,32 +2,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSignIn, QRCode } from '@farcaster/auth-kit';
 import Image from 'next/image';
-import { toast } from 'react-toastify';
 import Modal from '@/app/utils/Modal';
 import LoadingModalContent from './LoadingModalContent';
 import LoadedModalContent from './LoadedModalContent';
 import { IUpdateFarcasterProps, useFarcasterSignIn, useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
-import 'react-toastify/dist/ReactToastify.css';
 interface FarcasterModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
 const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
-  const { mutateAsync: connectFarcaster } = useFarcasterSignIn();
+  const { isPending: loading, isError, mutateAsync: connectFarcaster } = useFarcasterSignIn();
   const [terminate, setTerminate] = useState(false);
   const onSuccessCallback = useCallback(
     async ({ message, signature, custody }: IUpdateFarcasterProps) => {
       if (terminate) return;
-      const response = await connectFarcaster({ message, signature, custody });
-      console.log(response);
-      if (response.error) {
-        toast.error('Error on sign in with Farcaster', {
-          position: 'top-center',
-          autoClose: 15000,
-        });
-        throw new Error(response.error.message);
-      }
+      await connectFarcaster({ message, signature, custody });
       setTerminate(true);
     }, [terminate]);
   const { isLoading, data: delegates } = useGetDelegationStatus();
@@ -37,18 +27,11 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
     connect,
     isConnected,
     isSuccess,
-    isError,
     url,
     data,
     isPolling,
   } = useSignIn({
     onSuccess: onSuccessCallback,
-    onError: () => {
-      toast.error('Error on sign in with Farcaster', {
-        position: 'top-center',
-        autoClose: 15000,
-      });
-    },
   });
 
   useEffect(() => {
@@ -95,7 +78,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
       )}
-      {isSuccess && !isError && data?.username && data?.displayName && (
+      {!loading && isSuccess && !isError && data?.username && data?.displayName && (
         isLoading
           ? (
               <LoadingModalContent isFarcaster />

@@ -16,12 +16,17 @@ const updateFarcaster = async ({ message, signature, custody }: IUpdateFarcaster
       signature,
       address: custody,
     });
-    console.log(response);
+    if (response.data.error) {
+      throw new Error(response.data.error);
+    }
     return response.data;
   }
   catch (error: any) {
     if (error.response) {
-      throw error;
+      if (error.response.data?.message) {
+        throw new Error(error.response.data.message);
+      }
+      throw new Error(error.response.message);
     }
     else {
       throw new Error('No response received from the server');
@@ -37,20 +42,38 @@ interface ICollection {
   metadata: IDelegateMetadata
 }
 export interface ISocialDelegateResponse {
-  fromYou?: {
+  fromYou: {
     budget: IDelegateMetadata | null
     collections: ICollection[]
   }
-  toYou?: {
+  toYou: {
     budget: IDelegateMetadata[]
     collections: ICollection[]
   }
 }
 
 const updateWorldID = async (proof: ISuccessResult) => {
-  await axiosInstance.post('/flow/connect/wid', {
-    proof: proof,
-  });
+  try {
+    const response = await axiosInstance.post('/flow/connect/wid', {
+      proof: proof,
+    });
+
+    if (response.data.error) {
+      throw new Error(response.data.error);
+    }
+    return response.data;
+  }
+  catch (error: any) {
+    if (error.response) {
+      if (error.response.data?.message) {
+        throw new Error(error.response.data.message);
+      }
+      throw new Error(error.response.message);
+    }
+    else {
+      throw new Error('No response received from the server');
+    }
+  }
 };
 
 interface ISocialNetwork {
@@ -87,6 +110,12 @@ export const useFarcasterSignIn = () => {
         queryKey: ['fetch-delegates'],
       });
     },
+    onError: (error) => {
+      toast.error('Error signing in with Farcaster: ' + error.message, {
+        position: 'top-center',
+        autoClose: 15000,
+      });
+    },
   });
 };
 
@@ -101,15 +130,6 @@ export const useWorldSignIn = () => {
       queryClient.refetchQueries({
         queryKey: ['connect-status'],
       });
-    },
-    onError: (error) => {
-      console.error(error);
-      console.log(error.message);
-      toast.error('Error signing in with Farcaster: ' + error.message, {
-        position: 'top-center',
-        autoClose: 15000,
-      });
-      throw new Error(error.message);
     },
   });
 };

@@ -77,7 +77,6 @@ const config: Config = {
         'good-rating': 'url(\'/assets/images/good-rating-bg.svg\')',
         'ballot': 'url(\'/assets/images/ballot-bg.svg\')',
         'voting-power': 'url(\'/assets/images/bg-voting-power.svg\')',
-        'social-gradient': 'linear-gradient(145.08deg, #E0FFC1 0%, #E6EFFF 100%)',
       },
       screens: {
         // small laptops
