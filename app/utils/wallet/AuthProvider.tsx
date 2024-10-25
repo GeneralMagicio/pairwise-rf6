@@ -13,7 +13,6 @@ import { WalletId, createWallet } from 'thirdweb/wallets';
 import { useConnect } from 'thirdweb/react';
 import { AxiosError } from 'axios';
 import {
-  getMessageAndSignature,
   isLoggedIn,
   loginToPwBackend,
   logoutFromPwBackend,
@@ -22,6 +21,8 @@ import { API_URL, axiosInstance } from '../axiosInstance';
 import { usePrevious } from '../methods';
 import StorageLabel from '@/app/lib/localStorage';
 import { client, smartWalletConfig } from './provider';
+import { getMessageAndSignature, isLoggedInToAgora, loginToAgora, signOutFromAgora } from './agora-login';
+import { JWTPayload } from './types';
 
 export enum LogginToPwBackendState {
   Initial,
@@ -36,6 +37,8 @@ interface AuthContextType {
   setLoggedToPw: (bool: LogginToPwBackendState) => void
   isNewUser: boolean
   setIsNewUser: (bool: boolean) => void
+  loggedToAgora: 'initial' | 'error' | JWTPayload
+  setLoggedToAgora: (value: AuthContextType['loggedToAgora']) => void
   loginAddress: { value: `0x${string}` | undefined, confirmed: boolean }
   setLoginAddress: (value: AuthContextType['loginAddress']) => void
   isAutoConnecting: boolean
@@ -53,12 +56,15 @@ const AuthContext = React.createContext<AuthContextType>({
   setLoginAddress: () => {},
   isAutoConnecting: false,
   setIsAutoConnecting: () => {},
+  loggedToAgora: 'initial',
+  setLoggedToAgora: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loginInProgress, setLoginInProgress] = useState<boolean | null>(null);
   const [loggedToPw, setLoggedToPw] = useState(LogginToPwBackendState.Initial);
   const [isAutoConnecting, setIsAutoConnecting] = useState(false);
+  const [loggedToAgora, setLoggedToAgora] = useState<AuthContextType['loggedToAgora']>('initial');
 
   const [isNewUser, setIsNewUser] = useState(false);
 
@@ -73,6 +79,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         loginInProgress,
         setLoginInProgress,
+        loggedToAgora,
+        setLoggedToAgora,
         loggedToPw,
         setLoggedToPw,
         isNewUser,
@@ -100,6 +108,8 @@ export const useAuth = () => {
     setLoginAddress,
     isAutoConnecting,
     setIsAutoConnecting,
+    loggedToAgora,
+    setLoggedToAgora,
     // setShowBhModal,
   } = useContext(AuthContext);
 
@@ -114,6 +124,8 @@ export const useAuth = () => {
   const { connect } = useConnect();
 
   const signOut = async (redirectToLanding: boolean = true) => {
+    signOutFromAgora();
+    setLoggedToAgora('initial');
     logoutFromPwBackend();
     setLoginAddress({ value: undefined, confirmed: true });
     setLoggedToPw(LogginToPwBackendState.Initial);
@@ -154,14 +166,18 @@ export const useAuth = () => {
   }, [connectedAddress, prevAddress, path]);
 
   const redirectToComparisonPage = useCallback(() => {
-    if (loggedToPw !== LogginToPwBackendState.LoggedIn) return;
+    if (typeof loggedToAgora !== 'object' || loggedToPw !== LogginToPwBackendState.LoggedIn) return;
     if (path === '/') {
       router.push('/allocation');
     }
-  }, [loggedToPw, router]);
+  }, [loggedToPw, router, loggedToAgora, path]);
 
-  const checkLoggedInToPw = useCallback(async () => {
+  const checkLoggedInToPwAndAgora = useCallback(async () => {
     if (!loginAddress.value) return;
+
+    const loggedInToAgora = await isLoggedInToAgora(loginAddress.value);
+    if (loggedInToAgora) setLoggedToAgora(loggedInToAgora);
+    else setLoggedToAgora('error');
 
     const validToken = await isLoggedIn();
     if (validToken) {
@@ -180,61 +196,74 @@ export const useAuth = () => {
   ]);
 
   useEffect(() => {
-    checkLoggedInToPw();
-  }, [checkLoggedInToPw]);
+    checkLoggedInToPwAndAgora();
+  }, [checkLoggedInToPwAndAgora]);
 
-  const doLoginFlow = useCallback(
-    async (addressParam?: `0x${string}`) => {
-      console.log('Running the check login flow');
-      const address = addressParam ?? connectedAddress;
-      if (loginInProgress || !address || !chainId) return;
-      // setLoginAddress({value: connectedAddress, confirmed: false})
-      let message;
-      let signature;
+  const doLoginFlow = useCallback(async (addressParam?: `0x${string}`) => {
+    console.log('Running the check login flow');
+    const address = addressParam ?? connectedAddress;
+    if (loginInProgress || !address || !chainId) return;
+    // setLoginAddress({value: connectedAddress, confirmed: false})
+    let message;
+    let signature;
 
-      try {
-        console.log('Checking pw token if exists?');
-        const validToken = await isLoggedIn();
-        if (validToken) {
-          console.log('vt:', validToken);
-          setLoggedToPw(LogginToPwBackendState.LoggedIn);
+    try {
+      console.log('chking agora exp');
+      const loggedInToAgora = await isLoggedInToAgora(address);
+      if (loggedInToAgora) setLoggedToAgora(loggedInToAgora);
+      else {
+        const { message: val1, signature: val2 } = await getMessageAndSignature(address, chainId, signMessageAsync);
+        message = val1;
+        signature = val2;
+        console.log('loggin to agora');
+        setLoginInProgress(true);
+        const res = await loginToAgora(message, signature);
+        setLoggedToAgora(res);
+      }
+    }
+    catch (e) {
+      console.log('agora err');
+      setLoggedToAgora('error');
+      setLoginInProgress(false);
+      return;
+    }
+
+    try {
+      console.log('Checking pw token if exists?');
+      const validToken = await isLoggedIn();
+      if (validToken) {
+        console.log('vt:', validToken);
+        setLoggedToPw(LogginToPwBackendState.LoggedIn);
+      }
+      else {
+        if (!message || !signature) {
+          const { message: val1, signature: val2 } = await getMessageAndSignature(address, chainId, signMessageAsync);
+          message = val1;
+          signature = val2;
         }
-        else {
-          if (!message || !signature) {
-            const { message: val1, signature: val2 }
-              = await getMessageAndSignature(
-                address as `0x${string}`,
-                chainId,
-                signMessageAsync
-              );
-            message = val1;
-            signature = val2;
-          }
-          setLoginInProgress(true);
-          console.log('Logging to pw');
-          const res = await loginToPwBackend(
-            chainId,
-            address,
-            message,
-            signature
-          );
-          if (res.isNewUser) {
-            setIsNewUser(true);
-          }
-          setLoggedToPw(LogginToPwBackendState.LoggedIn);
+        setLoginInProgress(true);
+        console.log('Logging to pw');
+        const res = await loginToPwBackend(
+          chainId,
+          address,
+          message,
+          signature
+        );
+        if (res.isNewUser) {
+          setIsNewUser(true);
         }
+        setLoggedToPw(LogginToPwBackendState.LoggedIn);
       }
-      catch (e) {
-        console.log('pw error', e);
-        setLoggedToPw(LogginToPwBackendState.Error);
-        return;
-      }
-      finally {
-        setLoginInProgress(false);
-      }
-    },
-    [chainId, connectedAddress]
-  );
+    }
+    catch (e) {
+      console.log('pw error', e);
+      setLoggedToPw(LogginToPwBackendState.Error);
+      return;
+    }
+    finally {
+      setLoginInProgress(false);
+    }
+  }, [chainId, connectedAddress]);
 
   // Set up axios interceptors
   useEffect(() => {
@@ -295,6 +324,7 @@ export const useAuth = () => {
   return {
     loggedToPw,
     isNewUser,
+    loggedToAgora,
     loginInProgress,
     signOut,
     loginAddress,
