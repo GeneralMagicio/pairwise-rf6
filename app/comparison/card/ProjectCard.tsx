@@ -522,6 +522,7 @@ export const ProjectCard: React.FC<Props> = ({
                           amount={grant.amount}
                           date={grant.date}
                           title={grant.grant || ''}
+                          round={grant.grant === 'retroFunding' ? grant.fundingRound : null}
                         />
                       ))}
                       {project.grantsAndFunding.investments?.map(funding => (
@@ -530,8 +531,8 @@ export const ProjectCard: React.FC<Props> = ({
                           description={funding.details}
                           link={null}
                           amount={funding.amount}
-                          date={null}
-                          title="Funding"
+                          date={funding.year}
+                          title="Investment"
                         />
                       ))}
                     </div>
