@@ -110,7 +110,6 @@ export const useAuth = () => {
     setIsAutoConnecting,
     loggedToAgora,
     setLoggedToAgora,
-    // setShowBhModal,
   } = useContext(AuthContext);
 
   // const [loginFlowDangling, setLoginFlowDangling] = useState(false)
@@ -118,7 +117,6 @@ export const useAuth = () => {
   const prevAddress = usePrevious(connectedAddress);
   const { signMessageAsync } = useSignMessage();
   const { disconnectAsync } = useDisconnect();
-  const [showBhModal, setShowBhModal] = useState(false);
   const router = useRouter();
   const path = usePathname();
   const { connect } = useConnect();
@@ -172,6 +170,12 @@ export const useAuth = () => {
     }
   }, [loggedToPw, router, loggedToAgora, path]);
 
+  useEffect(() => {
+    if (loggedToPw === LogginToPwBackendState.LoggedIn && typeof loggedToAgora === 'object' && loggedToAgora.isBadgeholder === true) {
+      redirectToComparisonPage();
+    }
+  }, [loggedToAgora, loggedToPw, redirectToComparisonPage]);
+
   const checkLoggedInToPwAndAgora = useCallback(async () => {
     if (!loginAddress.value) return;
 
@@ -182,17 +186,12 @@ export const useAuth = () => {
     const validToken = await isLoggedIn();
     if (validToken) {
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
-      if (!showBhModal) redirectToComparisonPage();
     }
     else {
-      setShowBhModal(true);
       setLoggedToPw(LogginToPwBackendState.Error);
     }
   }, [
     loginAddress.value,
-    redirectToComparisonPage,
-    showBhModal,
-    setShowBhModal,
   ]);
 
   useEffect(() => {
@@ -331,8 +330,6 @@ export const useAuth = () => {
     setLoginAddress,
     redirectToComparisonPage,
     isAutoConnecting,
-    showBhModal,
-    setShowBhModal,
     doLoginFlow,
   };
 };
