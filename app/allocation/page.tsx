@@ -256,10 +256,16 @@ const AllocationPage = () => {
         isOpen={isWorldIdSignSuccessModal}
         onClose={() => {
           setIsWorldIdSignSuccessModal(false);
+        }}
+      />
+      <WorldIdSignInSuccessModal
+        isOpen={isWorldIdSignErrorModal}
+        onClose={() => {
           setIsWorldIdSignErrorModal(false);
         }}
-        isError={isWorldIdSignErrorModal}
+        isError
       />
+
       <FarcasterModal
         isOpen={isOpenFarcasterModal}
         onClose={() => {
@@ -438,10 +444,11 @@ const AllocationPage = () => {
               }}
               onConnectTwitter={() => {}}
               onConnectWorldID={(isError?: boolean) => {
-                setIsWorldIdSignSuccessModal(true);
                 if (isError) {
                   setIsWorldIdSignErrorModal(true);
+                  return;
                 }
+                setIsWorldIdSignSuccessModal(true);
               }}
             />
           </div>

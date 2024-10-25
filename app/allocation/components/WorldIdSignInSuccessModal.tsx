@@ -22,7 +22,7 @@ const WorldIdSignInSuccessModal: React.FC<WorldIdModalProps> = ({
               <Image src="/assets/images/star-blonde.svg" width={100} height={100} alt="" />
               <div className="flex flex-col content-between items-center gap-2">
                 <div className="text-2xl font-semibold text-dark-500">Error connecting to your WorldID!</div>
-                <div className="text-sm text-[#232634]">Successfully connected to your World ID</div>
+                <div className="text-sm text-[#232634] text-wrap">There was an error connecting to your WorldID account. Please try again.</div>
               </div>
               <button
                 className="w-full rounded-lg bg-primary px-5 py-2.5 text-white"
