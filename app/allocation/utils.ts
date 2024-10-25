@@ -37,7 +37,9 @@ export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): 
 
   const sum = result.reduce((acc, curr) => acc += curr.percentage, 0);
 
-  if (sum > 100.1) throw ({ msg: 'Bigger than 100 error' });
+  if (sum > 100.1) throw { msg: 'Bigger than 100 error', excess: sum - 100 };
+
+  if (sum < 100) throw { msg: 'Smaller than 100 error', deficit: 100 - sum };
 
   if (result.filter(el => !el.locked).length === 1) throw ({ msg: 'At least two categories must be unlocked' });
 
