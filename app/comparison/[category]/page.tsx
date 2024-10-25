@@ -43,6 +43,7 @@ import GoodRatingModal from '../card/modals/GoodRatingModal';
 import RevertLoadingModal from '../card/modals/RevertLoadingModal';
 import StorageLabel from '@/app/lib/localStorage';
 import { ProjectCardAI } from '../card/ProjectCardAI';
+import EmailLoginModal from '@/app/allocation/components/EOA/EmailLoginModal';
 
 const getSuccessBalootLSKey = (address: string) => {
   return `has-unlocked-ballot-${address}`;
@@ -75,6 +76,7 @@ export default function Home() {
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null
   );
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const [sectionExpanded1, setSectionExpanded1] = useState({
     repos: true,
@@ -153,8 +155,14 @@ export default function Home() {
   }, [data, temp]);
 
   useEffect(() => {
-    const initialRating1 = data?.pairs[0] && data?.pairs[0].length > 0 ? data.pairs[0][0].rating : null;
-    const initialRating2 = data?.pairs[0] && data?.pairs[0].length > 0 ? data.pairs[0][1].rating : null;
+    const initialRating1
+      = data?.pairs[0] && data?.pairs[0].length > 0
+        ? data.pairs[0][0].rating
+        : null;
+    const initialRating2
+      = data?.pairs[0] && data?.pairs[0].length > 0
+        ? data.pairs[0][1].rating
+        : null;
 
     // observe if user rated both projects
     if (rating1 !== initialRating1 && rating2 !== initialRating2) {
@@ -409,6 +417,26 @@ export default function Home() {
     return storedData[`${chainId}_${address}`] || {};
   }
 
+  const handleCloseLoginModal = () => {
+    const personalWalletId = localStorage.getItem(
+      StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+    );
+
+    if (!personalWalletId) return;
+
+    setShowLoginModal(false);
+  };
+
+  useEffect(() => {
+    const personalWalletId = localStorage.getItem(
+      StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+    );
+
+    if (!personalWalletId) {
+      setShowLoginModal(true);
+    }
+  }, [cid]);
+
   if (isLoading) return <Spinner />;
 
   if (!address || !chainId) return redirect('/');
@@ -476,6 +504,18 @@ export default function Home() {
           />
         )}
       </Modal>
+
+      <Modal
+        isOpen={showLoginModal}
+        onClose={handleCloseLoginModal}
+        showCloseButton={true}
+      >
+        <EmailLoginModal
+          closeModal={() => setShowLoginModal(false)}
+          selectedCategoryId={cid}
+        />
+      </Modal>
+
       <HeaderRF6
         progress={progress * 100}
         category={convertCategoryToLabel(category! as JWTPayload['category'])}
