@@ -1,17 +1,37 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ISuccessResult } from '@worldcoin/idkit';
+import { toast } from 'react-toastify';
 import { axiosInstance } from './axiosInstance';
+
+import 'react-toastify/dist/ReactToastify.css';
 export interface IUpdateFarcasterProps {
   message?: String
   signature?: `0x${string}`
   custody?: `0x${string}`
 }
 const updateFarcaster = async ({ message, signature, custody }: IUpdateFarcasterProps) => {
-  return (await axiosInstance.post('/flow/connect/farcaster', {
-    message,
-    signature,
-    address: custody,
-  }));
+  try {
+    const response = await axiosInstance.post('/flow/connect/farcaster', {
+      message,
+      signature,
+      address: custody,
+    });
+    if (response.data.error) {
+      throw new Error(response.data.error);
+    }
+    return response.data;
+  }
+  catch (error: any) {
+    if (error.response) {
+      if (error.response.data?.message) {
+        throw new Error(error.response.data.message);
+      }
+      throw new Error(error.response.message);
+    }
+    else {
+      throw new Error('No response received from the server');
+    }
+  }
 };
 interface IDelegateMetadata {
   username: string
@@ -38,9 +58,27 @@ export interface ISocialDelegateResponse {
 }
 
 const updateWorldID = async (proof: ISuccessResult) => {
-  await axiosInstance.post('/flow/connect/wid', {
-    proof: proof,
-  });
+  try {
+    const response = await axiosInstance.post('/flow/connect/wid', {
+      proof: proof,
+    });
+
+    if (response.data.error) {
+      throw new Error(response.data.error);
+    }
+    return response.data;
+  }
+  catch (error: any) {
+    if (error.response) {
+      if (error.response.data?.message) {
+        throw new Error(error.response.data.message);
+      }
+      throw new Error(error.response.message);
+    }
+    else {
+      throw new Error('No response received from the server');
+    }
+  }
 };
 
 interface ISocialNetwork {
@@ -75,6 +113,12 @@ export const useFarcasterSignIn = () => {
       });
       queryClient.refetchQueries({
         queryKey: ['fetch-delegates'],
+      });
+    },
+    onError: (error) => {
+      toast.error('Error signing in with Farcaster: ' + error.message, {
+        position: 'top-center',
+        autoClose: 15000,
       });
     },
   });

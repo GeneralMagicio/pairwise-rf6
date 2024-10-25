@@ -12,13 +12,14 @@ interface FarcasterModalProps {
 }
 
 const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
-  const { mutateAsync: connectFarcaster } = useFarcasterSignIn();
+  const { isPending: loading, isError, mutateAsync: connectFarcaster } = useFarcasterSignIn();
+  const [terminate, setTerminate] = useState(false);
   const onSuccessCallback = useCallback(
     async ({ message, signature, custody }: IUpdateFarcasterProps) => {
       if (terminate) return;
       await connectFarcaster({ message, signature, custody });
       setTerminate(true);
-    }, []);
+    }, [terminate]);
   const { isLoading, data: delegates } = useGetDelegationStatus();
 
   const {
@@ -32,8 +33,6 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
   } = useSignIn({
     onSuccess: onSuccessCallback,
   });
-
-  const [terminate, setTerminate] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -58,7 +57,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} showCloseButton>
-      {url && !isSuccess && (
+      {url && (!isSuccess || isError) && (
         <div className="flex w-[300px] flex-col items-center space-y-4 px-6 pb-6 pt-16 text-center md:w-[420px]">
           <div className="relative size-auto">
             <QRCode uri={url} />
@@ -79,7 +78,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
       )}
-      {isSuccess && data?.username && data?.displayName && (
+      {!loading && isSuccess && !isError && data?.username && data?.displayName && (
         isLoading
           ? (
               <LoadingModalContent isFarcaster />
@@ -90,7 +89,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
                 numDelegates={delegates?.toYou?.budget.length ?? 0}
                 onClose={onClose}
                 displayName={data?.displayName}
-                username={data?.displayName}
+                username={data?.username}
               />
             )
       )}

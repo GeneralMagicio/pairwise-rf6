@@ -75,6 +75,7 @@ const AllocationPage = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
     null
   );
+  const [isWorldIdSignErrorModal, setIsWorldIdSignErrorModal] = useState(false);
   const [categoriesRanking, setCategoriesRanking] = useState<RankItem[]>();
   const [dbudgetProgress, setDbudgetProgress]
     = useState<CollectionProgressStatusEnum>(
@@ -257,6 +258,14 @@ const AllocationPage = () => {
           setIsWorldIdSignSuccessModal(false);
         }}
       />
+      <WorldIdSignInSuccessModal
+        isOpen={isWorldIdSignErrorModal}
+        onClose={() => {
+          setIsWorldIdSignErrorModal(false);
+        }}
+        isError
+      />
+
       <FarcasterModal
         isOpen={isOpenFarcasterModal}
         onClose={() => {
@@ -434,7 +443,11 @@ const AllocationPage = () => {
                 setIsOpenFarcasterModal(true);
               }}
               onConnectTwitter={() => {}}
-              onConnectWorldID={() => {
+              onConnectWorldID={(isError?: boolean) => {
+                if (isError) {
+                  setIsWorldIdSignErrorModal(true);
+                  return;
+                }
                 setIsWorldIdSignSuccessModal(true);
               }}
             />

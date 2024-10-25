@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 interface LoadedModalContentProps {
   numDelegates: number
@@ -15,6 +16,14 @@ const LoadedModalContent: React.FC<LoadedModalContentProps> = (
     onClose,
     username }) => {
   const socialConnectionName = isFarcaster ? 'Farcaster' : 'X';
+  const router = useRouter();
+  const path = usePathname();
+  const onSuccess = () => {
+    if (isFarcaster && path !== '/allocation') {
+      router.push('/allocation');
+    }
+    onClose();
+  };
   return (
     <div>
       {(numDelegates == 0) && (
@@ -58,7 +67,7 @@ const LoadedModalContent: React.FC<LoadedModalContentProps> = (
           </div>
           <button
             className="w-full rounded-lg bg-primary px-5 py-2.5 text-white"
-            onClick={onClose}
+            onClick={onSuccess}
           >
             <p className="p-0.5">Ok</p>
           </button>
@@ -100,7 +109,7 @@ const LoadedModalContent: React.FC<LoadedModalContentProps> = (
           </div>
           <button
             className="w-full rounded-lg bg-primary px-5 py-2.5 text-white"
-            onClick={onClose}
+            onClick={onSuccess}
           >
             <p className="p-0.5">Done</p>
           </button>

@@ -22,6 +22,7 @@ export default function Modals() {
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
   const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal]
     = useState(false);
+  const [isWorldIdSignErrorModal, setIsWorldIdSignErrorModal] = useState(false);
   const {
     loggedToPw,
     loginInProgress,
@@ -41,9 +42,9 @@ export default function Modals() {
     return (await worldIdSignIn(proof));
   };
 
-  const notBhOpen
+  const bhOpen
     = loggedToPw === LogginToPwBackendState.LoggedIn
-    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && showBhModal;
+    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && !isWorldIdSignErrorModal && showBhModal;
 
   const signInModalOpen
     = !!address && loggedToPw === LogginToPwBackendState.Error;
@@ -71,6 +72,13 @@ export default function Modals() {
           setIsWorldIdSignSuccessModal(false);
         }}
       />
+      <WorldIdSignInSuccessModal
+        isOpen={isWorldIdSignErrorModal}
+        onClose={() => {
+          setIsWorldIdSignErrorModal(false);
+        }}
+        isError
+      />
       <IDKitWidget
         app_id={appId}
         action={actionId}
@@ -78,18 +86,21 @@ export default function Modals() {
           setIsWorldIdSignSuccessModal(true);
         }}
         handleVerify={handleVerify}
+        onError={() => {
+          setIsWorldIdSignErrorModal(true);
+        }}
         verification_level={VerificationLevel.Device}
       >
         {({ open }) => (
           <>
             <Modal
-              isOpen={notBhOpen}
+              isOpen={bhOpen}
               onClose={() => {
                 setShowBhModal(false);
                 router.push('/allocation');
               }}
             >
-              {notBhOpen
+              {bhOpen
               && (
                 <BadgeHolderModal
                   open={() => {

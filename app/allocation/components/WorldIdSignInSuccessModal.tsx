@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import Modal from '@/app/utils/Modal';
 import { getBadgeAmount, getBadgeMedal, useGetPublicBadges } from '@/app/utils/getBadges';
 import BadgeCard from '@/app/utils/BadgeCard';
@@ -17,8 +18,18 @@ const WorldIdSignInSuccessModal: React.FC<WorldIdModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} showCloseButton>
       { isError
         ? (
-            <div>
-              <></>
+            <div className="flex w-full flex-col items-center justify-center gap-6 px-14 py-10">
+              <Image src="/assets/images/star-blonde.svg" width={100} height={100} alt="" />
+              <div className="flex flex-col content-between items-center gap-2">
+                <div className="text-2xl font-semibold text-dark-500">Error connecting to your WorldID!</div>
+                <div className="text-sm text-[#232634] text-wrap">There was an error connecting to your WorldID account. Please try again.</div>
+              </div>
+              <button
+                className="w-full rounded-lg bg-primary px-5 py-2.5 text-white"
+                onClick={onClose}
+              >
+                <p className="p-0.5">Ok</p>
+              </button>
             </div>
           )
         : (
