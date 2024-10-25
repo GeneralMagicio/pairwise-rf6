@@ -116,6 +116,13 @@ const RankingPage = () => {
             }% from your ballot)`
           );
         }
+        else if (e.msg === 'Smaller than 100 error') {
+          setTotalShareError(
+            `Percentages must add up to 100% (add ${
+              Math.round(e.deficit * 100) / 100
+            }% to your ballot)`
+          );
+        }
         else {
           setTotalShareError(e.msg);
         }
