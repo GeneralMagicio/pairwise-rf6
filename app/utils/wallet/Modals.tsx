@@ -78,6 +78,9 @@ export default function Modals() {
           setIsWorldIdSignSuccessModal(true);
         }}
         handleVerify={handleVerify}
+        onError={()=>{
+          
+        }}
         verification_level={VerificationLevel.Device}
       >
         {({ open }) => (

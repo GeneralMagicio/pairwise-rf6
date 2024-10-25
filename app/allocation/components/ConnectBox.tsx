@@ -139,7 +139,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
 
       <div className="flex w-full flex-col items-center justify-center gap-6 rounded-xl bg-voting-power bg-cover bg-no-repeat p-4">
         <p className="text-4xl font-bold text-[#2C6074]">
-          {connectionStatus?.farcaster && delegates?.toYou.budget.length ? 'You have extra powers now!' : 'Claim more voting power'}
+          {connectionStatus?.farcaster && delegates?.toYou?.budget.length ? 'You have extra powers now!' : 'Claim more voting power'}
         </p>
         <p className="text-wrap font-medium text-gray-600">
           {connectionStatus?.farcaster
