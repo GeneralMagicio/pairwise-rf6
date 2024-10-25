@@ -1324,12 +1324,12 @@ export type ProjectMetadata =
     }
     testimonials: string
   };
-
 export interface ICategory {
   id: number
   name: string
-  poll_id: number
+  pollId: number
   url: string
+  description: string
   impactDescription: string
   contributionDescription: null | string
   RPGF5Id: null | number

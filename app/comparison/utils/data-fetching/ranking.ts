@@ -2,9 +2,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '@/app/utils/axiosInstance';
 import { IProjectRanking, ICategory } from '@/app/comparison/utils/types';
 
+type TCategoryRanking = {
+  ranking: ICategory[]
+  userId: number
+  projectId: number
+  share: number
+  stars: number
+};
+
 interface ICategoryRankingResponse
   extends Omit<IProjectsRankingResponse, 'ranking'> {
-  ranking: ICategory[]
+  ranking: TCategoryRanking[]
 }
 
 export interface IProjectsRankingResponse {
@@ -21,6 +29,11 @@ export interface IProjectsRankingResponse {
 export interface IProjectRankingObj {
   id: number
   share: number
+}
+
+export interface IUpdateCategoriesRankingBody {
+  budget: number
+  allocationPercentages: number[]
 }
 
 export const getCategoryRankings
@@ -91,6 +104,27 @@ export const useUpdateProjectRanking = ({
       console.log('OnSuccess');
       queryClient.refetchQueries({
         queryKey: ['projects-ranking', cid],
+      });
+    },
+  });
+};
+
+export const updateCategoriesRanking = async (ranking: IUpdateCategoriesRankingBody) => {
+  return (
+    await axiosInstance.post('flow/budget', {
+      ...ranking,
+    })
+  ).data;
+};
+
+export const useUpdateCategoriesRanking = (data: IUpdateCategoriesRankingBody) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => updateCategoriesRanking(data),
+    onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: ['category-ranking'],
       });
     },
   });
