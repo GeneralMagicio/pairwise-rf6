@@ -163,19 +163,6 @@ export const useAuth = () => {
     }
   }, [connectedAddress, prevAddress, path]);
 
-  const redirectToComparisonPage = useCallback(() => {
-    if (typeof loggedToAgora !== 'object' || loggedToPw !== LogginToPwBackendState.LoggedIn) return;
-    if (path === '/') {
-      router.push('/allocation');
-    }
-  }, [loggedToPw, router, loggedToAgora, path]);
-
-  useEffect(() => {
-    if (loggedToPw === LogginToPwBackendState.LoggedIn && typeof loggedToAgora === 'object' && loggedToAgora.isBadgeholder === true) {
-      redirectToComparisonPage();
-    }
-  }, [loggedToAgora, loggedToPw, redirectToComparisonPage]);
-
   const checkLoggedInToPwAndAgora = useCallback(async () => {
     if (!loginAddress.value) return;
 
@@ -328,7 +315,6 @@ export const useAuth = () => {
     signOut,
     loginAddress,
     setLoginAddress,
-    redirectToComparisonPage,
     isAutoConnecting,
     doLoginFlow,
   };

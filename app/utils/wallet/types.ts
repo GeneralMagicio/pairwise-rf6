@@ -8,6 +8,7 @@ export interface JWTPayload {
   sub: string
   scope: string
   isBadgeholder: boolean
+  isCitizen: boolean
   category: 'GOVERNANCE_LEADERSHIP' | 'GOVERNANCE_ANALYTICS' | 'GOVERNANCE_INFRA_AND_TOOLING'
   siwe: SiweData
   exp: number

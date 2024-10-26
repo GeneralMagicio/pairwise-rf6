@@ -42,7 +42,7 @@ export default function Modals() {
   };
 
   const bhOpen = typeof loggedToAgora === 'object'
-    && loggedToPw === LogginToPwBackendState.LoggedIn && loggedToAgora.isBadgeholder === false && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && !isWorldIdSignErrorModal;
+    && loggedToPw === LogginToPwBackendState.LoggedIn && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && !isWorldIdSignErrorModal;
 
   const signInModalOpen
     = !!address && (loggedToAgora === 'error' || loggedToPw === LogginToPwBackendState.Error);
