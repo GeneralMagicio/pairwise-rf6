@@ -27,7 +27,6 @@ export const createSocialEoa = async (strategy: Strategy) => {
     client,
     strategy,
   });
-  console.log('socialEOA 🦊', socialEOA.id);
   localStorage.setItem(
     StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID,
     socialEOA.id
