@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveWallet } from 'thirdweb/react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAccount } from 'wagmi';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import Modal from '../utils/Modal';
 import EmailLoginModal from './components/EOA/EmailLoginModal';
@@ -13,11 +14,11 @@ import BudgetAllocation, {
   BudgetCategory,
 } from './components/BudgetAllocation';
 import ConnectBox from './components/ConnectBox';
-import { modifyPercentage, RankItem } from './utils';
+import { getSuccessBalootLSKey, modifyPercentage, RankItem } from './utils';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { CustomizedSlider } from './components/Slider';
-import { categoryIdSlugMap, formatBudget } from '../comparison/utils/helpers';
+import { categoryIdSlugMap, categorySlugIdMap, formatBudget } from '../comparison/utils/helpers';
 import { useCategories } from '../comparison/utils/data-fetching/categories';
 import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
 import FarcasterModal from './components/FarcasterModal';
@@ -33,6 +34,12 @@ import {
   useCategoryRankings,
   useUpdateCategoriesRanking,
 } from '@/app/comparison/utils/data-fetching/ranking';
+import { uploadBallot } from '../utils/wallet/agora-login';
+import { useAuth } from '../utils/wallet/AuthProvider';
+import { ballotSuccessPost, getBallot } from '../comparison/ballot/useGetBallot';
+import BallotError from '../comparison/ballot/modals/BallotError';
+import BallotLoading from '../comparison/ballot/modals/BallotLoading';
+import BallotSuccessModal from '../comparison/ballot/modals/BallotSuccessModal';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -52,6 +59,8 @@ enum DelegationState {
 const AllocationPage = () => {
   const wallet = useActiveWallet();
   const router = useRouter();
+  const { address } = useAccount();
+  const { loggedToAgora } = useAuth();
 
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: delegations, isLoading: delegationsLoading }
@@ -65,6 +74,9 @@ const AllocationPage = () => {
   const budgetDelegateToYou = delegations?.toYou?.budget;
   const budgetDelegateFromYou = delegations?.fromYou?.budget;
 
+  const [showSuccessBallot, setShowSuccessBallot] = useState(true);
+  const [ballotLoading, setBallotLoading] = useState(false);
+  const [ballotError, setBallotError] = useState(false);
   const [totalValue, setTotalValue] = useState(categoryRankings?.budget || 0);
   const [percentageError, setPercentageError] = useState<string>();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
@@ -163,6 +175,31 @@ const AllocationPage = () => {
     setTargetDelegate(undefined);
   };
 
+  const handleUploadBallot = async () => {
+    if (loggedToAgora === 'error' || loggedToAgora === 'initial' || !address) return;
+    setBallotLoading(true);
+    setBallotError(false);
+
+    // const agoraPayload = await isLoggedInToAgora(address);
+
+    const cid = categorySlugIdMap.get(loggedToAgora.category);
+
+    if (!cid) throw new Error('Undefined category id');
+    try {
+      const ballot = await getBallot(cid);
+      await uploadBallot(ballot, address);
+      await ballotSuccessPost();
+      localStorage.setItem(getSuccessBalootLSKey(address), 'true');
+      setShowSuccessBallot(true);
+    }
+    catch (e) {
+      setBallotError(true);
+    }
+    finally {
+      setBallotLoading(false);
+    }
+  };
+
   const handleScoreProjects = (id: RankItem['id']) => () => {
     setSelectedCategoryId(id);
 
@@ -207,6 +244,23 @@ const AllocationPage = () => {
 
   return (
     <div>
+      <Modal
+        isOpen={
+          showSuccessBallot || ballotLoading || ballotError
+        }
+        onClose={() => {}}
+        showCloseButton={false}
+      >
+        {showSuccessBallot && (
+          <BallotSuccessModal
+            onClick={() => {
+              router.push(`${process.env.NEXT_PUBLIC_OPTIMISM_URL}/ballot`);
+            }}
+          />
+        )}
+        {ballotLoading && <BallotLoading />}
+        {ballotError && <BallotError onClick={handleUploadBallot} />}
+      </Modal>
       <Modal
         isOpen={
           delegationState !== DelegationState.Initial && !!categoryToDelegate
@@ -431,7 +485,7 @@ const AllocationPage = () => {
               : (
                   <button
                     className="w-fit self-end rounded-lg bg-primary px-4 py-3 text-white"
-                    onClick={() => {}}
+                    onClick={handleUploadBallot}
                   >
                     Update Ballot
                   </button>
