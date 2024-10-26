@@ -101,7 +101,6 @@ export const useUpdateProjectRanking = ({
   return useMutation({
     mutationFn: () => updateProjectRanking({ cid, ranking }),
     onSuccess: () => {
-      console.log('OnSuccess');
       queryClient.refetchQueries({
         queryKey: ['projects-ranking', cid],
       });

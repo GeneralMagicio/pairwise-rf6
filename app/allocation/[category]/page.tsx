@@ -56,6 +56,7 @@ const RankingPage = () => {
   const [lockedItems, setLockedItems] = useState<number[]>([]);
   const [isLocked, setIsLocked] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [allocationBudget, setAllocationBudget] = useState<number>(0);
 
   const { data: categoryRankings, isLoading: rankingLoading }
     = useCategoryRankings();
@@ -229,6 +230,15 @@ const RankingPage = () => {
 
   useEffect(() => {
     if (ranking) setProjects(ranking?.ranking);
+
+    if (!categoryRankings?.budget) return;
+
+    const categoryShare
+      = categoryRankings?.ranking?.find(
+        categoryRanking => categoryRanking.projectId === category
+      )?.share || 0;
+
+    setAllocationBudget(categoryRankings?.budget * categoryShare);
   }, [ranking]);
 
   useEffect(() => {
@@ -287,7 +297,7 @@ const RankingPage = () => {
                     )
                   : (
                       <span className="underline">
-                        {formatBudget(categoryRankings?.budget)}
+                        {formatBudget(allocationBudget)}
                       </span>
                     )}
               </p>
@@ -365,7 +375,7 @@ const RankingPage = () => {
                         <RankingRow
                           key={project.projectId}
                           index={index}
-                          budget={(categoryRankings?.budget || 0) * project.share}
+                          budget={allocationBudget * project.share}
                           project={project}
                           selected={checkedItems.includes(project.projectId)}
                           locked={lockedItems.includes(project.projectId)}
