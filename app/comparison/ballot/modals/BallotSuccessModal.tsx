@@ -35,8 +35,8 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
           className="mx-auto mb-6"
         />
       </div>
-      <div className="flex w-3/5 flex-col gap-4">
-        <div className="flex gap-6">
+      <div className="flex w-3/5 flex-col gap-1">
+        <div className="mb-2 flex gap-6">
           <input className="size-8 self-start" checked={confirmed} onChange={() => setConfirmed(!confirmed)} type="checkbox" />
           <p className="text-slate-700">
             I confirm that I understand and will not change the allocation method on OP Vote application
@@ -52,6 +52,18 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
             <ExternalLinkIcon />
           </button>
         </a>
+        {confirmed && (
+          <a href="https://docs.google.com/forms/d/1n3Dwq2WoPTX8vtsGT_GQ2FsyQ6TIUabXJgYsYzVUK4o/edit" className="w-full" target="_blank">
+            <button
+              disabled={!confirmed}
+              className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-4 py-3
+          text-slate-700 transition duration-300 ease-in-out"
+            >
+              Send Feedback
+              <ExternalLinkIcon />
+            </button>
+          </a>
+        )}
         <button
           onClick={onClose}
           className="flex w-full items-center justify-center rounded-lg px-4 py-3
