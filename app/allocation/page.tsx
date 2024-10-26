@@ -14,11 +14,11 @@ import BudgetAllocation, {
   BudgetCategory,
 } from './components/BudgetAllocation';
 import ConnectBox from './components/ConnectBox';
-import { getSuccessBalootLSKey, modifyPercentage, RankItem } from './utils';
+import { modifyPercentage, RankItem } from './utils';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { CustomizedSlider } from './components/Slider';
-import { categoryIdSlugMap, categorySlugIdMap, formatBudget } from '../comparison/utils/helpers';
+import { categoryIdSlugMap, categorySlugIdMap, convertCategoryToLabel, formatBudget } from '../comparison/utils/helpers';
 import { useCategories } from '../comparison/utils/data-fetching/categories';
 import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
 import FarcasterModal from './components/FarcasterModal';
@@ -40,6 +40,7 @@ import { ballotSuccessPost, getBallot } from '../comparison/ballot/useGetBallot'
 import BallotError from '../comparison/ballot/modals/BallotError';
 import BallotLoading from '../comparison/ballot/modals/BallotLoading';
 import BallotSuccessModal from '../comparison/ballot/modals/BallotSuccessModal';
+import BallotNotReady from '../comparison/ballot/modals/BallotNotReady';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -53,6 +54,14 @@ enum DelegationState {
   Initial,
   DelegationMethod,
   Lookup,
+  Success,
+}
+
+enum BallotState {
+  Initial,
+  Loading,
+  Error,
+  ErrorNotReady,
   Success,
 }
 
@@ -74,9 +83,7 @@ const AllocationPage = () => {
   const budgetDelegateToYou = delegations?.toYou?.budget;
   const budgetDelegateFromYou = delegations?.fromYou?.budget;
 
-  const [showSuccessBallot, setShowSuccessBallot] = useState(true);
-  const [ballotLoading, setBallotLoading] = useState(false);
-  const [ballotError, setBallotError] = useState(false);
+  const [ballotState, setBallotState] = useState<BallotState>(BallotState.Initial);
   const [totalValue, setTotalValue] = useState(categoryRankings?.budget || 0);
   const [percentageError, setPercentageError] = useState<string>();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
@@ -177,9 +184,7 @@ const AllocationPage = () => {
 
   const handleUploadBallot = async () => {
     if (loggedToAgora === 'error' || loggedToAgora === 'initial' || !address) return;
-    setBallotLoading(true);
-    setBallotError(false);
-
+    setBallotState(BallotState.Loading);
     // const agoraPayload = await isLoggedInToAgora(address);
 
     const cid = categorySlugIdMap.get(loggedToAgora.category);
@@ -189,14 +194,11 @@ const AllocationPage = () => {
       const ballot = await getBallot(cid);
       await uploadBallot(ballot, address);
       await ballotSuccessPost();
-      localStorage.setItem(getSuccessBalootLSKey(address), 'true');
-      setShowSuccessBallot(true);
+      setBallotState(BallotState.Success);
     }
-    catch (e) {
-      setBallotError(true);
-    }
-    finally {
-      setBallotLoading(false);
+    catch (e: any) {
+      if (e.response.data.pwCode === 'e-1005') setBallotState(BallotState.ErrorNotReady);
+      else setBallotState(BallotState.Error);
     }
   };
 
@@ -246,20 +248,26 @@ const AllocationPage = () => {
     <div>
       <Modal
         isOpen={
-          showSuccessBallot || ballotLoading || ballotError
+          ballotState !== BallotState.Initial
         }
         onClose={() => {}}
         showCloseButton={false}
       >
-        {showSuccessBallot && (
+        {ballotState === BallotState.Success && (
           <BallotSuccessModal
-            onClick={() => {
-              router.push(`${process.env.NEXT_PUBLIC_OPTIMISM_URL}/ballot`);
-            }}
+            link={`${process.env.NEXT_PUBLIC_OPTIMISM_URL}/ballot`}
+            onClose={() => setBallotState(BallotState.Initial)}
           />
         )}
-        {ballotLoading && <BallotLoading />}
-        {ballotError && <BallotError onClick={handleUploadBallot} />}
+        {ballotState === BallotState.Loading && <BallotLoading />}
+        {ballotState === BallotState.Error && <BallotError onClick={handleUploadBallot} />}
+        {ballotState === BallotState.ErrorNotReady && typeof loggedToAgora === 'object'
+        && (
+          <BallotNotReady
+            categoryName={convertCategoryToLabel(loggedToAgora.category)}
+            onClick={() => { setBallotState(BallotState.Initial); }}
+          />
+        )}
       </Modal>
       <Modal
         isOpen={

@@ -9,10 +9,6 @@ export const roundFractions = (value: number, fractions: number) => {
   return Math.round(value * Math.pow(10, fractions)) / Math.pow(10, fractions);
 };
 
-export const getSuccessBalootLSKey = (address: string) => {
-  return `has-unlocked-ballot-rf6-${address}`;
-};
-
 export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): T[] => {
   // const totalPercentage = 100
 

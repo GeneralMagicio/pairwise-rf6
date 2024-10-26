@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { ExternalLinkIcon } from '@/public/assets/icon-components/ExternalLink';
 
 interface UnlockBallotProps {
-  onClick: () => void
+  link: string
+  onClose: () => void
 }
 
-const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ onClick }) => {
+const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
   const [confirmed, setConfirmed] = useState(false);
   return (
     <div className="mx-auto flex w-[750px] flex-col items-center gap-2 overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat p-6 py-12 shadow-lg">
@@ -41,17 +42,18 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ onClick }) => {
             I confirm that I understand and will not change the allocation method on OP Vote application
           </p>
         </div>
+        <a href={link} className="w-full" target="_blank">
+          <button
+            disabled={!confirmed}
+            className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4
+          py-3 text-white transition duration-300 ease-in-out disabled:bg-op-neutral-300 disabled:text-slate-700"
+          >
+            View my Ballot
+            <ExternalLinkIcon />
+          </button>
+        </a>
         <button
-          disabled={!confirmed}
-          onClick={onClick}
-          className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4
-        py-3 text-white transition duration-300 ease-in-out disabled:bg-op-neutral-300 disabled:text-slate-700"
-        >
-          View my Ballot
-          <ExternalLinkIcon />
-        </button>
-        <button
-          onClick={onClick}
+          onClick={onClose}
           className="flex w-full items-center justify-center rounded-lg px-4 py-3
         text-black transition duration-300 ease-in-out"
         >
