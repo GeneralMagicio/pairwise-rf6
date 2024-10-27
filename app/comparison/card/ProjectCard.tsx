@@ -520,11 +520,12 @@ export const ProjectCard: React.FC<Props> = ({
                       {project.grantsAndFunding.grants?.map((grant, index) => (
                         <GrantBox
                           key={`grant_${index}`}
+                          type="grant"
                           description={grant.details}
                           link={grant.link}
                           amount={grant.amount}
                           date={grant.date}
-                          title={grant.grant || ''}
+                          title={grant.grant ?? ''}
                           round={
                             grant.grant === 'retroFunding'
                               ? grant.fundingRound
@@ -535,6 +536,18 @@ export const ProjectCard: React.FC<Props> = ({
                       {project.grantsAndFunding.investments?.map(funding => (
                         <GrantBox
                           key={funding.details}
+                          type="investment"
+                          description={funding.details}
+                          link={null}
+                          amount={funding.amount}
+                          date={funding.year}
+                          title="Investment"
+                        />
+                      ))}
+                      {project.grantsAndFunding.ventureFunding?.map(funding => (
+                        <GrantBox
+                          key={funding.details}
+                          type="investment"
                           description={funding.details}
                           link={null}
                           amount={funding.amount}
