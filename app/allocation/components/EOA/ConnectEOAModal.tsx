@@ -1,26 +1,34 @@
 import { FC } from 'react';
 import Image from 'next/image';
-import { useConnect } from 'thirdweb/react';
-import { Wallet } from 'thirdweb/wallets';
+import { useActiveWallet } from 'thirdweb/react';
 import { Step } from './EmailLoginModal';
+import { axiosInstance } from '@/app/utils/axiosInstance';
 
 type TConnectEOAModalProps = {
   email: string
-  eoaWallet: Wallet | null
   setStep: (step: number) => void
 }
 
 const ConnectEOAModal: FC<TConnectEOAModalProps> = ({
   email,
-  eoaWallet,
   setStep,
 }) => {
-  const { connect } = useConnect();
+  const wallet = useActiveWallet();
 
-  const connectEOA = () => {
-    if (!eoaWallet) return;
+  const connectEOA = async () => {
+    if (!wallet) return;
+    const msg = 'Sign in with Thirdweb wallet';
+    const account = wallet?.getAccount();
 
-    connect(eoaWallet);
+    if (!account) return;
+
+    const signature = await account.signMessage({ message: msg });
+
+    await axiosInstance.post('auth/thirdweb/login', {
+      message: msg,
+      signature,
+      address: account.address,
+    });
     setStep(Step.SUCCESS);
   };
 

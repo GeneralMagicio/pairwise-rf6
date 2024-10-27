@@ -10,7 +10,7 @@ import React, {
 import { useAccount, useDisconnect, useSignMessage } from 'wagmi';
 import { usePathname, useRouter } from 'next/navigation';
 import { WalletId, createWallet } from 'thirdweb/wallets';
-import { useConnect } from 'thirdweb/react';
+import { useActiveWallet, useConnect, useDisconnect as useThirdwebDisconnect } from 'thirdweb/react';
 import { AxiosError } from 'axios';
 import {
   isLoggedIn,
@@ -120,10 +120,15 @@ export const useAuth = () => {
   const router = useRouter();
   const path = usePathname();
   const { connect } = useConnect();
+  const wallet = useActiveWallet()
+  const { disconnect } = useThirdwebDisconnect();
+
 
   const signOut = async (redirectToLanding: boolean = true) => {
     signOutFromAgora();
     setLoggedToAgora('initial');
+    localStorage.clear();
+    if (wallet) disconnect(wallet)
     logoutFromPwBackend();
     setLoginAddress({ value: undefined, confirmed: true });
     setLoggedToPw(LogginToPwBackendState.Initial);
