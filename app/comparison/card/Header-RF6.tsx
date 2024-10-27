@@ -134,7 +134,7 @@ const HeaderRF6: FC<HeaderProps> = ({
       </Modal>
 
       <div className="relative z-40 w-full border-b bg-white">
-        <div className="flex flex-col items-center justify-between px-6 py-4 md:px-12 lg:flex-row lg:px-4">
+        <div className="flex items-center justify-between px-6 py-4 md:px-12 lg:px-4">
           {!isFirstSelection && (
             <div className="flex items-center">
               <PwLogo />
@@ -152,9 +152,7 @@ const HeaderRF6: FC<HeaderProps> = ({
               </span>
             )}
             <div
-              className={`${
-                category ? 'hidden 2xl:flex' : 'flex'
-              } items-center gap-4`}
+              className="hidden items-center gap-4 2xl:flex"
             >
               {activeBadges.length > 0 && (
                 <button
@@ -174,7 +172,7 @@ const HeaderRF6: FC<HeaderProps> = ({
               </button>
             </div>
 
-            <Dropdown customClass={category ? '2xl:hidden' : 'hidden'}>
+            <Dropdown customClass="2xl:hidden">
               <div className="flex flex-col gap-2">
                 {activeBadges.length > 0 && (
                   <>

@@ -32,9 +32,9 @@ export const categoryIdSlugMap = new Map([
 ]);
 
 export const categoryIdTitleMap = new Map([
-  [1, 'OP Stack R&D'],
-  [2, 'Ethereum Core Contributors'],
-  [3, 'OP Stack Tooling'],
+  [1, 'Governance Leadership'],
+  [2, 'Governance Infrastructure & Tooling'],
+  [3, 'Governance Analytics'],
 ]);
 
 export const categorySlugIdMap = new Map([
