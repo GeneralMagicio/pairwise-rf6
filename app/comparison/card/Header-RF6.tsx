@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { FC, useState, useEffect, useMemo } from 'react';
 import { useDisconnect } from 'wagmi';
+import { usePathname } from 'next/navigation';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
 import { PwLogo } from '@/public/assets/icon-components/PairwiseLogo';
 import { ThinExternalLinkIcon } from '@/public/assets/icon-components/ThinExternalLink';
@@ -11,7 +12,9 @@ import { shortenWalletAddress } from '@/app/comparison/utils/helpers';
 import { useAuth } from '@/app/utils/wallet/AuthProvider';
 import { PowerIcon } from '@/public/assets/icon-components/Power';
 import { useGetPublicBadges } from '@/app/utils/getBadges';
-
+import DelegationsModal from './modals/DelegationsModal';
+import { useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
+import StorageLabel from '@/app/lib/localStorage';
 interface HeaderProps {
   progress?: number
   category?: string
@@ -22,17 +25,20 @@ interface HeaderProps {
 const PAIRWISE_REPORT_URL
   = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
 
-const HeaderRF6: React.FC<HeaderProps> = ({
+const HeaderRF6: FC<HeaderProps> = ({
   progress,
   category,
   question,
   isFirstSelection = false,
 }) => {
+  const path = usePathname();
   const { disconnectAsync } = useDisconnect();
   const { signOut, loginAddress } = useAuth();
   const { data: badges } = useGetPublicBadges();
+  const { data: delegates } = useGetDelegationStatus();
 
-  const [isBadgesModalOpen, setIsBadgesModalOpen] = React.useState(false);
+  const [isBadgesModalOpen, setIsBadgesModalOpen] = useState(false);
+  const [isDelegateModalOpen, setIsDelegateModalOpen] = useState(false);
   const [isBarFixed, setIsBarFixed] = useState(false);
 
   const activeBadges = useMemo(() => {
@@ -88,20 +94,47 @@ const HeaderRF6: React.FC<HeaderProps> = ({
     signOut();
   };
 
+  useEffect(() => {
+    const isAlreadyShown
+      = localStorage.getItem(StorageLabel.PRE_VOTING_DELEGATION_POPUP) === 'true';
+
+    if (
+      path.includes('comparison')
+      && delegates?.toYou?.budget.length
+      && !isAlreadyShown
+    ) {
+      setIsDelegateModalOpen(true);
+    }
+  }, [path]);
+
+  const markAsShown = () => {
+    localStorage.setItem(StorageLabel.PRE_VOTING_DELEGATION_POPUP, 'true');
+    setIsDelegateModalOpen(false);
+  };
+
   return (
     <>
       <Modal
-        isOpen={isBadgesModalOpen}
+        isOpen={isBadgesModalOpen || isDelegateModalOpen}
         onClose={() => {
-          setIsBadgesModalOpen(false);
+          if (isDelegateModalOpen) markAsShown();
+          else setIsBadgesModalOpen(false);
         }}
         showCloseButton
       >
-        <BadgesModal badges={activeBadges} />
+        {isBadgesModalOpen && <BadgesModal badges={activeBadges} />}
+        {isDelegateModalOpen && (
+          <DelegationsModal
+            category={category}
+            badges={activeBadges}
+            delegates={delegates}
+            onClose={markAsShown}
+          />
+        )}
       </Modal>
 
       <div className="relative z-40 w-full border-b bg-white">
-        <div className="flex flex-col items-center justify-between px-6 py-4 md:px-12 lg:flex-row lg:px-4">
+        <div className="flex items-center justify-between px-6 py-4 md:px-12 lg:px-4">
           {!isFirstSelection && (
             <div className="flex items-center">
               <PwLogo />
@@ -119,9 +152,7 @@ const HeaderRF6: React.FC<HeaderProps> = ({
               </span>
             )}
             <div
-              className={`${
-                category ? 'hidden 2xl:flex' : 'flex'
-              } items-center gap-4`}
+              className="hidden items-center gap-4 2xl:flex"
             >
               {activeBadges.length > 0 && (
                 <button
@@ -141,7 +172,7 @@ const HeaderRF6: React.FC<HeaderProps> = ({
               </button>
             </div>
 
-            <Dropdown customClass={category ? '2xl:hidden' : 'hidden'}>
+            <Dropdown customClass="2xl:hidden">
               <div className="flex flex-col gap-2">
                 {activeBadges.length > 0 && (
                   <>

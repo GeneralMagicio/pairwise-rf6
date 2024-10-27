@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import debounce from 'lodash.debounce';
 import RankingRow from './components/RankingRow';
 import HeaderRF6 from '../../comparison/card/Header-RF6';
 import Spinner from '@/app/components/Spinner';
@@ -25,6 +26,7 @@ import { CheckIcon } from '@/public/assets/icon-components/Check';
 import { IProjectRanking } from '@/app/comparison/utils/types';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
+import { modifyPercentage, RankItem } from '../utils';
 
 enum VotingStatus {
   VOTED,
@@ -54,8 +56,10 @@ const RankingPage = () => {
   const [lockedItems, setLockedItems] = useState<number[]>([]);
   const [isLocked, setIsLocked] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
+  const [allocationBudget, setAllocationBudget] = useState<number>(0);
 
-  const { data: categoryRankings } = useCategoryRankings();
+  const { data: categoryRankings, isLoading: rankingLoading }
+    = useCategoryRankings();
   const { data: ranking, isLoading } = useProjectsRankingByCategoryId(category);
   const { mutate: updateProjectRanking } = useUpdateProjectRanking({
     cid: category,
@@ -73,15 +77,61 @@ const RankingPage = () => {
     }
   };
 
-  const handleVote = (id: number, share: number) => {
-    if (!projects) return;
+  const handleVote = useCallback(
+    debounce((id: number, share: number) => {
+      setTotalShareError(null);
 
-    const updatedProjects = projects.map(project =>
-      project.projectId === id ? { ...project, share } : project
-    );
+      if (!projects) return;
 
-    setProjects(updatedProjects);
-  };
+      try {
+        const values: RankItem[] = projects.map(project => ({
+          id: project.projectId,
+          percentage: Math.round(project.share * 100 * 100) / 100,
+          locked: lockedItems.includes(project.projectId),
+          budget: categoryRankings?.budget || 0,
+        })) as RankItem[];
+
+        const newValue = values.find(el => el.id === id);
+
+        if (!newValue) return;
+
+        const newRanking = modifyPercentage(values, {
+          ...newValue,
+          percentage: Math.round(share * 100 * 100) / 100,
+        });
+
+        setProjects(
+          projects.map(project => ({
+            ...project,
+            share:
+              (newRanking.find(el => el.id === project.projectId)
+                ?.percentage || 0) / 100,
+          }))
+        );
+      }
+      catch (e: any) {
+        if (e.msg === 'Bigger than 100 error') {
+          setTotalShareError(
+            `Percentages must add up to 100% (remove ${
+              Math.round(e.excess * 100) / 100
+            }% from your ballot)`
+          );
+        }
+        else if (e.msg === 'Smaller than 100 error') {
+          setTotalShareError(
+            `Percentages must add up to 100% (add ${
+              Math.round(e.deficit * 100) / 100
+            }% to your ballot)`
+          );
+        }
+        else {
+          setTotalShareError(e.msg);
+        }
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+    }, 300),
+    [projects, lockedItems, categoryRankings]
+  );
 
   const handleLocck = (id: number) => {
     if (lockedItems.includes(id)) {
@@ -94,6 +144,12 @@ const RankingPage = () => {
 
   const lockSelection = () => {
     if (!projects) return;
+
+    if (checkedItems.length > projects?.length - 2) {
+      setTotalShareError('At least two categories must be unlocked');
+      window.scrollTo(0, document.body.scrollHeight);
+      return;
+    }
 
     const lockedProjects = checkedItems.filter(
       checkedId => !lockedItems.includes(checkedId)
@@ -128,29 +184,6 @@ const RankingPage = () => {
   const submitVotes = () => {
     if (!projects) return;
 
-    const totalShare = projects.reduce(
-      (acc, project) => acc + project.share * 100,
-      0
-    );
-
-    if (totalShare !== 100) {
-      if (totalShare > 100) {
-        setTotalShareError(
-          `Percentages must add up to 100% (remove ${
-            totalShare - 100
-          }% from your ballot)`
-        );
-      }
-      else {
-        setTotalShareError(
-          `Percentages must add up to 100% (add ${
-            100 - totalShare
-          }% to your ballot)`
-        );
-      }
-      return;
-    }
-
     const rankingArray = projects.map(project => ({
       id: project.projectId,
       share: project.share,
@@ -168,7 +201,7 @@ const RankingPage = () => {
       return;
     }
 
-    const allLocked = lockedItems.length === projects.length;
+    const allLocked = lockedItems.length === projects.length && projects.length;
     const noneLocked = lockedItems.length === 0;
     const checkedLocked = checkedItems.every(id => lockedItems.includes(id));
     const checkedUnlocked = checkedItems.every(
@@ -197,7 +230,48 @@ const RankingPage = () => {
 
   useEffect(() => {
     if (ranking) setProjects(ranking?.ranking);
+
+    if (!categoryRankings?.budget) return;
+
+    const categoryShare
+      = categoryRankings?.ranking?.find(
+        categoryRanking => categoryRanking.projectId === category
+      )?.share || 0;
+
+    setAllocationBudget(categoryRankings?.budget * categoryShare);
   }, [ranking]);
+
+  useEffect(() => {
+    if (!projects) return;
+
+    if (lockedItems.length > projects?.length - 2) {
+      setTotalShareError('At least two categories must be unlocked');
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+    else {
+      setTotalShareError(null);
+    }
+  }, [lockedItems]);
+
+  // search functionality
+  useEffect(() => {
+    if (!projects) return;
+
+    if (!search) {
+      setProjects(ranking?.ranking || []);
+      return;
+    }
+
+    const filteredProjects = ranking?.ranking.filter((project) => {
+      if (!project.name) return false;
+
+      return (
+        !search || project.name.toLowerCase().includes(search.toLowerCase())
+      );
+    });
+
+    setProjects(filteredProjects || []);
+  }, [search]);
 
   if (!category) return <NotFoundComponent />;
 
@@ -217,9 +291,15 @@ const RankingPage = () => {
               <p className="text-sm font-normal text-gray-600">
                 OP calculations in this ballot are based on your budget of
                 {' '}
-                <span className="underline">
-                  {formatBudget(categoryRankings?.budget)}
-                </span>
+                {rankingLoading
+                  ? (
+                      <span className="text-gray-400">...</span>
+                    )
+                  : (
+                      <span className="underline">
+                        {formatBudget(allocationBudget)}
+                      </span>
+                    )}
               </p>
             </div>
             <div className="flex items-center justify-center gap-2 rounded-2xl border border-voting-border bg-voting-bg px-3 py-1 text-xs text-voting-text">
@@ -233,7 +313,10 @@ const RankingPage = () => {
               <div className="flex items-center justify-center gap-2">
                 <Checkbox
                   onChange={() => handleBulkSelection()}
-                  checked={checkedItems.length === projects?.length}
+                  checked={
+                    checkedItems.length === projects?.length
+                    && !!projects?.length
+                  }
                 />
                 <p className="text-sm text-gray-600">Select all</p>
               </div>
@@ -245,7 +328,7 @@ const RankingPage = () => {
                   items selected
                 </p>
               </div>
-              {projects?.length && checkedItems.length > 0 && (
+              {!!projects?.length && (
                 <>
                   <div className="h-6 border-r border-gray-200" />
                   {isLocked && (
@@ -292,7 +375,7 @@ const RankingPage = () => {
                         <RankingRow
                           key={project.projectId}
                           index={index}
-                          budget={(categoryRankings?.budget || 0) * project.share}
+                          budget={allocationBudget * project.share}
                           project={project}
                           selected={checkedItems.includes(project.projectId)}
                           locked={lockedItems.includes(project.projectId)}
@@ -326,6 +409,7 @@ const RankingPage = () => {
             <button
               className="flex items-center justify-center gap-3 rounded-lg bg-primary px-10 py-2 font-semibold text-white"
               onClick={submitVotes}
+              disabled={!!totalShareError}
             >
               Submit Vote
               <ArrowRightIcon size={20} />

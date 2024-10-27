@@ -2,11 +2,11 @@ import { JWTPayload } from '@/app/utils/wallet/types';
 
 export const convertCategoryNameToId = (category: JWTPayload['category']) => {
   switch (category) {
-    case 'OP_STACK_RESEARCH_AND_DEVELOPMENT':
+    case 'GOVERNANCE_LEADERSHIP':
       return 1;
-    case 'ETHEREUM_CORE_CONTRIBUTIONS':
+    case 'GOVERNANCE_INFRA_AND_TOOLING':
       return 2;
-    case 'OP_STACK_TOOLING':
+    case 'GOVERNANCE_ANALYTICS':
       return 3;
     default:
       throw new Error(`Invalid category name: ${category}`);
@@ -15,39 +15,42 @@ export const convertCategoryNameToId = (category: JWTPayload['category']) => {
 
 export const convertCategoryToLabel = (category: JWTPayload['category']) => {
   const labels = {
-    ETHEREUM_CORE_CONTRIBUTIONS: 'Ethereum Core Contributors',
-    OP_STACK_RESEARCH_AND_DEVELOPMENT: 'OP Stack R&D',
-    OP_STACK_TOOLING: 'OP Stack Tooling',
+    GOVERNANCE_LEADERSHIP: 'Governance Leadership',
+    GOVERNANCE_INFRA_AND_TOOLING: 'Governance Infrastructure & Tooling',
+    GOVERNANCE_ANALYTICS: 'Governance Analytics',
   };
-  return labels[category] || 'OP Stack';
+
+  if (!(category in labels)) throw new Error ('Invalid category name');
+
+  return labels[category];
 };
 
 export const categoryIdSlugMap = new Map([
-  [1, 'OP_STACK_RESEARCH_AND_DEVELOPMENT'],
-  [2, 'ETHEREUM_CORE_CONTRIBUTIONS'],
-  [3, 'OP_STACK_TOOLING'],
+  [1, 'GOVERNANCE_LEADERSHIP'],
+  [2, 'GOVERNANCE_INFRA_AND_TOOLING'],
+  [3, 'GOVERNANCE_ANALYTICS'],
 ]);
 
 export const categoryIdTitleMap = new Map([
-  [1, 'OP Stack R&D'],
-  [2, 'Ethereum Core Contributors'],
-  [3, 'OP Stack Tooling'],
+  [1, 'Governance Leadership'],
+  [2, 'Governance Infrastructure & Tooling'],
+  [3, 'Governance Analytics'],
 ]);
 
 export const categorySlugIdMap = new Map([
-  ['OP_STACK_RESEARCH_AND_DEVELOPMENT', 1],
-  ['ETHEREUM_CORE_CONTRIBUTIONS', 2],
-  ['OP_STACK_TOOLING', 3],
+  ['GOVERNANCE_LEADERSHIP', 1],
+  ['GOVERNANCE_INFRA_AND_TOOLING', 2],
+  ['GOVERNANCE_ANALYTICS', 3],
 ]);
 
-export const getCategoryCount = (category: JWTPayload['category']) => {
-  const labels = {
-    ETHEREUM_CORE_CONTRIBUTIONS: 30,
-    OP_STACK_RESEARCH_AND_DEVELOPMENT: 29,
-    OP_STACK_TOOLING: 20,
-  };
-  return category in labels ? labels[category] : 30;
-};
+// export const getCategoryCount = (category: JWTPayload['category']) => {
+//   const labels = {
+//     GOVERNANCE_LEADERSHIP: 30,
+//     GOVERNANCE_INFRA_AND_TOOLING: 29,
+//     GOVERNANCE_ANALYTICS: 20,
+//   };
+//   return category in labels ? labels[category] : 30;
+// };
 
 export function shortenWalletAddress(
   address: string,

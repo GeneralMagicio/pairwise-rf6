@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { redirect, useParams, useRouter } from 'next/navigation';
+import { redirect, useParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 import { JWTPayload } from '@/app/utils/wallet/types';
@@ -19,7 +19,6 @@ import {
 import {
   convertCategoryNameToId,
   convertCategoryToLabel,
-  getCategoryCount,
 } from '../utils/helpers';
 import {
   useUpdateProjectUndo,
@@ -29,11 +28,6 @@ import { getBiggerNumber, usePrevious } from '@/app/utils/methods';
 import { useMarkCoi } from '../utils/data-fetching/coi';
 import Modal from '@/app/utils/Modal';
 import { IProject } from '../utils/types';
-import FinishBallot from '../ballot/modals/FinishBallotModal';
-import BallotSuccessModal from '../ballot/modals/BallotSuccessModal';
-import BallotLoading from '../ballot/modals/BallotLoading';
-import { ballotSuccessPost } from '../ballot/useGetBallot';
-import BallotError from '../ballot/modals/BallotError';
 import { mockProject1, mockProject2 } from '../card/mockData';
 import IntroView from './IntroView';
 import Spinner from '../../components/Spinner';
@@ -43,14 +37,10 @@ import GoodRatingModal from '../card/modals/GoodRatingModal';
 import RevertLoadingModal from '../card/modals/RevertLoadingModal';
 import StorageLabel from '@/app/lib/localStorage';
 import { ProjectCardAI } from '../card/ProjectCardAI';
-
-const getSuccessBalootLSKey = (address: string) => {
-  return `has-unlocked-ballot-${address}`;
-};
+import EmailLoginModal from '@/app/allocation/components/EOA/EmailLoginModal';
 
 export default function Home() {
   const { category } = useParams() ?? {};
-  const router = useRouter();
   const queryClient = useQueryClient();
   const { address, chainId } = useAccount();
 
@@ -64,10 +54,6 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [lastAction, setLastAction] = useState<AutoScrollAction>();
 
-  const [showFinishBallot, setShowFinishBallot] = useState(false);
-  const [showSuccessBallot, setShowSuccessBallot] = useState(false);
-  const [ballotLoading, setBallotLoading] = useState(false);
-  const [ballotError, setBallotError] = useState(false);
   const [revertingBack, setRevertingBack] = useState(false);
   const [showLowRateModal, setShowLowRateModal] = useState(false);
   const [showPostRatingModal, setShowPostRatingModal] = useState(false);
@@ -75,6 +61,7 @@ export default function Home() {
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null
   );
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const [sectionExpanded1, setSectionExpanded1] = useState({
     repos: true,
@@ -139,9 +126,6 @@ export default function Home() {
   useEffect(() => {
     if (!data || !address) return;
     if (data.pairs.length === 0) {
-      const value = localStorage.getItem(getSuccessBalootLSKey(address));
-      if (!value || !JSON.parse(value)) setShowFinishBallot(true);
-      else setShowSuccessBallot(true);
       if (!project1 || !project2) {
         setProject1(mockProject1);
         setProject2(mockProject2);
@@ -153,8 +137,14 @@ export default function Home() {
   }, [data, temp]);
 
   useEffect(() => {
-    const initialRating1 = data?.pairs[0] && data?.pairs[0].length > 0 ? data.pairs[0][0].rating : null;
-    const initialRating2 = data?.pairs[0] && data?.pairs[0].length > 0 ? data.pairs[0][1].rating : null;
+    const initialRating1
+      = data?.pairs[0] && data?.pairs[0].length > 0
+        ? data.pairs[0][0].rating
+        : null;
+    const initialRating2
+      = data?.pairs[0] && data?.pairs[0].length > 0
+        ? data.pairs[0][1].rating
+        : null;
 
     // observe if user rated both projects
     if (rating1 !== initialRating1 && rating2 !== initialRating2) {
@@ -217,11 +207,7 @@ export default function Home() {
   };
 
   const isAnyModalOpen = () =>
-    showFinishBallot
-    || showSuccessBallot
-    || ballotLoading
-    || ballotError
-    || showLowRateModal
+    showLowRateModal
     || revertingBack
     || showPostRatingModal
     || showGoodRatingModal;
@@ -291,26 +277,6 @@ export default function Home() {
       localStorage.setItem(hasVisitedKey, 'true');
     }
     setIsInitialVisit(false);
-  };
-
-  const handleUnlockBallot = async () => {
-    if (!address) return;
-    setShowFinishBallot(false);
-    setBallotLoading(true);
-    setBallotError(false);
-    try {
-      // const ballot = await getBallot(cid);
-      // await uploadBallot(ballot, address);
-      await ballotSuccessPost();
-      localStorage.setItem(getSuccessBalootLSKey(address), 'true');
-      setShowSuccessBallot(true);
-    }
-    catch (e) {
-      setBallotError(true);
-    }
-    finally {
-      setBallotLoading(false);
-    }
   };
 
   const checkLowRatedProjectSelected = (chosenId: number): boolean => {
@@ -409,6 +375,26 @@ export default function Home() {
     return storedData[`${chainId}_${address}`] || {};
   }
 
+  const handleCloseLoginModal = () => {
+    const personalWalletId = localStorage.getItem(
+      StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+    );
+
+    if (!personalWalletId) return;
+
+    setShowLoginModal(false);
+  };
+
+  useEffect(() => {
+    const personalWalletId = localStorage.getItem(
+      StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+    );
+
+    if (!personalWalletId) {
+      setShowLoginModal(true);
+    }
+  }, [cid]);
+
   if (isLoading) return <Spinner />;
 
   if (!address || !chainId) return redirect('/');
@@ -420,35 +406,13 @@ export default function Home() {
       <Modals />
       <Modal
         isOpen={
-          showFinishBallot
-          || showSuccessBallot
-          || ballotLoading
-          || ballotError
-          || showLowRateModal
+          showLowRateModal
           || revertingBack
           || showPostRatingModal
           || showGoodRatingModal
         }
         onClose={() => {}}
       >
-        {showFinishBallot && (
-          <FinishBallot
-            category={convertCategoryToLabel(
-              category as JWTPayload['category']
-            )}
-            projectCount={getCategoryCount(category as JWTPayload['category'])}
-            onUnlock={handleUnlockBallot}
-          />
-        )}
-        {showSuccessBallot && (
-          <BallotSuccessModal
-            onClick={() => {
-              router.push(`${process.env.NEXT_PUBLIC_OPTIMISM_URL}/ballot`);
-            }}
-          />
-        )}
-        {ballotLoading && <BallotLoading />}
-        {ballotError && <BallotError onClick={handleUnlockBallot} />}
         {revertingBack && <RevertLoadingModal />}
         {showLowRateModal && (
           <LowRateModal
@@ -476,10 +440,24 @@ export default function Home() {
           />
         )}
       </Modal>
+
+      <Modal
+        isOpen={showLoginModal}
+        onClose={handleCloseLoginModal}
+        showCloseButton={true}
+      >
+        <EmailLoginModal
+          closeModal={() => setShowLoginModal(false)}
+          selectedCategoryId={cid}
+        />
+      </Modal>
+
       <HeaderRF6
         progress={progress * 100}
         category={convertCategoryToLabel(category! as JWTPayload['category'])}
-        question="Which project had the greatest impact on the OP Stack?"
+        question={`Which project had the greatest impact on the ${convertCategoryToLabel(
+          category! as JWTPayload['category']
+        )} ?`}
         isFirstSelection={isInitialVisit}
       />
       {isInitialVisit

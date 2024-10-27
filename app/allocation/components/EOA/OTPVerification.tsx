@@ -5,7 +5,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Wallet } from 'thirdweb/wallets';
 import { useConnect } from 'thirdweb/react';
 import { TOTPData, OtpStatus, Step } from './EmailLoginModal';
 import { EditIcon } from '@/public/assets/icon-components/Edit';
@@ -20,10 +19,8 @@ interface IOTPVerificationProps {
   otpData: TOTPData
   setOtpData: (data: TOTPData) => void
   handleGoBack: () => void
-  setEoaWallet: (wallet: Wallet) => void
   setStep: (step: number) => void
   resendOTP: () => void
-  closeModal: () => void
 }
 
 const FIVE_MINUTES = 1 * 60 * 1000;
@@ -33,10 +30,8 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
   otpData,
   setOtpData,
   handleGoBack,
-  setEoaWallet,
   setStep,
   resendOTP,
-  closeModal,
 }) => {
   const { connect } = useConnect();
 
@@ -112,6 +107,10 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
     }
 
     try {
+      const personalWalletId = localStorage.getItem(
+        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+      );
+
       const emailEoa = await createEmailEoa(email, verificationCode);
       const account = emailEoa.getAccount();
 
@@ -119,17 +118,16 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
 
       const smartWallet = await createSmartWalletFromEOA(account);
 
-      const personalWalletId = localStorage.getItem(
-        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
-      );
-
       if (!personalWalletId) {
-        setEoaWallet(smartWallet);
-        setStep(Step.CONNECT_EOA);
+        setOtpData({
+          ...otpData,
+          loading: false,
+          otpStatus: OtpStatus.INCORRECT,
+        });
       }
       else {
         connect(smartWallet);
-        closeModal();
+        setStep(Step.CONNECT_EOA);
       }
     }
     catch {

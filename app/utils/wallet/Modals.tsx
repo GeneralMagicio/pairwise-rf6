@@ -30,8 +30,7 @@ export default function Modals() {
     setLoginAddress,
     doLoginFlow,
     signOut,
-    showBhModal,
-    setShowBhModal,
+    loggedToAgora,
   } = useAuth();
 
   const { open: isOpen } = useIDKit();
@@ -42,12 +41,11 @@ export default function Modals() {
     return (await worldIdSignIn(proof));
   };
 
-  const bhOpen
-    = loggedToPw === LogginToPwBackendState.LoggedIn
-    && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && !isWorldIdSignErrorModal && showBhModal;
+  const bhOpen = typeof loggedToAgora === 'object'
+    && loggedToPw === LogginToPwBackendState.LoggedIn && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && !isWorldIdSignErrorModal;
 
   const signInModalOpen
-    = !!address && loggedToPw === LogginToPwBackendState.Error;
+    = !!address && (loggedToAgora === 'error' || loggedToPw === LogginToPwBackendState.Error);
 
   const handleNewWalletCancel = () => {
     setLoginAddress({ ...loginAddress, confirmed: true });
@@ -96,7 +94,6 @@ export default function Modals() {
             <Modal
               isOpen={bhOpen}
               onClose={() => {
-                setShowBhModal(false);
                 router.push('/allocation');
               }}
             >

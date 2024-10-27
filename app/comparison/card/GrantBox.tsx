@@ -9,11 +9,13 @@ import { USDIcon } from '@/public/assets/icon-components/Usd';
 import { truncate } from '@/app/utils/methods';
 
 interface Props {
+  type: 'grant' | 'investment'
   title: string
   amount: string
   link: string | null
   date: string | null
   description: string | null
+  round?: string | null
 }
 
 export function formatAmount(amount: string) {
@@ -42,24 +44,72 @@ export function formatAmount(amount: string) {
   }
 }
 
-const GrantBox: FC<Props> = ({ title, link, amount, date, description }) => {
+const GrantBox: FC<Props> = ({
+  type,
+  title,
+  link,
+  amount,
+  date,
+  description,
+  round,
+}) => {
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
+  const formatTitle = (title: string) => {
+    if (title === 'retroFunding') return 'Retro Funding';
+
+    const titleFormated = title.split('-').join(' ');
+    if (type === 'grant') {
+      return 'Grant: ' + titleFormated;
+    }
+    else {
+      return titleFormated;
+    }
+  };
+
   return (
-    <div className="max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2">
+    <div
+      {...getToggleProps()}
+      className="max-w-full rounded-lg border border-gray-200 bg-gray-50 p-2"
+    >
       <div className="flex items-center justify-between py-1">
         <div className="flex items-center justify-between gap-6">
-          <span className="text-sm">
-            {truncate(title, 20)}
+          <span className="text-sm font-semibold capitalize">
+            {truncate(formatTitle(title), 20)}
           </span>
           {link && (
-            <a href={link} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm">
+            <a
+              href={link}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 text-sm"
+            >
               <WebsiteIcon />
               {truncate(link, 25)}
             </a>
           )}
 
-          {amount.includes('$') || amount.includes('USD') || amount.includes('usd') || amount.includes('dollars')
+          {round && (
+            <span className="flex items-center gap-2 text-sm">
+              <TimeIcon />
+              Round
+              {' '}
+              {round}
+            </span>
+          )}
+
+          {date && (
+            <span className="flex items-center gap-2 text-sm">
+              <TimeIcon />
+              {date}
+            </span>
+          )}
+
+          {type === 'investment'
+          || amount.includes('$')
+          || amount.includes('USD')
+          || amount.includes('usd')
+          || amount.includes('dollars')
             ? (
                 <span className="flex items-center gap-2 text-sm">
                   <USDIcon />
@@ -72,24 +122,15 @@ const GrantBox: FC<Props> = ({ title, link, amount, date, description }) => {
                   {formatAmount(amount)}
                 </span>
               )}
-          {date && (
-            <span className="flex items-center gap-2 text-sm">
-              <TimeIcon />
-              {date}
-            </span>
-          )}
         </div>
         {description && (
-          <button
-            {...getToggleProps()}
-            className="text-sm text-gray-600 hover:underline"
-          >
+          <button className="text-sm text-gray-600 hover:underline">
             {isExpanded ? <ArrowUpIcon /> : <ArrowDownIcon />}
           </button>
         )}
       </div>
       <section {...getCollapseProps()}>
-        <p className="my-3 text-gray-600">{description}</p>
+        <p className="my-3 break-words text-gray-600">{description}</p>
       </section>
     </div>
   );

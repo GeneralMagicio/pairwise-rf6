@@ -1,6 +1,5 @@
 import React, { FC, FormEvent } from 'react';
 import Image from 'next/image';
-import { Wallet } from 'thirdweb/wallets';
 import { useConnect } from 'thirdweb/react';
 import {
   createSmartWalletFromEOA,
@@ -16,7 +15,6 @@ interface IMethodSelectionProps {
   otpData: TOTPData
   oAuthData: TOAuthData
   setPickedMethod: (method: Strategy | 'email' | null) => void
-  setEoaWallet: (wallet: Wallet) => void
   setOAuthData: (data: TOAuthData) => void
   setOtpData: (data: TOTPData) => void
   sendOTP: () => void
@@ -29,17 +27,19 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
   otpData,
   oAuthData,
   setPickedMethod,
-  setEoaWallet,
   setOAuthData,
   setOtpData,
   sendOTP,
   setStep,
-  closeModal,
 }) => {
   const { connect } = useConnect();
 
   const handleOAuthConnect = (strategy: Strategy) => async () => {
     try {
+      const personalWalletId = localStorage.getItem(
+        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+      );
+
       setPickedMethod(strategy);
       setOAuthData({ ...oAuthData, loading: true });
       const socialEoa = await createSocialEoa(strategy);
@@ -48,21 +48,19 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
       if (!account) throw new Error(`Unable to create a ${strategy} EOA`);
 
       const smartWallet = await createSmartWalletFromEOA(account);
-      setEoaWallet(smartWallet);
       setOAuthData({ ...oAuthData, loading: false });
 
-      const personalWalletId = localStorage.getItem(
-        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
-      );
-
       if (!personalWalletId) {
-        setStep(Step.CONNECT_EOA);
-        setPickedMethod(null);
+        setOAuthData({
+          ...oAuthData,
+          loading: true,
+          error: 'There was a problem connecting to your Google account',
+        });
       }
       else {
         console.log('Connecting to smart wallet');
         connect(smartWallet);
-        closeModal();
+        setStep(Step.CONNECT_EOA);
       }
     }
     catch (error: any) {

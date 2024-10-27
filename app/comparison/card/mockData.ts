@@ -20,7 +20,7 @@ export const mockProject1: IProject = {
     projectId:
         '0x8ec88058175ef4c1c9b1f26910c4d4f2cfa733d6fcd1dbd9385476a313d9e12d',
     category: 'Utility',
-    applicationCategory: 'ETHEREUM_CORE_CONTRIBUTIONS',
+    applicationCategory: 'GOVERNANCE_LEADERSHIP',
     organization: null,
     name: 'Lodestar',
     description:
@@ -138,7 +138,7 @@ export const mockProject1: IProject = {
     } as any,
     pricingModel: { type: 'free', details: '' },
     impactStatement: {
-      category: 'ETHEREUM_CORE_CONTRIBUTIONS',
+      category: 'GOVERNANCE_LEADERSHIP',
       subcategory: [
         'Ethereum client implementations',
         'Ethereum test networks',
@@ -188,7 +188,7 @@ export const mockProject2: IProject = {
     projectId:
       '0x2c97e213fef2bd3f30a71edf6ed48232640368d0083dc0a134a1b59391639bde',
     category: 'Utility',
-    applicationCategory: 'ETHEREUM_CORE_CONTRIBUTIONS',
+    applicationCategory: 'GOVERNANCE_LEADERSHIP',
     organization: {
       name: 'Formal Verification @ Ethereum Foundation',
       description:
@@ -340,7 +340,7 @@ export const mockProject2: IProject = {
     } as any,
     pricingModel: { type: 'free', details: '' },
     impactStatement: {
-      category: 'ETHEREUM_CORE_CONTRIBUTIONS',
+      category: 'GOVERNANCE_LEADERSHIP',
       subcategory: ['Ethereum client implementations'],
       statement: {
         create:
