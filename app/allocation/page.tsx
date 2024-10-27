@@ -288,7 +288,7 @@ const AllocationPage = () => {
             </p>
           </div>
         )}
-        <div className="flex justify-between gap-4">
+        <div className="flex grow justify-between gap-4">
           <div className="flex max-w-[65%] flex-col gap-6 rounded-xl border p-6">
             <div>
               <h3 className="mb-4 w-full border-b pb-6 text-2xl font-bold">
