@@ -40,6 +40,10 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
 
   const handleOAuthConnect = (strategy: Strategy) => async () => {
     try {
+      const personalWalletId = localStorage.getItem(
+        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+      );
+
       setPickedMethod(strategy);
       setOAuthData({ ...oAuthData, loading: true });
       const socialEoa = await createSocialEoa(strategy);
@@ -50,10 +54,6 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
       const smartWallet = await createSmartWalletFromEOA(account);
       setEoaWallet(smartWallet);
       setOAuthData({ ...oAuthData, loading: false });
-
-      const personalWalletId = localStorage.getItem(
-        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
-      );
 
       if (!personalWalletId) {
         setStep(Step.CONNECT_EOA);

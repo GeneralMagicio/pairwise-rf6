@@ -112,16 +112,16 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
     }
 
     try {
+      const personalWalletId = localStorage.getItem(
+        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
+      );
+
       const emailEoa = await createEmailEoa(email, verificationCode);
       const account = emailEoa.getAccount();
 
       if (!account) throw new Error('Unable to create an email EOA');
 
       const smartWallet = await createSmartWalletFromEOA(account);
-
-      const personalWalletId = localStorage.getItem(
-        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
-      );
 
       if (!personalWalletId) {
         setEoaWallet(smartWallet);
