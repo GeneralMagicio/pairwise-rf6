@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Wallet } from 'thirdweb/wallets';
 import { preAuthenticate } from 'thirdweb/wallets/in-app';
 import { ExternalLinkIcon } from '@/public/assets/icon-components/ExternalLink';
 import { brandColor } from '@/app/lib/constants';
@@ -62,7 +61,6 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
     error: '',
   });
   const [step, setStep] = useState<Step>(Step.EMAIL);
-  const [eoaWallet, setEoaWallet] = useState<Wallet | null>(null);
   const [pickedMethod, setPickedMethod] = useState<Strategy | 'email' | null>(
     null
   );
@@ -172,7 +170,6 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
                     pickedMethod={pickedMethod}
                     setOtpData={setOtpData}
                     setPickedMethod={setPickedMethod}
-                    setEoaWallet={setEoaWallet}
                     setOAuthData={setOAuthData}
                     sendOTP={sendOTP}
                     setStep={setStep}
@@ -184,10 +181,8 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
                     otpData={otpData}
                     setOtpData={setOtpData}
                     handleGoBack={goBack}
-                    setEoaWallet={setEoaWallet}
                     setStep={setStep}
                     resendOTP={sendOTP}
-                    closeModal={closeModal}
                   />
                 )}
           </div>
@@ -204,7 +199,6 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
     return (
       <ConnectEOAModal
         email={otpData.email}
-        eoaWallet={eoaWallet}
         setStep={setStep}
       />
     );
