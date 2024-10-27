@@ -371,9 +371,12 @@ export const ProjectCard: React.FC<Props> = ({
               || project.contracts?.length
                 ? (
                     <div className="space-y-4">
-                      {project.github?.map(repo => (
-                        <GithubBox key={repo.url} repo={repo} />
-                      ))}
+                      {project.github?.map((repo) => {
+                        if (repo.url) {
+                          return <GithubBox key={repo.url} repo={repo} />;
+                        }
+                        return null;
+                      })}
 
                       {project.links?.map(link => (
                         <SimpleInfoBox
@@ -522,7 +525,11 @@ export const ProjectCard: React.FC<Props> = ({
                           amount={grant.amount}
                           date={grant.date}
                           title={grant.grant || ''}
-                          round={grant.grant === 'retroFunding' ? grant.fundingRound : null}
+                          round={
+                            grant.grant === 'retroFunding'
+                              ? grant.fundingRound
+                              : null
+                          }
                         />
                       ))}
                       {project.grantsAndFunding.investments?.map(funding => (
