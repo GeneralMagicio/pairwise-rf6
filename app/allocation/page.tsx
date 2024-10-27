@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveWallet } from 'thirdweb/react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAccount } from 'wagmi';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import Modal from '../utils/Modal';
 import EmailLoginModal from './components/EOA/EmailLoginModal';
@@ -17,7 +18,7 @@ import { modifyPercentage, RankItem } from './utils';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { CustomizedSlider } from './components/Slider';
-import { categoryIdSlugMap, formatBudget } from '../comparison/utils/helpers';
+import { categoryIdSlugMap, categorySlugIdMap, convertCategoryToLabel, formatBudget } from '../comparison/utils/helpers';
 import { useCategories } from '../comparison/utils/data-fetching/categories';
 import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
 import FarcasterModal from './components/FarcasterModal';
@@ -33,6 +34,13 @@ import {
   useCategoryRankings,
   useUpdateCategoriesRanking,
 } from '@/app/comparison/utils/data-fetching/ranking';
+import { uploadBallot } from '../utils/wallet/agora-login';
+import { useAuth } from '../utils/wallet/AuthProvider';
+import { ballotSuccessPost, getBallot } from '../comparison/ballot/useGetBallot';
+import BallotError from '../comparison/ballot/modals/BallotError';
+import BallotLoading from '../comparison/ballot/modals/BallotLoading';
+import BallotSuccessModal from '../comparison/ballot/modals/BallotSuccessModal';
+import BallotNotReady from '../comparison/ballot/modals/BallotNotReady';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -49,9 +57,19 @@ enum DelegationState {
   Success,
 }
 
+enum BallotState {
+  Initial,
+  Loading,
+  Error,
+  ErrorNotReady,
+  Success,
+}
+
 const AllocationPage = () => {
   const wallet = useActiveWallet();
   const router = useRouter();
+  const { address } = useAccount();
+  const { loggedToAgora } = useAuth();
 
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: delegations, isLoading: delegationsLoading }
@@ -65,6 +83,7 @@ const AllocationPage = () => {
   const budgetDelegateToYou = delegations?.toYou?.budget;
   const budgetDelegateFromYou = delegations?.fromYou?.budget;
 
+  const [ballotState, setBallotState] = useState<BallotState>(BallotState.Initial);
   const [totalValue, setTotalValue] = useState(categoryRankings?.budget || 0);
   const [percentageError, setPercentageError] = useState<string>();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
@@ -163,6 +182,26 @@ const AllocationPage = () => {
     setTargetDelegate(undefined);
   };
 
+  const handleUploadBallot = async () => {
+    if (loggedToAgora === 'error' || loggedToAgora === 'initial' || !address) return;
+    setBallotState(BallotState.Loading);
+    // const agoraPayload = await isLoggedInToAgora(address);
+
+    const cid = categorySlugIdMap.get(loggedToAgora.category);
+
+    if (!cid) throw new Error('Undefined category id');
+    try {
+      const ballot = await getBallot(cid);
+      await uploadBallot(ballot, address);
+      await ballotSuccessPost();
+      setBallotState(BallotState.Success);
+    }
+    catch (e: any) {
+      if (e.response.data.pwCode === 'e-1005') setBallotState(BallotState.ErrorNotReady);
+      else setBallotState(BallotState.Error);
+    }
+  };
+
   const handleScoreProjects = (id: RankItem['id']) => () => {
     setSelectedCategoryId(id);
 
@@ -207,6 +246,29 @@ const AllocationPage = () => {
 
   return (
     <div>
+      <Modal
+        isOpen={
+          ballotState !== BallotState.Initial
+        }
+        onClose={() => {}}
+        showCloseButton={false}
+      >
+        {ballotState === BallotState.Success && (
+          <BallotSuccessModal
+            link={`${process.env.NEXT_PUBLIC_OPTIMISM_URL}/ballot`}
+            onClose={() => setBallotState(BallotState.Initial)}
+          />
+        )}
+        {ballotState === BallotState.Loading && <BallotLoading />}
+        {ballotState === BallotState.Error && <BallotError onClick={handleUploadBallot} />}
+        {ballotState === BallotState.ErrorNotReady && typeof loggedToAgora === 'object'
+        && (
+          <BallotNotReady
+            categoryName={convertCategoryToLabel(loggedToAgora.category)}
+            onClick={() => { setBallotState(BallotState.Initial); }}
+          />
+        )}
+      </Modal>
       <Modal
         isOpen={
           delegationState !== DelegationState.Initial && !!categoryToDelegate
@@ -431,7 +493,7 @@ const AllocationPage = () => {
               : (
                   <button
                     className="w-fit self-end rounded-lg bg-primary px-4 py-3 text-white"
-                    onClick={() => {}}
+                    onClick={handleUploadBallot}
                   >
                     Update Ballot
                   </button>
