@@ -85,6 +85,13 @@ export type ProjectMetadata =
         details: null
         fundingRound: string
       }[]
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
+      }[]
     }
     pricingModel: {
       type: string
@@ -201,6 +208,13 @@ export type ProjectMetadata =
       }[]
       revenue: null
       grants: null
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
+      }[]
     }
     pricingModel: {
       type: string
@@ -216,6 +230,13 @@ export type ProjectMetadata =
         }[]
       }
     }
+    retroFunding: {
+      grant: string
+      link: null
+      amount: string
+      date: string
+      details: null
+    }[]
     testimonials: string
   }
   | {
@@ -307,6 +328,13 @@ export type ProjectMetadata =
           fundingRound: null
         }
       )[]
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
+      }[]
     }
     pricingModel: {
       type: string
@@ -398,6 +426,13 @@ export type ProjectMetadata =
         date: string
         details: null
         fundingRound: string
+      }[]
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
       }[]
     }
     pricingModel: {
@@ -532,6 +567,13 @@ export type ProjectMetadata =
           fundingRound: null
         }
       )[]
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
+      }[]
     }
     pricingModel: {
       type: string
@@ -635,6 +677,13 @@ export type ProjectMetadata =
         date: string
         details: null
         fundingRound: string
+      }[]
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
       }[]
     }
     pricingModel: {
@@ -769,6 +818,13 @@ export type ProjectMetadata =
         details: null
         fundingRound: string
       }[]
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
+      }[]
     }
     pricingModel: {
       type: string
@@ -845,6 +901,13 @@ export type ProjectMetadata =
       investments: null
       revenue: null
       grants: null
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
+      }[]
     }
     pricingModel: {
       type: string
@@ -975,6 +1038,13 @@ export type ProjectMetadata =
           fundingRound: null
         }
       )[]
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
+      }[]
     }
     pricingModel: {
       type: string
@@ -1095,6 +1165,13 @@ export type ProjectMetadata =
         date: string
         details: string
         fundingRound: null
+      }[]
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
       }[]
     }
     pricingModel: {
@@ -1245,6 +1322,13 @@ export type ProjectMetadata =
           fundingRound: null
         }
       )[]
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
+      }[]
     }
     pricingModel: {
       type: string
@@ -1367,6 +1451,13 @@ export type ProjectMetadata =
       }[]
       revenue: null
       grants: null
+      retroFunding: {
+        grant: string
+        link: null
+        amount: string
+        date: string
+        details: null
+      }[]
     }
     pricingModel: {
       type: string

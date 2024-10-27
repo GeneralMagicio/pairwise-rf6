@@ -9,7 +9,7 @@ import { USDIcon } from '@/public/assets/icon-components/Usd';
 import { truncate } from '@/app/utils/methods';
 
 interface Props {
-  type: 'grant' | 'investment'
+  type: 'grant' | 'investment' | 'retro_funding'
   title: string
   amount: string
   link: string | null
@@ -56,15 +56,10 @@ const GrantBox: FC<Props> = ({
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   const formatTitle = (title: string) => {
-    if (title === 'retroFunding') return 'Retro Funding';
-
-    const titleFormated = title.split('-').join(' ');
     if (type === 'grant') {
-      return 'Grant: ' + titleFormated;
+      return 'Grant: ' + title.split('-').join(' ');
     }
-    else {
-      return titleFormated;
-    }
+    else return title;
   };
 
   return (
@@ -92,8 +87,6 @@ const GrantBox: FC<Props> = ({
           {round && (
             <span className="flex items-center gap-2 text-sm">
               <TimeIcon />
-              Round
-              {' '}
               {round}
             </span>
           )}

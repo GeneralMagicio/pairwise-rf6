@@ -327,8 +327,12 @@ export const ProjectCard: React.FC<Props> = ({
                 {project.socialLinks.website?.map(item => (
                   <ExternalLink key={item} address={item} type="website" />
                 ))}
-                {project.socialLinks.farcaster?.map(item => (
-                  <ExternalLink key={item} address={item} type="warpcast" />
+                {project.socialLinks.farcaster?.map((item, index) => (
+                  <ExternalLink
+                    key={`${item}_${index}`}
+                    address={item}
+                    type="warpcast"
+                  />
                 ))}
                 {project.socialLinks.twitter && (
                   <ExternalLink
@@ -514,7 +518,8 @@ export const ProjectCard: React.FC<Props> = ({
               title={ProjectSectionTitles[ProjectSection.GRANTS]}
             >
               {project.grantsAndFunding.grants?.length
-              || project.grantsAndFunding.investments?.length
+              || project.grantsAndFunding.retroFunding?.length
+              || project.grantsAndFunding.ventureFunding?.length
                 ? (
                     <div className="space-y-2">
                       {project.grantsAndFunding.grants?.map((grant, index) => (
@@ -526,22 +531,18 @@ export const ProjectCard: React.FC<Props> = ({
                           amount={grant.amount}
                           date={grant.date}
                           title={grant.grant ?? ''}
-                          round={
-                            grant.grant === 'retroFunding'
-                              ? grant.fundingRound
-                              : null
-                          }
                         />
                       ))}
-                      {project.grantsAndFunding.investments?.map(funding => (
+                      {project.grantsAndFunding.retroFunding?.map(funding => (
                         <GrantBox
                           key={funding.details}
-                          type="investment"
-                          description={funding.details}
+                          type="retro_funding"
+                          description={null}
+                          round={funding.details}
                           link={null}
                           amount={funding.amount}
-                          date={funding.year}
-                          title="Investment"
+                          date={funding.date}
+                          title="Retro Funding"
                         />
                       ))}
                       {project.grantsAndFunding.ventureFunding?.map(funding => (
