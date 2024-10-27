@@ -468,11 +468,11 @@ export default function Home() {
                 {aiMode1
                   ? (
                       <ProjectCardAI
-                        key={project1.RPGF5Id}
+                        key={project1.RF6Id}
                         aiMode={aiMode1}
                         setAi={toggleAiMode}
-                        key1={project1.RPGF5Id}
-                        key2={project2.RPGF5Id}
+                        key1={project1.RF6Id}
+                        key2={project2.RF6Id}
                         coiLoading={coiLoading1}
                         summaryData={project1.aiSummary}
                         coi={coi1}
@@ -483,7 +483,7 @@ export default function Home() {
                     )
                   : (
                       <ProjectCard
-                        key={project1.RPGF5Id}
+                        key={project1.RF6Id}
                         aiMode={aiMode1}
                         setAi={toggleAiMode}
                         sectionExpanded={sectionExpanded1}
@@ -491,8 +491,8 @@ export default function Home() {
                         name="card1"
                         action={lastAction}
                         dispatchAction={dispatchAction('card1')}
-                        key1={project1.RPGF5Id}
-                        key2={project2.RPGF5Id}
+                        key1={project1.RF6Id}
+                        key2={project2.RF6Id}
                         coiLoading={coiLoading2}
                         coi={coi1}
                         project={{ ...project1.metadata, ...project1 } as any}
@@ -505,11 +505,11 @@ export default function Home() {
                 {aiMode2
                   ? (
                       <ProjectCardAI
-                        key={project2.RPGF5Id}
+                        key={project2.RF6Id}
                         aiMode={aiMode2}
                         setAi={toggleAiMode}
-                        key1={project2.RPGF5Id}
-                        key2={project1.RPGF5Id}
+                        key1={project2.RF6Id}
+                        key2={project1.RF6Id}
                         coiLoading={coiLoading2}
                         coi={coi2}
                         summaryData={project2.aiSummary}
@@ -520,7 +520,7 @@ export default function Home() {
                     )
                   : (
                       <ProjectCard
-                        key={project2.RPGF5Id}
+                        key={project2.RF6Id}
                         aiMode={aiMode2}
                         setAi={toggleAiMode}
                         sectionExpanded={sectionExpanded2}
@@ -528,8 +528,8 @@ export default function Home() {
                         name="card2"
                         action={lastAction}
                         dispatchAction={dispatchAction('card2')}
-                        key1={project2.RPGF5Id}
-                        key2={project1.RPGF5Id}
+                        key1={project2.RF6Id}
+                        key2={project1.RF6Id}
                         coiLoading={coiLoading2}
                         coi={coi2}
                         onCoICancel={cancelCoI2}
