@@ -52,6 +52,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
           <PendingCategory
             onScore={onScore}
             onDelegate={onDelegate}
+            progress={progress}
             delegations={delegations}
             isAutoConnecting={isAutoConnecting}
           />

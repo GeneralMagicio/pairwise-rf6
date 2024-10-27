@@ -101,6 +101,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
           <PendingCategory
             onScore={onScore}
             onDelegate={onDelegate}
+            progress={progress}
             isAutoConnecting={isAutoConnecting}
             delegations={delegations}
           />
