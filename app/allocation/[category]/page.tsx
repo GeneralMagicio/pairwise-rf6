@@ -36,6 +36,10 @@ import { modifyPercentage, RankItem } from '../utils';
 import { activeChain } from '@/app/lib/constants';
 import { convertRankingToAttestationFormat, EASNetworks, generateRandomString, getPrevAttestationIds, SCHEMA_UID, useSigner } from './utils';
 import { axiosInstance } from '@/app/utils/axiosInstance';
+import Modal from '@/app/utils/Modal';
+import AttestationSuccessModal from './attestation/AttestationSuccessModal';
+import AttestationLoading from './attestation/AttestationLoading';
+import AttestationError from './attestation/AttestationError';
 
 enum VotingStatus {
   VOTED,
@@ -51,6 +55,13 @@ const votingStatusMap = {
   },
 };
 
+enum AttestationState {
+  Initial,
+  Loading,
+  Success,
+  Error,
+}
+
 const RankingPage = () => {
   const params = useParams();
   const router = useRouter();
@@ -60,6 +71,8 @@ const RankingPage = () => {
   const category = categorySlugIdMap.get((params?.category as string) || '');
 
   const [search, setSearch] = useState<string>('');
+  const [attestationState, setAttestationState] = useState(AttestationState.Initial);
+  const [attestationLink, setAttestationLink] = useState<string>();
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [projects, setProjects] = useState<IProjectRanking[] | null>(null);
   const [rankingArray, setRankingArray] = useState<IProjectRankingObj[]>([]);
@@ -206,7 +219,7 @@ const RankingPage = () => {
 
     if (!ranking) return;
 
-    // setAttestUnderway(true);
+    setAttestationState(AttestationState.Loading);
 
     const chainId = activeChain.id;
     const easConfig = EASNetworks[chainId];
@@ -426,18 +439,20 @@ const RankingPage = () => {
 
       console.log('attestaion id', newAttestationUID);
       // await finishCollections(collectionId);
+
+      const attestationLink = `${easConfig.explorer}/attestation/view/${newAttestationUID}`;
+
       await axiosInstance.post('/flow/report-attest', {
         collectionId: ranking.id,
-        attestationId: newAttestationUID,
+        attestationId: attestationLink,
       });
 
-      // setVoteSubmitted(true);
+      setAttestationState(AttestationState.Success);
+      setAttestationLink(attestationLink);
     }
     catch (e) {
       console.error('error on sending tx:', e);
-    }
-    finally {
-      // setAttestUnderway(false);
+      setAttestationState(AttestationState.Error);
     }
   };
 
@@ -540,6 +555,22 @@ const RankingPage = () => {
 
   return (
     <div>
+      <Modal
+        isOpen={
+          attestationState !== AttestationState.Initial
+        }
+        onClose={() => {}}
+        showCloseButton={false}
+      >
+        {attestationState === AttestationState.Success && attestationLink && (
+          <AttestationSuccessModal
+            link={attestationLink}
+            onClose={() => setAttestationState(AttestationState.Initial)}
+          />
+        )}
+        {attestationState === AttestationState.Loading && <AttestationLoading />}
+        {attestationState === AttestationState.Error && <AttestationError onClick={submitVotes} />}
+      </Modal>
       <HeaderRF6 />
       <div className="flex flex-col justify-between gap-4 px-6 py-16 lg:px-20 xl:px-52 2xl:px-72">
         <p className="mb-4 text-2xl font-semibold text-gray-700">

@@ -73,7 +73,7 @@ export const EASNetworks: Record<number, Config> = {
   [optimismSepolia.id]: {
     EASDeployment: '0x4200000000000000000000000000000000000021',
     SchemaRegistry: '0x4200000000000000000000000000000000000020',
-    explorer: 'https://optimism-sepolia.blockscout.com',
+    explorer: 'https://optimism-sepolia.easscan.org',
     gqlUrl: 'https://optimism-sepolia.easscan.org/graphql',
   },
 };
