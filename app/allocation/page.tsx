@@ -336,7 +336,7 @@ const AllocationPage = () => {
       />
       <div className="flex flex-col gap-6 p-16">
         {!allocatingBudget && (
-          <div className="flex max-w-[65%] flex-col gap-3">
+          <div className="flex max-w-[72%] flex-col gap-3">
             <h2 className="text-3xl font-bold"> Round 6: Governance</h2>
             <p className="text-gray-400">
               Retro Funding 6 will reward contributions to Optimism Governance,
@@ -351,7 +351,7 @@ const AllocationPage = () => {
           </div>
         )}
         <div className="flex justify-between gap-4">
-          <div className="flex max-w-[65%] flex-col gap-6 rounded-xl border p-6">
+          <div className="flex w-[72%] flex-col gap-6 rounded-xl border p-6">
             <div>
               <h3 className="mb-4 w-full border-b pb-6 text-2xl font-bold">
                 {allocatingBudget ? 'Your budget' : 'Voting'}
@@ -499,7 +499,7 @@ const AllocationPage = () => {
                   </button>
                 )}
           </div>
-          <div className="max-w-[25%]">
+          <div className="w-[25%]">
             <ConnectBox
               onConnectFarcaster={() => {
                 setIsOpenFarcasterModal(true);

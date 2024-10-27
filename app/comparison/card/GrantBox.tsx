@@ -9,6 +9,7 @@ import { USDIcon } from '@/public/assets/icon-components/Usd';
 import { truncate } from '@/app/utils/methods';
 
 interface Props {
+  type: 'grant' | 'investment'
   title: string
   amount: string
   link: string | null
@@ -44,6 +45,7 @@ export function formatAmount(amount: string) {
 }
 
 const GrantBox: FC<Props> = ({
+  type,
   title,
   link,
   amount,
@@ -55,7 +57,14 @@ const GrantBox: FC<Props> = ({
 
   const formatTitle = (title: string) => {
     if (title === 'retroFunding') return 'Retro Funding';
-    return title.split('-').join(' ');
+
+    const titleFormated = title.split('-').join(' ');
+    if (type === 'grant') {
+      return 'Grant: ' + titleFormated;
+    }
+    else {
+      return titleFormated;
+    }
   };
 
   return (
@@ -65,7 +74,7 @@ const GrantBox: FC<Props> = ({
     >
       <div className="flex items-center justify-between py-1">
         <div className="flex items-center justify-between gap-6">
-          <span className="text-sm capitalize">
+          <span className="text-sm font-semibold capitalize">
             {truncate(formatTitle(title), 20)}
           </span>
           {link && (
@@ -96,7 +105,8 @@ const GrantBox: FC<Props> = ({
             </span>
           )}
 
-          {amount.includes('$')
+          {type === 'investment'
+          || amount.includes('$')
           || amount.includes('USD')
           || amount.includes('usd')
           || amount.includes('dollars')
@@ -120,7 +130,7 @@ const GrantBox: FC<Props> = ({
         )}
       </div>
       <section {...getCollapseProps()}>
-        <p className="my-3 text-gray-600">{description}</p>
+        <p className="my-3 break-words text-gray-600">{description}</p>
       </section>
     </div>
   );

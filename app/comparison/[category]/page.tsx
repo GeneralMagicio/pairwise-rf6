@@ -455,7 +455,9 @@ export default function Home() {
       <HeaderRF6
         progress={progress * 100}
         category={convertCategoryToLabel(category! as JWTPayload['category'])}
-        question="Which project had the greatest impact on the OP Stack?"
+        question={`Which project had the greatest impact on the ${convertCategoryToLabel(
+          category! as JWTPayload['category']
+        )} ?`}
         isFirstSelection={isInitialVisit}
       />
       {isInitialVisit

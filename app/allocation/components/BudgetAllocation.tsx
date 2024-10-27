@@ -52,6 +52,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
           <PendingCategory
             onScore={onScore}
             onDelegate={onDelegate}
+            progress={progress}
             delegations={delegations}
             isAutoConnecting={isAutoConnecting}
           />
@@ -61,7 +62,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
 
   return (
     <div className="flex justify-between rounded-lg border bg-gray-50 p-4">
-      <div className="flex w-[74%] space-x-4">
+      <div className="flex w-[64%] space-x-4 2xl:w-[74%]">
         <ImageContainer src={imageSrc} alt={name} />
         <ProjectInfo
           name={name}
@@ -70,7 +71,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
           isDelegated={progress === CollectionProgressStatusEnum.Delegated}
         />
       </div>
-      <div className="flex w-[26%] items-center justify-center border-l border-gray-200">
+      <div className="flex w-[36%] items-center justify-center border-l border-gray-200 2xl:w-[26%]">
         <div className="flex w-4/5 items-start justify-center">
           {loading ? <Loading /> : renderProgressState}
         </div>

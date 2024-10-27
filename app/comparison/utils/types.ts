@@ -70,6 +70,11 @@ export type ProjectMetadata =
     links: null
     contracts: null
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: null
       revenue: null
       grants: {
@@ -184,6 +189,11 @@ export type ProjectMetadata =
     }[]
     contracts: null
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: {
         amount: string
         year: string
@@ -268,6 +278,11 @@ export type ProjectMetadata =
     }[]
     contracts: null
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: {
         amount: string
         year: string
@@ -369,6 +384,11 @@ export type ProjectMetadata =
     }[]
     contracts: null
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: null
       revenue: null
       grants: {
@@ -483,6 +503,11 @@ export type ProjectMetadata =
     }[]
     contracts: null
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: {
         amount: string
         year: string
@@ -596,6 +621,11 @@ export type ProjectMetadata =
     }[]
     contracts: null
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: null
       revenue: null
       grants: {
@@ -724,6 +754,11 @@ export type ProjectMetadata =
       chainId: number
     }[]
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: null
       revenue: null
       grants: {
@@ -802,6 +837,11 @@ export type ProjectMetadata =
     }[]
     contracts: null
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: null
       revenue: null
       grants: null
@@ -906,6 +946,11 @@ export type ProjectMetadata =
     }[]
     contracts: null
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: {
         amount: string
         year: string
@@ -1036,6 +1081,11 @@ export type ProjectMetadata =
       chainId: number
     }[]
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: null
       revenue: null
       grants: {
@@ -1170,6 +1220,11 @@ export type ProjectMetadata =
     }[]
     contracts: null
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: null
       revenue: null
       grants: (
@@ -1300,6 +1355,11 @@ export type ProjectMetadata =
       chainId: number
     }[]
     grantsAndFunding: {
+      ventureFunding: {
+        amount: string
+        year: string
+        details: string
+      }[]
       investments: {
         amount: string
         year: string

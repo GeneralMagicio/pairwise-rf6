@@ -371,9 +371,12 @@ export const ProjectCard: React.FC<Props> = ({
               || project.contracts?.length
                 ? (
                     <div className="space-y-4">
-                      {project.github?.map(repo => (
-                        <GithubBox key={repo.url} repo={repo} />
-                      ))}
+                      {project.github?.map((repo) => {
+                        if (repo.url) {
+                          return <GithubBox key={repo.url} repo={repo} />;
+                        }
+                        return null;
+                      })}
 
                       {project.links?.map(link => (
                         <SimpleInfoBox
@@ -517,17 +520,34 @@ export const ProjectCard: React.FC<Props> = ({
                       {project.grantsAndFunding.grants?.map((grant, index) => (
                         <GrantBox
                           key={`grant_${index}`}
+                          type="grant"
                           description={grant.details}
                           link={grant.link}
                           amount={grant.amount}
                           date={grant.date}
-                          title={grant.grant || ''}
-                          round={grant.grant === 'retroFunding' ? grant.fundingRound : null}
+                          title={grant.grant ?? ''}
+                          round={
+                            grant.grant === 'retroFunding'
+                              ? grant.fundingRound
+                              : null
+                          }
                         />
                       ))}
                       {project.grantsAndFunding.investments?.map(funding => (
                         <GrantBox
                           key={funding.details}
+                          type="investment"
+                          description={funding.details}
+                          link={null}
+                          amount={funding.amount}
+                          date={funding.year}
+                          title="Investment"
+                        />
+                      ))}
+                      {project.grantsAndFunding.ventureFunding?.map(funding => (
+                        <GrantBox
+                          key={funding.details}
+                          type="investment"
                           description={funding.details}
                           link={null}
                           amount={funding.amount}

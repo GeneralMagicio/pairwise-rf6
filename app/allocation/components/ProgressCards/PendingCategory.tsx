@@ -3,6 +3,7 @@ import { UserColabGroupIcon } from '@/public/assets/icon-components/UserColabGro
 type TPendingCategoryProps = {
   onScore: () => void
   onDelegate: () => void
+  progress: string
   isAutoConnecting: boolean
   delegations?: number
 };
@@ -12,6 +13,7 @@ const PendingCategory = ({
   onDelegate,
   isAutoConnecting,
   delegations,
+  progress,
 }: TPendingCategoryProps) => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-2">
@@ -51,6 +53,14 @@ const PendingCategory = ({
           </p>
         </div>
       )}
+      {progress === 'WIP' && (
+        <div className="flex w-full justify-center gap-2 rounded-xl border border-[#FFA15A] bg-[#FFF7ED] py-1">
+          <p className="text-xs font-medium text-[#FFA15A]">Voting</p>
+        </div>
+      )}
+      {/* <div className="flex w-full justify-center gap-2 rounded-xl border border-[#17B26A] bg-[#ECFDF3] py-1">
+        <p className="text-xs font-medium text-[#17B26A]">Voting</p>
+      </div> */}
     </div>
   );
 };

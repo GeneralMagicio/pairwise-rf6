@@ -14,7 +14,7 @@ import { QuestionMarkIcon } from '@/public/assets/icon-components/QuestionMark';
 import { ProjectMetadata } from '../utils/types';
 
 type ArrayElement<ArrayType extends readonly unknown[]> =
-  ArrayType extends readonly (infer ElementType)[] ? ElementType : never
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
 
 interface Props {
   repo: ArrayElement<Exclude<ProjectMetadata['github'], null>>
@@ -43,7 +43,8 @@ const GithubBox: FC<Props> = ({ repo }) => {
           >
             {repo.name || repo.url?.replace('https://' || 'http://', '')}
           </a>
-          <div className="flex items-center gap-1 rounded-2xl border bg-blue-background px-2
+          <div
+            className="flex items-center gap-1 rounded-2xl border bg-blue-background px-2
           py-0.5 text-xs text-blue-foreground"
           >
             <OpenSourceIcon color="#3374DB" />
@@ -105,33 +106,25 @@ const GithubBox: FC<Props> = ({ repo }) => {
                   <div className="flex items-center gap-2 rounded-md bg-gray-100 p-2">
                     <ForkIcon />
                     <span className="text-sm">
-                      {`${
-                        repo.metrics.num_forks || 0
-                      } forks`}
+                      {`${repo.metrics.num_forks || 0} forks`}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 rounded-md bg-gray-100 p-2">
                     <ForkIcon />
                     <span className="text-sm">
-                      {`${
-                        repo.metrics.num_trusted_forks || 0
-                      } forks from top devs`}
+                      {`${repo.metrics.num_trusted_forks || 0} forks from top devs`}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 rounded-md bg-gray-100 p-2">
                     <StarIcon />
                     <span className="text-sm">
-                      {`${
-                        repo.metrics.num_stars || 0
-                      } stars`}
+                      {`${repo.metrics.num_stars || 0} stars`}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 rounded-md bg-gray-100 p-2">
                     <StarIcon />
                     <span className="text-sm">
-                      {`${
-                        repo.metrics.num_trusted_stars || 0
-                      } stars from top devs`}
+                      {`${repo.metrics.num_trusted_stars || 0} stars from top devs`}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 rounded-md bg-gray-100 p-2">
