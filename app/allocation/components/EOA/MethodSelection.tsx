@@ -44,7 +44,6 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
       if (!account) throw new Error(`Unable to create a ${strategy} EOA`);
 
       const smartWallet = await createSmartWalletFromEOA(account);
-      // setEoaWallet(smartWallet);
       setOAuthData({ ...oAuthData, loading: false });
 
       const personalWalletId = localStorage.getItem(

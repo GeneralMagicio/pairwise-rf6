@@ -120,15 +120,14 @@ export const useAuth = () => {
   const router = useRouter();
   const path = usePathname();
   const { connect } = useConnect();
-  const wallet = useActiveWallet()
+  const wallet = useActiveWallet();
   const { disconnect } = useThirdwebDisconnect();
-
 
   const signOut = async (redirectToLanding: boolean = true) => {
     signOutFromAgora();
     setLoggedToAgora('initial');
     localStorage.clear();
-    if (wallet) disconnect(wallet)
+    if (wallet) disconnect(wallet);
     logoutFromPwBackend();
     setLoginAddress({ value: undefined, confirmed: true });
     setLoggedToPw(LogginToPwBackendState.Initial);
