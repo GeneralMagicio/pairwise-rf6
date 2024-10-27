@@ -110,7 +110,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
 
   return (
     <div className="flex justify-between rounded-lg border bg-gray-50 p-4">
-      <div className="flex w-[74%] space-x-4">
+      <div className="flex w-[64%] space-x-4 2xl:w-[74%]">
         <ImageContainer src={collectionsImageSrc.get(id) || ''} alt={name} />
         <ProjectInfo
           name={name}
@@ -121,7 +121,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
         />
       </div>
 
-      <div className="flex w-[26%] items-center justify-center gap-2 border-l border-gray-200">
+      <div className="flex w-[36%] items-center justify-center gap-2 border-l border-gray-200 2xl:w-[26%]">
         <div className="flex w-4/5 items-start justify-center">
           {allocatingBudget
             ? (
