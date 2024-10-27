@@ -34,7 +34,7 @@ import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
 import { modifyPercentage, RankItem } from '../utils';
 import { activeChain } from '@/app/lib/constants';
-import { convertRankingToAttestationFormat, EASNetworks, getPrevAttestationIds, SCHEMA_UID, useSigner } from './utils';
+import { convertRankingToAttestationFormat, EASNetworks, generateRandomString, getPrevAttestationIds, SCHEMA_UID, useSigner } from './utils';
 import { axiosInstance } from '@/app/utils/axiosInstance';
 
 enum VotingStatus {
@@ -382,11 +382,11 @@ const RankingPage = () => {
 
       const schemaDataWithProof = [
         ...schemaData,
-        // {
-        //   name: 'proof',
-        //   type: 'string[]',
-        //   value: proof,
-        // },
+        {
+          name: 'proof',
+          type: 'string[]',
+          value: [generateRandomString(20)],
+        },
       ];
 
       console.log('sdwp', schemaDataWithProof);
@@ -426,8 +426,9 @@ const RankingPage = () => {
 
       console.log('attestaion id', newAttestationUID);
       // await finishCollections(collectionId);
-      await axiosInstance.post('/flow/reportAttest', {
-        cid: ranking.id,
+      await axiosInstance.post('/flow/report-attest', {
+        collectionId: ranking.id,
+        attestationId: newAttestationUID,
       });
 
       // setVoteSubmitted(true);
