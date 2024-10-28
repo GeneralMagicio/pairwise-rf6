@@ -183,6 +183,7 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
                     handleGoBack={goBack}
                     setStep={setStep}
                     resendOTP={sendOTP}
+                    closeModal={closeModal}
                   />
                 )}
           </div>

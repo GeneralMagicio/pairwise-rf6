@@ -20,6 +20,9 @@ interface IBudgetAllocationProps extends BudgetCategory {
   delegations: number
   loading: boolean
   username?: string
+  isBadgeholder: boolean
+  bhCategory: string
+  categorySlug: string
   onDelegate: () => void
   onScore: () => void
 }
@@ -33,6 +36,9 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
   loading,
   progress = CollectionProgressStatusEnum.Pending,
   username,
+  isBadgeholder,
+  bhCategory,
+  categorySlug,
   onScore,
   onDelegate,
 }) => {
@@ -55,6 +61,9 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
             progress={progress}
             delegations={delegations}
             isAutoConnecting={isAutoConnecting}
+            isBadgeholder={isBadgeholder}
+            bhCategory={bhCategory}
+            categorySlug={categorySlug}
           />
         );
     }

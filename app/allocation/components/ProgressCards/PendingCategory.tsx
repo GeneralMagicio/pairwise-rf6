@@ -6,6 +6,9 @@ type TPendingCategoryProps = {
   progress: string
   isAutoConnecting: boolean
   delegations?: number
+  isBadgeholder: boolean
+  bhCategory: string
+  categorySlug: string
 };
 
 const PendingCategory = ({
@@ -14,18 +17,25 @@ const PendingCategory = ({
   isAutoConnecting,
   delegations,
   progress,
+  isBadgeholder,
+  bhCategory,
+  categorySlug,
 }: TPendingCategoryProps) => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-2">
       <div className="flex w-full items-center justify-between">
         <button
           onClick={onScore}
-          className={`w-[48%] whitespace-nowrap rounded-md py-3 text-sm font-medium ${
-            isAutoConnecting
+          className={`whitespace-nowrap rounded-md py-3 text-sm font-medium ${
+            isAutoConnecting || (isBadgeholder && bhCategory !== categorySlug)
               ? 'border bg-gray-300 text-gray-600'
               : 'bg-primary text-white'
+          } ${
+            isBadgeholder && bhCategory === categorySlug ? 'w-full' : 'w-[48%]'
           }`}
-          disabled={isAutoConnecting}
+          disabled={
+            isAutoConnecting || (isBadgeholder && bhCategory !== categorySlug)
+          }
         >
           Vote
         </button>
@@ -33,7 +43,7 @@ const PendingCategory = ({
           onClick={onDelegate}
           className={`w-[48%] rounded-md border py-3 text-sm font-medium ${
             isAutoConnecting ? 'bg-gray-300 text-gray-600' : 'text-gray-700'
-          }`}
+          } ${isBadgeholder && bhCategory === categorySlug ? 'hidden' : ''}`}
           disabled={isAutoConnecting}
         >
           Delegate
@@ -53,14 +63,12 @@ const PendingCategory = ({
           </p>
         </div>
       )}
-      {progress === 'WIP' && (
+      {progress === 'WIP'
+      && !(isBadgeholder && bhCategory !== categorySlug) && (
         <div className="flex w-full justify-center gap-2 rounded-xl border border-[#FFA15A] bg-[#FFF7ED] py-1">
           <p className="text-xs font-medium text-[#FFA15A]">Voting</p>
         </div>
       )}
-      {/* <div className="flex w-full justify-center gap-2 rounded-xl border border-[#17B26A] bg-[#ECFDF3] py-1">
-        <p className="text-xs font-medium text-[#17B26A]">Voting</p>
-      </div> */}
     </div>
   );
 };

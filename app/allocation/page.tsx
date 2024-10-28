@@ -18,7 +18,12 @@ import { modifyPercentage, RankItem } from './utils';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { CustomizedSlider } from './components/Slider';
-import { categoryIdSlugMap, categorySlugIdMap, convertCategoryToLabel, formatBudget } from '../comparison/utils/helpers';
+import {
+  categoryIdSlugMap,
+  categorySlugIdMap,
+  convertCategoryToLabel,
+  formatBudget,
+} from '../comparison/utils/helpers';
 import { useCategories } from '../comparison/utils/data-fetching/categories';
 import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
 import FarcasterModal from './components/FarcasterModal';
@@ -28,15 +33,21 @@ import FarcasterSuccess from '../delegation/farcaster/FarcasterSuccess';
 import { axiosInstance } from '../utils/axiosInstance';
 import { TargetDelegate } from '../delegation/farcaster/types';
 import { useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
-import { ICategory, CollectionProgressStatusEnum } from '../comparison/utils/types';
+import {
+  ICategory,
+  CollectionProgressStatusEnum,
+} from '../comparison/utils/types';
 import SmallSpinner from '../components/SmallSpinner';
 import {
   useCategoryRankings,
   useUpdateCategoriesRanking,
 } from '@/app/comparison/utils/data-fetching/ranking';
-import { uploadBallot } from '../utils/wallet/agora-login';
+import { uploadBallot, getJWTData } from '../utils/wallet/agora-login';
 import { useAuth } from '../utils/wallet/AuthProvider';
-import { ballotSuccessPost, getBallot } from '../comparison/ballot/useGetBallot';
+import {
+  ballotSuccessPost,
+  getBallot,
+} from '../comparison/ballot/useGetBallot';
 import BallotError from '../comparison/ballot/modals/BallotError';
 import BallotLoading from '../comparison/ballot/modals/BallotLoading';
 import BallotSuccessModal from '../comparison/ballot/modals/BallotSuccessModal';
@@ -70,6 +81,7 @@ const AllocationPage = () => {
   const router = useRouter();
   const { address } = useAccount();
   const { loggedToAgora } = useAuth();
+  const { isBadgeholder, category } = getJWTData();
 
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: delegations, isLoading: delegationsLoading }
@@ -83,7 +95,9 @@ const AllocationPage = () => {
   const budgetDelegateToYou = delegations?.toYou?.budget;
   const budgetDelegateFromYou = delegations?.fromYou?.budget;
 
-  const [ballotState, setBallotState] = useState<BallotState>(BallotState.Initial);
+  const [ballotState, setBallotState] = useState<BallotState>(
+    BallotState.Initial
+  );
   const [totalValue, setTotalValue] = useState(categoryRankings?.budget || 0);
   const [percentageError, setPercentageError] = useState<string>();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
@@ -110,7 +124,8 @@ const AllocationPage = () => {
 
   const { mutate: updateCategoriesRanking } = useUpdateCategoriesRanking({
     budget: totalValue,
-    allocationPercentages: categoriesRanking?.map(el => el.percentage / 100) || [],
+    allocationPercentages:
+      categoriesRanking?.map(el => el.percentage / 100) || [],
   });
 
   const handleDelegate = async (username: string, target: TargetDelegate) => {
@@ -121,15 +136,15 @@ const AllocationPage = () => {
       targetUsername: username,
     });
 
-    queryClient.refetchQueries(({
+    queryClient.refetchQueries({
       queryKey: ['fetch-delegates'],
-    }));
-    queryClient.refetchQueries(({
+    });
+    queryClient.refetchQueries({
       queryKey: ['category-ranking'],
-    }));
-    queryClient.refetchQueries(({
+    });
+    queryClient.refetchQueries({
       queryKey: ['categories'],
-    }));
+    });
     setTargetDelegate(target);
     setDelegationState(DelegationState.Success);
   };
@@ -183,7 +198,8 @@ const AllocationPage = () => {
   };
 
   const handleUploadBallot = async () => {
-    if (loggedToAgora === 'error' || loggedToAgora === 'initial' || !address) return;
+    if (loggedToAgora === 'error' || loggedToAgora === 'initial' || !address)
+      return;
     setBallotState(BallotState.Loading);
     // const agoraPayload = await isLoggedInToAgora(address);
 
@@ -197,7 +213,8 @@ const AllocationPage = () => {
       setBallotState(BallotState.Success);
     }
     catch (e: any) {
-      if (e.response.data.pwCode === 'e-1005') setBallotState(BallotState.ErrorNotReady);
+      if (e.response.data.pwCode === 'e-1005')
+        setBallotState(BallotState.ErrorNotReady);
       else setBallotState(BallotState.Error);
     }
   };
@@ -247,9 +264,7 @@ const AllocationPage = () => {
   return (
     <div>
       <Modal
-        isOpen={
-          ballotState !== BallotState.Initial
-        }
+        isOpen={ballotState !== BallotState.Initial}
         onClose={() => {}}
         showCloseButton={false}
       >
@@ -260,12 +275,16 @@ const AllocationPage = () => {
           />
         )}
         {ballotState === BallotState.Loading && <BallotLoading />}
-        {ballotState === BallotState.Error && <BallotError onClick={handleUploadBallot} />}
-        {ballotState === BallotState.ErrorNotReady && typeof loggedToAgora === 'object'
-        && (
+        {ballotState === BallotState.Error && (
+          <BallotError onClick={handleUploadBallot} />
+        )}
+        {ballotState === BallotState.ErrorNotReady
+        && typeof loggedToAgora === 'object' && (
           <BallotNotReady
             categoryName={convertCategoryToLabel(loggedToAgora.category)}
-            onClick={() => { setBallotState(BallotState.Initial); }}
+            onClick={() => {
+              setBallotState(BallotState.Initial);
+            }}
           />
         )}
       </Modal>
@@ -420,6 +439,9 @@ const AllocationPage = () => {
                           progress={dbudgetProgress}
                           delegations={budgetDelegateToYou?.length || 0}
                           loading={delegationsLoading}
+                          isBadgeholder={isBadgeholder}
+                          bhCategory={category}
+                          categorySlug={category}
                           onDelegate={() => {
                             setCategoryToDelegate(budgetCategory);
                             setDelegationState(DelegationState.DelegationMethod);
@@ -427,9 +449,7 @@ const AllocationPage = () => {
                           onScore={() => {
                             setAllocatingBudget(true);
                           }}
-                          username={
-                            budgetDelegateFromYou?.metadata?.username
-                          }
+                          username={budgetDelegateFromYou?.metadata?.username}
                         />
                       )}
                       {categories.map((cat) => {
@@ -446,6 +466,9 @@ const AllocationPage = () => {
                             allocationPercentage={rank?.percentage || 0}
                             allocationBudget={rank?.budget || 0}
                             loading={delegationsLoading}
+                            isBadgeholder={isBadgeholder}
+                            bhCategory={category}
+                            categorySlug={categoryIdSlugMap.get(cat.id)!}
                             onDelegate={() => {
                               setCategoryToDelegate(cat);
                               setDelegationState(DelegationState.DelegationMethod);

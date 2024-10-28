@@ -38,6 +38,7 @@ import RevertLoadingModal from '../card/modals/RevertLoadingModal';
 import StorageLabel from '@/app/lib/localStorage';
 import { ProjectCardAI } from '../card/ProjectCardAI';
 import EmailLoginModal from '@/app/allocation/components/EOA/EmailLoginModal';
+import PostVotingModal from '../ballot/modals/PostVotingModal';
 
 export default function Home() {
   const { category } = useParams() ?? {};
@@ -62,7 +63,7 @@ export default function Home() {
     null
   );
   const [showLoginModal, setShowLoginModal] = useState(false);
-
+  const [showFinishModal, setShowFinishModal] = useState(false);
   const [sectionExpanded1, setSectionExpanded1] = useState({
     repos: true,
     pricing: true,
@@ -126,6 +127,8 @@ export default function Home() {
   useEffect(() => {
     if (!data || !address) return;
     if (data.pairs.length === 0) {
+      setShowFinishModal(true);
+
       if (!project1 || !project2) {
         setProject1(mockProject1);
         setProject2(mockProject2);
@@ -410,6 +413,7 @@ export default function Home() {
           || revertingBack
           || showPostRatingModal
           || showGoodRatingModal
+          || showFinishModal
         }
         onClose={() => {}}
       >
@@ -439,6 +443,7 @@ export default function Home() {
             }}
           />
         )}
+        {showFinishModal && <PostVotingModal categorySlug={category} categoryLabel={convertCategoryToLabel(category as JWTPayload['category'])} />}
       </Modal>
 
       <Modal

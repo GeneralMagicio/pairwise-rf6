@@ -21,6 +21,7 @@ interface IOTPVerificationProps {
   handleGoBack: () => void
   setStep: (step: number) => void
   resendOTP: () => void
+  closeModal: () => void
 }
 
 const FIVE_MINUTES = 1 * 60 * 1000;
@@ -32,6 +33,7 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
   handleGoBack,
   setStep,
   resendOTP,
+  closeModal,
 }) => {
   const { connect } = useConnect();
 
@@ -118,16 +120,19 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
 
       const smartWallet = await createSmartWalletFromEOA(account);
 
+      setOtpData({
+        ...otpData,
+        loading: false,
+        otpStatus: OtpStatus.VERIFIED,
+      });
+
+      connect(smartWallet);
+
       if (!personalWalletId) {
-        setOtpData({
-          ...otpData,
-          loading: false,
-          otpStatus: OtpStatus.INCORRECT,
-        });
+        setStep(Step.CONNECT_EOA);
       }
       else {
-        connect(smartWallet);
-        setStep(Step.CONNECT_EOA);
+        closeModal();
       }
     }
     catch {

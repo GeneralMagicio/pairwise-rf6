@@ -31,6 +31,7 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
   setOtpData,
   sendOTP,
   setStep,
+  closeModal,
 }) => {
   const { connect } = useConnect();
 
@@ -50,21 +51,17 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
       const smartWallet = await createSmartWalletFromEOA(account);
       setOAuthData({ ...oAuthData, loading: false });
 
+      connect(smartWallet);
+
       if (!personalWalletId) {
-        setOAuthData({
-          ...oAuthData,
-          loading: true,
-          error: 'There was a problem connecting to your Google account',
-        });
+        setStep(Step.CONNECT_EOA);
+        setPickedMethod(null);
       }
       else {
-        console.log('Connecting to smart wallet');
-        connect(smartWallet);
-        setStep(Step.CONNECT_EOA);
+        closeModal();
       }
     }
     catch (error: any) {
-      console.error(error);
       setOAuthData({
         ...oAuthData,
         loading: true,
