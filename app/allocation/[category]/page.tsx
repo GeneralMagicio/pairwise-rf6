@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce';
 import RankingRow from './components/RankingRow';
 import HeaderRF6 from '../../comparison/card/Header-RF6';
 import Spinner from '@/app/components/Spinner';
-import SearchBar from './components/SearchBar';
+// import SearchBar from "./components/SearchBar";
 import {
   categorySlugIdMap,
   categoryIdTitleMap,
@@ -48,7 +48,7 @@ const RankingPage = () => {
 
   const category = categorySlugIdMap.get((params?.category as string) || '');
 
-  const [search, setSearch] = useState<string>('');
+  // const [search, setSearch] = useState<string>("");
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [projects, setProjects] = useState<IProjectRanking[] | null>(null);
   const [rankingArray, setRankingArray] = useState<IProjectRankingObj[]>([]);
@@ -100,14 +100,29 @@ const RankingPage = () => {
           percentage: Math.round(share * 100 * 100) / 100,
         });
 
+        const sum = newRanking.reduce(
+          (acc, curr) => (acc += curr.percentage),
+          0
+        );
+
         setProjects(
           projects.map(project => ({
             ...project,
             share:
-              (newRanking.find(el => el.id === project.projectId)
-                ?.percentage || 0) / 100,
+            (newRanking.find(el => el.id === project.projectId)
+              ?.percentage || 0) / 100,
           }))
         );
+
+        if (sum < 99.9) {
+          const deficit = 100 - sum;
+          setTotalShareError(
+            `Percentages must add up to 100% (add ${
+              Math.round(deficit * 100) / 100
+            }% to your ballot)`
+          );
+          window.scrollTo(0, document.body.scrollHeight);
+        }
       }
       catch (e: any) {
         if (e.msg === 'Bigger than 100 error') {
@@ -115,13 +130,6 @@ const RankingPage = () => {
             `Percentages must add up to 100% (remove ${
               Math.round(e.excess * 100) / 100
             }% from your ballot)`
-          );
-        }
-        else if (e.msg === 'Smaller than 100 error') {
-          setTotalShareError(
-            `Percentages must add up to 100% (add ${
-              Math.round(e.deficit * 100) / 100
-            }% to your ballot)`
           );
         }
         else {
@@ -253,26 +261,6 @@ const RankingPage = () => {
     }
   }, [lockedItems]);
 
-  // search functionality
-  useEffect(() => {
-    if (!projects) return;
-
-    if (!search) {
-      setProjects(ranking?.ranking || []);
-      return;
-    }
-
-    const filteredProjects = ranking?.ranking.filter((project) => {
-      if (!project.name) return false;
-
-      return (
-        !search || project.name.toLowerCase().includes(search.toLowerCase())
-      );
-    });
-
-    setProjects(filteredProjects || []);
-  }, [search]);
-
   if (!category) return <NotFoundComponent />;
 
   return (
@@ -307,7 +295,7 @@ const RankingPage = () => {
               <CheckIcon size={18} />
             </div>
           </div>
-          <SearchBar search={search} setSearch={setSearch} />
+          {/* <SearchBar search={search} setSearch={setSearch} /> */}
           <div className="flex items-center justify-between rounded-lg bg-gray-100 px-8 py-3">
             <div className="flex items-center gap-4">
               <div className="flex items-center justify-center gap-2">
