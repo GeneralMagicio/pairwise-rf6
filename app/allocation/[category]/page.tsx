@@ -295,11 +295,11 @@ const RankingPage = () => {
       //   console.log('generated proof of vote: ', proof);
 
       //   const { data: currentMerkleRoot, error: errorRootHistory }
-      // 		= await supabase
-      // 		  .from('root_history')
-      // 		  .select()
-      // 		  .order('created_at', { ascending: false })
-      // 		  .limit(1);
+      //     = await supabase
+      //       .from('root_history')
+      //       .select()
+      //       .order('created_at', { ascending: false })
+      //       .limit(1);
 
       //   if (errorRootHistory) {
       //     console.log(errorRootHistory);
@@ -338,7 +338,7 @@ const RankingPage = () => {
 
       //     console.log('dataMerkleTreeRoot', dataMerkleTreeRoot);
       //     const merkleTreeRootDuration
-      // 			= bandadaGroup?.fingerprintDuration ?? 0;
+      //       = bandadaGroup?.fingerprintDuration ?? 0;
 
       //     if (
       //       dataMerkleTreeRoot
@@ -351,10 +351,10 @@ const RankingPage = () => {
       //   }
 
       //   const { data: nullifier, error: errorNullifierHash }
-      // 		= await supabase
-      // 		  .from('nullifier_hash')
-      // 		  .select('nullifier')
-      // 		  .eq('nullifier', nullifierHash);
+      //     = await supabase
+      //       .from('nullifier_hash')
+      //       .select('nullifier')
+      //       .eq('nullifier', nullifierHash);
 
       //   if (errorNullifierHash) {
       //     console.log(errorNullifierHash);
@@ -376,11 +376,11 @@ const RankingPage = () => {
       //   }
 
       //   const { data: dataFeedback, error: errorFeedback }
-      // 		= await supabase
-      // 		  .from('feedback')
-      // 		  .insert([{ signal: schemaData }])
-      // 		  .select()
-      // 		  .order('created_at', { ascending: false });
+      //     = await supabase
+      //       .from('feedback')
+      //       .insert([{ signal: schemaData }])
+      //       .select()
+      //       .order('created_at', { ascending: false });
 
       //   if (errorFeedback) {
       //     console.error(errorFeedback);
@@ -467,7 +467,7 @@ const RankingPage = () => {
 
     setRankingArray(rankingArray);
 
-    // await updateProjectRanking();
+    await updateProjectRanking();
 
     await attest();
   };

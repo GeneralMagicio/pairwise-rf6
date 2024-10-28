@@ -191,7 +191,7 @@ export const useAuth = () => {
 
   const doLoginFlow = useCallback(async (addressParam?: `0x${string}`) => {
     console.log('Running the check login flow');
-    const address = addressParam ?? connectedAddress;
+    const address = addressParam ?? connectedAddress as `0x${string}`;
     if (loginInProgress || !address || !chainId) return;
     // setLoginAddress({value: connectedAddress, confirmed: false})
     let message;
