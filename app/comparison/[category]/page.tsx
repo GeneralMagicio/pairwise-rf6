@@ -116,6 +116,8 @@ export default function Home() {
 
   useEffect(() => {
     setLastAction(undefined);
+    setRating1(null);
+    setRating2(null);
   }, [project1, project2]);
 
   useEffect(() => {
