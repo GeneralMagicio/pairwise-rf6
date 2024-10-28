@@ -52,6 +52,7 @@ const RankingRow: FC<IRankingRowProps> = ({
           alt={project.project.name}
           width={50}
           height={50}
+          unoptimized
         />
       </td>
       <td className="w-[50%] pb-8 pl-4 pt-4">
