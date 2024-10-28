@@ -127,6 +127,7 @@ export const useAuth = () => {
     localStorage.removeItem(StorageLabel.AUTH);
     localStorage.removeItem(StorageLabel.AGORA_SIWE_JWT);
     localStorage.removeItem(StorageLabel.LOGGED_IN_ADDRESS);
+    localStorage.removeItem(StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID);
   };
 
   const signOut = async (redirectToLanding: boolean = true) => {
