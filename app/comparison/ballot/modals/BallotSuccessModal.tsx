@@ -47,7 +47,7 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
           <button
             disabled={!confirmed}
             className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4
-          py-3 text-white transition duration-300 ease-in-out disabled:bg-op-neutral-300 disabled:text-slate-700 sl:px-2 sl:py-2"
+          py-3 text-white transition duration-300 ease-in-out disabled:bg-op-neutral-300 disabled:text-slate-700 sl:p-2"
           >
             View my Ballot
             <ExternalLinkIcon />
@@ -58,7 +58,7 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
             <button
               disabled={!confirmed}
               className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-4 py-3
-          text-slate-700 transition duration-300 ease-in-out sl:px-2 sl:py-2"
+          text-slate-700 transition duration-300 ease-in-out sl:p-2"
             >
               Send Feedback
               <ExternalLinkIcon />
@@ -68,7 +68,7 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
         <button
           onClick={onClose}
           className="flex w-full items-center justify-center rounded-lg px-4 py-3
-        text-black transition duration-300 ease-in-out sl:px-2 sl:py-2"
+        text-black transition duration-300 ease-in-out sl:p-2"
         >
           Close
         </button>
