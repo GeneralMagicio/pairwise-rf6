@@ -52,6 +52,9 @@ export interface ISocialDelegateResponse {
     collections: ICollection[]
   }
   toYou?: {
+    uniqueDelegators: number
+    uniqueBudgetDelegators: number
+    uniqueCollectionDelegators: number
     budget: IBudget[]
     collections: ICollection[]
   }

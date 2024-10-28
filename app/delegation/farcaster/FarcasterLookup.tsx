@@ -3,6 +3,7 @@ import Image from 'next/image';
 import debounce from 'lodash.debounce';
 import { FarcasterUserByFid, TargetDelegate } from './types';
 import { axiosInstance } from '@/app/utils/axiosInstance';
+import { useGetConnectionStatus } from '@/app/utils/getConnectionStatus';
 
 interface Props {
   categoryName: string
@@ -27,6 +28,7 @@ function extractFarcasterUsername(input: string) {
 export const FarcasterLookup: React.FC<Props> = ({ categoryName, handleDelegate }) => {
   const [username, setUsername] = useState('');
   const [isValid, setIsValid] = useState<null | false | FarcasterUserByFid['result']['user']>(null);
+  const { data: connectionStatus } = useGetConnectionStatus();
 
   const handleUsernameChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsValid(null);
@@ -84,25 +86,33 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName, handleDelegate 
       />
       <div className="h-8 self-start text-sm">
         {isValid
-          ? (
-              <div className="flex size-full items-center text-teal-600">
-                <span>{`@${isValid.username}`}</span>
-                <div className="relative mx-1 size-[25px]">
-                  <Image
-                    src={isValid.pfp.url}
-                    alt="User profile picture"
-                    fill
-                    className="rounded-full"
-                    unoptimized
-                  />
-                </div>
-                is available on Faracster
-              </div>
-            )
+          ? (isValid.username === connectionStatus?.farcaster?.metadata['username'])
+              ? <span className="text-primary"> You can&#39;t delegate to yourself.</span>
+              : (
+                  <div className="flex size-full items-center text-teal-600">
+                    <span>{`@${isValid.username}`}</span>
+                    <div className="relative mx-1 size-[25px]">
+                      <Image
+                        src={isValid.pfp.url}
+                        alt="User profile picture"
+                        fill
+                        className="rounded-full"
+                        unoptimized
+                      />
+                    </div>
+                    is available on Faracster
+                  </div>
+                )
 
           : isValid === false ? <span className="text-primary"> No user found with this username  </span> : null}
       </div>
-      <button onClick={onDelegate} className={`w-full rounded-md ${isValid ? 'bg-primary text-white' : 'bg-gray-100 text-gray-400'}  py-2  transition-colors`}>
+      <button
+        onClick={onDelegate}
+        className={`w-full rounded-md ${isValid
+        && (isValid.username !== connectionStatus?.farcaster?.metadata['username'])
+          ? 'bg-primary text-white'
+          : 'bg-gray-100 text-gray-400'}  py-2  transition-colors`}
+      >
         Delegate
       </button>
     </div>
