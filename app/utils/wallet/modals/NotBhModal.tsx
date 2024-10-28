@@ -133,10 +133,10 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
               <div className="flex w-full items-center justify-center">
                 <p className="text-center text-sm font-medium text-[#079455]">
                   <span className="font-semibold">
-                    {delegates?.uniqueDelegators
-                      ? `${(delegates?.uniqueDelegators <= 1)
+                    {delegates?.toYou?.uniqueDelegators
+                      ? `${(delegates?.toYou?.uniqueDelegators <= 1)
                         ? 'someone delegated to you'
-                        : `${delegates?.uniqueDelegators} people delegated to you`}`
+                        : `${delegates?.toYou?.uniqueDelegators} people delegated to you`}`
                       : 'You have no delegations'}
                   </span>
                 </p>

@@ -47,14 +47,14 @@ interface ICollection {
   metadata: IDelegateMetadata
 }
 export interface ISocialDelegateResponse {
-  uniqueDelegators: number
-  uniqueBudgetDelegators: number
-  uniqueCollectionDelegators: number
   fromYou?: {
     budget: IBudget | null
     collections: ICollection[]
   }
   toYou?: {
+    uniqueDelegators: number
+    uniqueBudgetDelegators: number
+    uniqueCollectionDelegators: number
     budget: IBudget[]
     collections: ICollection[]
   }
