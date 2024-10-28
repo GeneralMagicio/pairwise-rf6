@@ -121,9 +121,14 @@ export const signOutFromAgora = () => {
 };
 
 export const getJWTData = (): JWTPayload => {
-  const agoraJwt = localStorage.getItem(LOCAL_STORAGE_JWT_KEY);
-  const parsed: VerifyResponse = JSON.parse(agoraJwt || '');
-  const decoded: JWTPayload = decodeJwt(parsed.access_token);
+  if (typeof window !== 'undefined') {
+    const agoraJwt = localStorage.getItem(LOCAL_STORAGE_JWT_KEY);
+    const parsed: VerifyResponse = JSON.parse(agoraJwt || '');
+    const decoded: JWTPayload = decodeJwt(parsed.access_token);
 
-  return decoded;
+    return decoded;
+  }
+  else {
+    return {} as JWTPayload;
+  }
 };
