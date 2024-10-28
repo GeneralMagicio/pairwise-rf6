@@ -4,6 +4,8 @@ import Image from 'next/image';
 const TextBlock: FC<{
   mainText: string
   highlightText: string
+  midtext?: string
+  maintext2?: string
   description: string
   highlightImage?: {
     src: string
@@ -14,7 +16,15 @@ const TextBlock: FC<{
     scale?: number
   }
   header?: boolean
-}> = ({ mainText, highlightText, description, highlightImage, header }) => (
+  endImage?: {
+    src: string
+    alt: string
+    styles: string
+    width: number
+    height: number
+    scale?: number
+  }
+}> = ({ mainText, highlightText, description, highlightImage, midtext, maintext2, header, endImage }) => (
   <p className={`sm:w-[35%]] w-full ${(header) ? '' : 'text-start text-3xl xl:text-4xl xl:leading-[3rem]'}
   font-bold text-dark-500`}
   >
@@ -38,7 +48,27 @@ const TextBlock: FC<{
       <span className="text-primary">{highlightText}</span>
     </span>
     {' '}
-    {description}
+    {midtext && <span>{midtext}</span>}
+    {' '}
+    {maintext2 && <span className="text-primary">{maintext2}</span>}
+    {' '}
+    <span className="relative inline-block">
+      <span>{description}</span>
+      {endImage && (
+        <Image
+          src={endImage.src}
+          alt={endImage.alt}
+          className={endImage.styles}
+          width={endImage.width}
+          height={endImage.height}
+          style={{
+            transform: endImage.scale
+              ? `scale(${endImage.scale})`
+              : 'scale(1)',
+          }}
+        />
+      )}
+    </span>
   </p>
 );
 

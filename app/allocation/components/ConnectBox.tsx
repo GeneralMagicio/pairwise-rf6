@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import Image from 'next/image';
 import {
   IDKitWidget,
@@ -27,6 +27,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectFarcaster,
 }) => {
   const { data: badges } = useGetPublicBadges();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const activeBadges = useMemo(() => {
     if (!badges) return [];
@@ -64,11 +65,15 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   const queryClient = useQueryClient();
   const refresh = useCallback(() => {
     queryClient.refetchQueries({ queryKey: ['connect-status'] });
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 500);
   }, []);
 
   const { mutateAsync: worldIdSignIn } = useWorldSignIn();
   const { data: connectionStatus } = useGetConnectionStatus();
-  const { data: delegates } = useGetDelegationStatus();
+  const { isLoading, data: delegates } = useGetDelegationStatus();
 
   const handleVerify = async (proof: ISuccessResult) => {
     return (await worldIdSignIn(proof));
@@ -173,8 +178,16 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                       </span>
                     </p>
                   </div>
-                  <button onClick={refresh} className="px-1 text-xs text-gray-600 underline">
-                    Refresh
+                  <button onClick={refresh} className="px-1 text-xs text-gray-600">
+                    {(isLoading || isRefreshing)
+                      ? (
+                          <span>
+                            Refreshing ...
+                            {' '}
+                            <Image className="inline" src="/assets/images/refresh.svg" width={16} height={16} alt=".." />
+                          </span>
+                        )
+                      : <span className="underline">Refresh</span>}
                   </button>
                 </div>
               </div>

@@ -10,15 +10,16 @@ export const LandingPart3 = () => {
             mainText="After completion you will update your"
             highlightText="Ballot"
             description="and you&#39;re done!"
+            endImage={{
+              src: '/assets/images/accent.svg',
+              alt: 'accent',
+              styles: 'absolute -right-12 top-full scale-210"',
+              height: 60,
+              width: 100,
+              scale: 2.1,
+            }}
           />
         </div>
-        <Image
-          src="/assets/images/accent.svg"
-          alt="accent"
-          className="absolute -right-12 top-full scale-210"
-          width={100}
-          height={60}
-        />
       </div>
       <div className="relative flex h-[450px] w-full justify-end md:h-[620px]">
         <Image src="assets/images/landing-p3.svg" alt="landing part 3" width={700} height={620} />
