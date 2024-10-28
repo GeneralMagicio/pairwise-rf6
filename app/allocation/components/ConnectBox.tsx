@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import Image from 'next/image';
 import {
   IDKitWidget,
@@ -27,6 +27,8 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectFarcaster,
 }) => {
   const { data: badges } = useGetPublicBadges();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const activeBadges = useMemo(() => {
     if (!badges) return [];
     const {
@@ -63,11 +65,15 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   const queryClient = useQueryClient();
   const refresh = useCallback(() => {
     queryClient.refetchQueries({ queryKey: ['connect-status'] });
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 500);
   }, []);
 
   const { mutateAsync: worldIdSignIn } = useWorldSignIn();
   const { data: connectionStatus } = useGetConnectionStatus();
-  const { data: delegates } = useGetDelegationStatus();
+  const { isLoading, data: delegates } = useGetDelegationStatus();
 
   const handleVerify = async (proof: ISuccessResult) => {
     return (await worldIdSignIn(proof));
@@ -126,12 +132,14 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
           <p className="text-sm font-medium text-gray-700">
             Your WorldID verification badge
           </p>
-          <Image
-            src="/assets/images/wid-badge.svg"
-            alt="Arrow right"
-            width={32}
-            height={32}
-          />
+          {badges?.holderType && (
+            <ActiveBadges activeBadges={[{
+              type: BadgesEnum.HOLDER,
+              variation: badges.holderType,
+            }]}
+            />
+          )}
+
         </div>
       )}
 
@@ -148,23 +156,38 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
         </p>
         {connectionStatus?.farcaster
           ? (
-              <div className="flex w-full items-center justify-between">
-                <Image
-                  src="/assets/images/farcaster.svg"
-                  alt="Farcaster Icon"
-                  width={32}
-                  height={32}
-                />
+              <div className="flex w-full justify-between">
+                <div className="relative">
+                  <Image
+                    src="/assets/images/farcaster.svg"
+                    alt="Farcaster Icon"
+                    className="left-0 top-0"
+                    width={32}
+                    height={32}
+                  />
+                </div>
                 <div className="flex flex-col items-end justify-center gap-2">
-                  <div className="flex items-center justify-center gap-2 rounded-full border border-[#079455] bg-[#17B26A] px-4 py-1">
-                    <p className="text-sm text-gray-50">
+                  <div className="flex items-center justify-center gap-2 rounded-full border border-[#079455] bg-[#17B26A] px-4 py-1 sl:px-2">
+                    <p className="text-sm text-gray-50 sl:text-xs">
                       <span className="font-semibold">
-                        {delegates?.toYou?.budget.length ? `${delegates?.toYou?.budget.length} people delegated to you` : 'You have no delegations'}
+                        {delegates?.toYou?.budget.length
+                          ? `${(delegates?.toYou?.budget.length > 1)
+                            ? 'someone delegated to you'
+                            : `${delegates?.toYou?.budget.length} people delegated to you`}`
+                          : 'You have no delegations'}
                       </span>
                     </p>
                   </div>
-                  <button onClick={refresh} className="px-1 text-xs text-gray-600 underline">
-                    Refresh
+                  <button onClick={refresh} className="px-1 text-xs text-gray-600">
+                    {(isLoading || isRefreshing)
+                      ? (
+                          <span>
+                            Refreshing ...
+                            {' '}
+                            <Image className="inline" src="/assets/images/refresh.svg" width={16} height={16} alt=".." />
+                          </span>
+                        )
+                      : <span className="underline">Refresh</span>}
                   </button>
                 </div>
               </div>
