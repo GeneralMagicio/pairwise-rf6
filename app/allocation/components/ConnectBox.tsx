@@ -171,7 +171,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                     <p className="text-sm text-gray-50 sl:text-xs">
                       <span className="font-semibold">
                         {delegates?.toYou?.budget.length
-                          ? `${(delegates?.toYou?.budget.length > 1)
+                          ? `${(delegates?.toYou?.budget.length <= 1)
                             ? 'someone delegated to you'
                             : `${delegates?.toYou?.budget.length} people delegated to you`}`
                           : 'You have no delegations'}
