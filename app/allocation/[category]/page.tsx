@@ -86,7 +86,7 @@ const RankingPage = () => {
       try {
         const values: RankItem[] = projects.map(project => ({
           id: project.projectId,
-          percentage: Math.round(project.share * 100 * 100) / 100,
+          percentage: project.share * 100,
           locked: lockedItems.includes(project.projectId),
           budget: categoryRankings?.budget || 0,
         })) as RankItem[];
@@ -97,7 +97,7 @@ const RankingPage = () => {
 
         const newRanking = modifyPercentage(values, {
           ...newValue,
-          percentage: Math.round(share * 100 * 100) / 100,
+          percentage: share * 100,
         });
 
         const sum = newRanking.reduce(

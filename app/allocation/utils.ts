@@ -6,7 +6,7 @@ export interface RankItem {
 }
 
 export const roundFractions = (value: number, fractions: number) => {
-  return Math.round(value * Math.pow(10, fractions)) / Math.pow(10, fractions);
+  return value * Math.pow(10, fractions) / Math.pow(10, fractions);
 };
 
 export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): T[] => {
