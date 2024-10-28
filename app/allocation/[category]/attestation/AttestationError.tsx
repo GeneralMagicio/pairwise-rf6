@@ -7,8 +7,7 @@ interface Props {
 }
 
 const AttestationReportUrl
-  = `https://github.com/GeneralMagicio/pairwise-rf6/
-  issues/new?assignees=MoeNick&labels=bug&projects=&template=error-submit-vote.md&title=%5BError+submit+vote%5D+`;
+  = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=bug&projects=&template=error-submit-vote.md&title=%5BError+submit+vote%5D+';
 
 const AttestationError: React.FC<Props> = ({ onClick }) => {
   return (
