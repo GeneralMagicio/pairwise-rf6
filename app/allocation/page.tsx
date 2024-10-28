@@ -41,6 +41,7 @@ import BallotError from '../comparison/ballot/modals/BallotError';
 import BallotLoading from '../comparison/ballot/modals/BallotLoading';
 import BallotSuccessModal from '../comparison/ballot/modals/BallotSuccessModal';
 import BallotNotReady from '../comparison/ballot/modals/BallotNotReady';
+import BallotErrorDelegated from '../comparison/ballot/modals/BallotErrorDelegated';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -62,6 +63,7 @@ enum BallotState {
   Loading,
   Error,
   ErrorNotReady,
+  ErrorDelegated,
   Success,
 }
 
@@ -190,6 +192,10 @@ const AllocationPage = () => {
     const cid = categorySlugIdMap.get(loggedToAgora.category);
 
     if (!cid) throw new Error('Undefined category id');
+    if (categories?.find(el => el.id === cid)?.progress === 'Delegated') {
+      setBallotState(BallotState.ErrorDelegated);
+      return;
+    }
     try {
       const ballot = await getBallot(cid);
       await uploadBallot(ballot, address);
@@ -264,6 +270,13 @@ const AllocationPage = () => {
         {ballotState === BallotState.ErrorNotReady && typeof loggedToAgora === 'object'
         && (
           <BallotNotReady
+            categoryName={convertCategoryToLabel(loggedToAgora.category)}
+            onClick={() => { setBallotState(BallotState.Initial); }}
+          />
+        )}
+        {ballotState === BallotState.ErrorDelegated && typeof loggedToAgora === 'object'
+        && (
+          <BallotErrorDelegated
             categoryName={convertCategoryToLabel(loggedToAgora.category)}
             onClick={() => { setBallotState(BallotState.Initial); }}
           />
