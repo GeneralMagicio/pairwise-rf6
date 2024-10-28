@@ -142,7 +142,7 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    const loggedInAddress = localStorage.getItem(StorageLabel.GET_STARTED_DATA);
+    const loggedInAddress = localStorage.getItem(StorageLabel.LOGGED_IN_ADDRESS);
     if (loggedInAddress)
       setLoginAddress({
         value: loggedInAddress as `0x${string}`,
