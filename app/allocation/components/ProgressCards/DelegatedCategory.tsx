@@ -27,6 +27,7 @@ const DelegatedCategory = ({
     queryClient.refetchQueries(({
       queryKey: ['categories'],
     }));
+    location.reload();
   };
 
   return (

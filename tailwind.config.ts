@@ -77,12 +77,23 @@ const config: Config = {
         'good-rating': 'url(\'/assets/images/good-rating-bg.svg\')',
         'ballot': 'url(\'/assets/images/ballot-bg.svg\')',
         'voting-power': 'url(\'/assets/images/bg-voting-power.svg\')',
+        'river-left-right': 'url(\'/assets/images/river-left.svg\'),url(\'/assets/images/river-right.svg\')',
       },
+      backgroundPosition: {
+        river: 'left top,right top',
+      },
+      backgroundSize: {
+        'river-left-right': '50% auto',
+      },
+
       screens: {
         // small laptops
         sl: { max: '1400px' },
         // laptops
         l: { max: '1920px' },
+      },
+      scale: {
+        210: '2.1',
       },
     },
   },
