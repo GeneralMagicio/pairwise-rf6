@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import Image from 'next/image';
 import { useActiveWallet } from 'thirdweb/react';
 import { Step } from './EmailLoginModal';
@@ -7,29 +7,47 @@ import { axiosInstance } from '@/app/utils/axiosInstance';
 type TConnectEOAModalProps = {
   email: string
   setStep: (step: number) => void
-}
+};
 
-const ConnectEOAModal: FC<TConnectEOAModalProps> = ({
-  email,
-  setStep,
-}) => {
+const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setStep }) => {
   const wallet = useActiveWallet();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const connectEOA = async () => {
-    if (!wallet) return;
-    const msg = 'Sign in with Thirdweb wallet';
-    const account = wallet?.getAccount();
+    setLoading(true);
+    setError(null);
 
-    if (!account) return;
+    if (!wallet) {
+      setError('Unable to connect to your wallet');
+      setLoading(false);
+      return;
+    }
 
-    const signature = await account.signMessage({ message: msg });
+    try {
+      const msg = 'Sign in with Thirdweb wallet';
+      const account = wallet?.getAccount();
 
-    await axiosInstance.post('auth/thirdweb/login', {
-      message: msg,
-      signature,
-      address: account.address,
-    });
-    setStep(Step.SUCCESS);
+      if (!account) {
+        setError('Unable to connect to your wallet');
+        setLoading(false);
+        return;
+      }
+
+      const signature = await account.signMessage({ message: msg });
+
+      await axiosInstance.post('auth/thirdweb/login', {
+        message: msg,
+        signature,
+        address: account.address,
+      });
+      setLoading(false);
+      setStep(Step.SUCCESS);
+    }
+    catch (err) {
+      setError('An error occurred while connecting to your wallet');
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,11 +72,21 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({
         <p className="text-gray-400">
           Please link this with your connected ETH address to continue.
         </p>
+
+        {error && (
+          <div className="mt-4 flex w-[90%] flex-col items-start gap-1 rounded-lg border border-primary bg-status-bg-error px-3 py-2">
+            <p className="text-sm font-semibold text-primary">
+              An error occurred!
+            </p>
+            <p className="text-center text-xs text-dark-500">{error}</p>
+          </div>
+        )}
+
         <button
           className="my-4 w-full rounded-lg border bg-primary px-4 py-2 font-semibold text-white transition duration-300"
           onClick={connectEOA}
         >
-          Connect
+          {loading ? 'Connecting...' : 'Connect'}
         </button>
       </div>
     </div>

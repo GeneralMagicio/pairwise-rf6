@@ -119,3 +119,16 @@ export const uploadBallot = async (
 export const signOutFromAgora = () => {
   localStorage.removeItem(LOCAL_STORAGE_JWT_KEY);
 };
+
+export const getJWTData = (): JWTPayload => {
+  if (typeof window !== 'undefined') {
+    const agoraJwt = localStorage.getItem(LOCAL_STORAGE_JWT_KEY);
+    const parsed: VerifyResponse = JSON.parse(agoraJwt || '');
+    const decoded: JWTPayload = decodeJwt(parsed.access_token);
+
+    return decoded;
+  }
+  else {
+    return {} as JWTPayload;
+  }
+};

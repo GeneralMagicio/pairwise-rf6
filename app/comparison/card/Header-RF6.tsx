@@ -73,8 +73,10 @@ const HeaderRF6: FC<HeaderProps> = ({
   }, [badges]);
 
   useEffect(() => {
+    const HEADER_HEIGHT = 80;
+
     const handleScroll = () => {
-      if (window.scrollY > 100) {
+      if (window.scrollY > HEADER_HEIGHT) {
         setIsBarFixed(true);
       }
       else {
@@ -151,9 +153,7 @@ const HeaderRF6: FC<HeaderProps> = ({
                 {category}
               </span>
             )}
-            <div
-              className="hidden items-center gap-4 2xl:flex"
-            >
+            <div className="hidden items-center gap-4 2xl:flex">
               {activeBadges.length > 0 && (
                 <button
                   onClick={() => setIsBadgesModalOpen(true)}
