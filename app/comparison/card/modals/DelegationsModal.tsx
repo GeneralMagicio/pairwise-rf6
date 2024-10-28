@@ -48,7 +48,7 @@ const DelegationsModal = ({
           and on behalf of
           {' '}
           <strong className="text-dark-500">
-            {delegates?.toYou?.budget.length}
+            {delegates?.uniqueDelegators}
             {' '}
             people
             {' '}
