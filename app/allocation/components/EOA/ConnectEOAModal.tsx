@@ -24,24 +24,30 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setStep }) => {
       return;
     }
 
-    const msg = 'Sign in with Thirdweb wallet';
-    const account = wallet?.getAccount();
+    try {
+      const msg = 'Sign in with Thirdweb wallet';
+      const account = wallet?.getAccount();
 
-    if (!account) {
-      setError('Unable to connect to your wallet');
+      if (!account) {
+        setError('Unable to connect to your wallet');
+        setLoading(false);
+        return;
+      }
+
+      const signature = await account.signMessage({ message: msg });
+
+      await axiosInstance.post('auth/thirdweb/login', {
+        message: msg,
+        signature,
+        address: account.address,
+      });
       setLoading(false);
-      return;
+      setStep(Step.SUCCESS);
     }
-
-    const signature = await account.signMessage({ message: msg });
-
-    await axiosInstance.post('auth/thirdweb/login', {
-      message: msg,
-      signature,
-      address: account.address,
-    });
-    setLoading(false);
-    setStep(Step.SUCCESS);
+    catch (err) {
+      setError('An error occurred while connecting to your wallet');
+      setLoading(false);
+    }
   };
 
   return (
