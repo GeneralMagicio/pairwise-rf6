@@ -10,18 +10,19 @@ interface UnlockBallotProps {
 const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
   const [confirmed, setConfirmed] = useState(false);
   return (
-    <div className="mx-auto flex w-[750px] flex-col items-center gap-2 overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat p-6 py-12 shadow-lg">
-      <Image
-        src="/assets/images/sunny.svg"
-        alt="Celebration"
-        width={160}
-        height={125}
-        className="mx-auto mb-6"
-      />
+    <div className="mx-auto flex max-h-[95vh] w-[750px] flex-col items-center gap-2 overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat p-6 py-12 shadow-lg">
+      <div className="relative h-[250px] w-[320px] sl:h-[160px] sl:w-[250px]">
+        <Image
+          src="/assets/images/sunny.svg"
+          alt="Celebration"
+          fill
+          className="mx-auto mb-6"
+        />
+      </div>
       <h2 className="mb-4 text-3xl font-medium text-dark-500">
         Important notice!
       </h2>
-      <p className="mb-6 text-center text-gray-400">
+      <p className="mb-6 text-center text-gray-400 sl:mb-1">
         Your Pairwise results have been assigned to “Custom” allocation method on the OP Vote application.
         If you change the allocation method all your voting will be lost and you’ll have to
         re-submit Ballot from Pairwise again.
@@ -46,7 +47,7 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
           <button
             disabled={!confirmed}
             className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4
-          py-3 text-white transition duration-300 ease-in-out disabled:bg-op-neutral-300 disabled:text-slate-700"
+          py-3 text-white transition duration-300 ease-in-out disabled:bg-op-neutral-300 disabled:text-slate-700 sl:p-2"
           >
             View my Ballot
             <ExternalLinkIcon />
@@ -57,7 +58,7 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
             <button
               disabled={!confirmed}
               className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-4 py-3
-          text-slate-700 transition duration-300 ease-in-out"
+          text-slate-700 transition duration-300 ease-in-out sl:p-2"
             >
               Send Feedback
               <ExternalLinkIcon />
@@ -67,7 +68,7 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
         <button
           onClick={onClose}
           className="flex w-full items-center justify-center rounded-lg px-4 py-3
-        text-black transition duration-300 ease-in-out"
+        text-black transition duration-300 ease-in-out sl:p-2"
         >
           Close
         </button>

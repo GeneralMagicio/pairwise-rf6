@@ -1483,7 +1483,7 @@ export interface ICategory {
   description: string
   impactDescription: string
   contributionDescription: null | string
-  RPGF5Id: null | number
+  RF6Id: null | number
   parentId: null | number
   image: string | null
   metadata: ProjectMetadata
@@ -1500,7 +1500,7 @@ export interface IProject {
   pollId: number
   url: string | null
   description: string
-  RPGF5Id: string
+  RF6Id: string
   parentId: number | null
   image: string | null
   metadata: ProjectMetadata

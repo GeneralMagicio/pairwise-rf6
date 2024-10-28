@@ -153,7 +153,11 @@ const HeaderRF6: FC<HeaderProps> = ({
                 {category}
               </span>
             )}
-            <div className="hidden items-center gap-4 2xl:flex">
+            <div
+              className={`${
+                category ? 'hidden 2xl:flex' : 'flex'
+              } items-center gap-4`}
+            >
               {activeBadges.length > 0 && (
                 <button
                   onClick={() => setIsBadgesModalOpen(true)}
@@ -172,7 +176,7 @@ const HeaderRF6: FC<HeaderProps> = ({
               </button>
             </div>
 
-            <Dropdown customClass="2xl:hidden">
+            <Dropdown customClass={category ? '2xl:hidden' : 'hidden'}>
               <div className="flex flex-col gap-2">
                 {activeBadges.length > 0 && (
                   <>

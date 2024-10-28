@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosInstance } from '@/app/utils/axiosInstance';
+import { CollectionProgressStatus } from '../types';
 
 export type TCategory = {
   id: number
@@ -7,7 +8,7 @@ export type TCategory = {
   description: string
   image: string
   projectCount: number
-  progress: string
+  progress: CollectionProgressStatus
 };
 
 export const getCategories = async (): Promise<TCategory[]> => {

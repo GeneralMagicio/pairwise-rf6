@@ -8,7 +8,7 @@ export const mockProject1: IProject = {
   url: null,
   description:
     'Lodestar is a Typescript ecosystem for Ethereum consensus, developed by ChainSafe Systems. Our flagship products are our production-capable beacon chain and validator client. In addition, we maintain public repositories of useful tools for public use. Some of these libraries include JS implementations for BLS, SSZ, Discv5, Gossipsub, Noise and Yamux. Our work contributes to the backbone infrastructure required to keep the Ethereum blockchain progressing within the rules as defined by the specification.\n\nLodestar’s niche is in its implementation language, TypeScript. Our software and tooling is uniquely situated as the go-to for researchers and developers for rapid prototyping such as our Prover, a verified web3 provider using light clients to increase decentralization and security of the JSON-RPC. Millions of developers around the world are familiar with Typescript, and Lodestar’s high-quality codebases are excellent introductions to the Ethereum protocol, with the goal of increasing client diversity and attracting new talent from one of the largest groups of developers in the world.',
-  RPGF5Id: '0x716ad2474c6acff63481ec2283e01a2c4bef79250a1e85119324edae7b8d53ce',
+  RF6Id: '0x716ad2474c6acff63481ec2283e01a2c4bef79250a1e85119324edae7b8d53ce',
   parentId: 1,
   image:
     'https://storage.googleapis.com/op-atlas/973ba7db-8101-405b-98a0-1f7d93a0f344.png',
@@ -176,7 +176,7 @@ export const mockProject2: IProject = {
   url: '',
   description:
     'hevm is an open source, state-of-the art, fast symbolic and concrete EVM execution engine. It has a library interface and can be used as a component in high level tooling. It can be used stand-alone for ad-hoc analysis and symbolic unit test execution.',
-  RPGF5Id: '0x43a266d84aa8ce67af3e6afc1bed4021fd7a06693e9eee94e1ef4767b429cc0d',
+  RF6Id: '0x43a266d84aa8ce67af3e6afc1bed4021fd7a06693e9eee94e1ef4767b429cc0d',
   parentId: 1,
   image:
     'https://storage.googleapis.com/op-atlas/d7cf4059-4f9c-48aa-a37a-df2f8c81933c.png',
