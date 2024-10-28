@@ -243,6 +243,17 @@ const AllocationPage = () => {
     return colDelegation?.length || 0;
   };
 
+  const isBGCategoryVoted = () => {
+    const bhCategoryProgress = categories?.find(
+      el => el.id === categorySlugIdMap.get(category)
+    )?.progress;
+
+    return (
+      bhCategoryProgress === CollectionProgressStatusEnum.Finished
+      || bhCategoryProgress === CollectionProgressStatusEnum.Attested
+    );
+  };
+
   useEffect(() => {
     if (delegations) {
       const budgetDelegateFromYou = delegations?.fromYou?.budget;
@@ -528,8 +539,17 @@ const AllocationPage = () => {
                 )
               : (
                   <button
-                    className="w-fit self-end rounded-lg bg-primary px-4 py-3 text-white"
+                    className={`w-fit self-end rounded-lg px-4 py-3 ${
+                      ballotState === BallotState.Loading
+                      || (isBadgeholder && !isBGCategoryVoted())
+                        ? 'bg-gray-300 text-gray-500'
+                        : 'bg-primary text-white'
+                    }`}
                     onClick={handleUploadBallot}
+                    disabled={
+                      ballotState === BallotState.Loading
+                      || (isBadgeholder && !isBGCategoryVoted())
+                    }
                   >
                     Update Ballot
                   </button>
