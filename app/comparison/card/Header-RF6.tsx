@@ -102,7 +102,7 @@ const HeaderRF6: FC<HeaderProps> = ({
 
     if (
       path.includes('comparison')
-      && delegates?.uniqueDelegators
+      && delegates?.toYou?.uniqueDelegators
       && !isAlreadyShown
     ) {
       setIsDelegateModalOpen(true);
