@@ -123,6 +123,9 @@ export const signOutFromAgora = () => {
 export const getJWTData = (): JWTPayload => {
   if (typeof window !== 'undefined') {
     const agoraJwt = localStorage.getItem(LOCAL_STORAGE_JWT_KEY);
+    if (!agoraJwt) {
+      return {} as JWTPayload;
+    }
     const parsed: VerifyResponse = JSON.parse(agoraJwt || '');
     const decoded: JWTPayload = decodeJwt(parsed.access_token);
 
