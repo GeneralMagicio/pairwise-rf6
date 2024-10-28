@@ -472,6 +472,15 @@ const RankingPage = () => {
     await attest();
   };
 
+  const handleAttestationModalClose = () => {
+    if (attestationState === AttestationState.Success) {
+      router.push('/allocation');
+    }
+    else if (attestationState === AttestationState.Error) {
+      setAttestationState(AttestationState.Initial);
+    }
+  };
+
   useEffect(() => {
     if (!projects || projects.length === 0) {
       setIsLocked(false);
@@ -559,8 +568,8 @@ const RankingPage = () => {
         isOpen={
           attestationState !== AttestationState.Initial
         }
-        onClose={() => {}}
-        showCloseButton={false}
+        onClose={handleAttestationModalClose}
+        showCloseButton={true}
       >
         {attestationState === AttestationState.Success && attestationLink && (
           <AttestationSuccessModal
