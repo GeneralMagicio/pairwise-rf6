@@ -67,8 +67,10 @@ const DelegationsModal = ({
             <div className="flex items-center justify-center gap-2 rounded-full border border-[#079455] bg-[#17B26A] px-4 py-1">
               <p className="text-sm text-gray-50">
                 <span className="font-semibold">
-                  {delegates?.toYou?.budget.length
-                    ? `${delegates?.toYou?.budget.length} people delegated to you`
+                  {delegates?.uniqueDelegators
+                    ? `${(delegates?.uniqueDelegators <= 1)
+                      ? 'someone delegated to you'
+                      : `${delegates?.uniqueDelegators} people delegated to you`}`
                     : 'You have no delegations'}
                 </span>
               </p>
