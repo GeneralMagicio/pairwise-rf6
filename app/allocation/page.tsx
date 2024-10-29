@@ -190,6 +190,12 @@ const AllocationPage = () => {
   const handleSliderChange = (_event: Event, newValue: number | number[]) => {
     if (typeof newValue === 'number') {
       setTotalValue(newValue * 1_000_000);
+      setCategoriesRanking(
+        categoriesRanking?.map(el => ({
+          ...el,
+          budget: el.budget * (newValue / (totalValue / 1_000_000)),
+        }))
+      );
     }
   };
 
