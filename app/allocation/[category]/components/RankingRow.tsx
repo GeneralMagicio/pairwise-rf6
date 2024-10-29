@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { NumericFormat } from 'react-number-format';
 import { IProjectRanking } from '@/app/comparison/utils/types';
 import { Checkbox } from '@/app/utils/Checkbox';
-import { ExpandVertical } from '@/public/assets/icon-components/ExpandVertical';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
 import styles from '@/app/styles/Project.module.css';

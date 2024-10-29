@@ -39,7 +39,6 @@ const HeaderRF6: FC<HeaderProps> = ({
   const { data: delegates } = useGetDelegationStatus();
   const { address, chainId } = useAccount();
 
-
   const [isBadgesModalOpen, setIsBadgesModalOpen] = useState(false);
   const [isDelegateModalOpen, setIsDelegateModalOpen] = useState(false);
   const [isBarFixed, setIsBarFixed] = useState(false);
@@ -100,7 +99,7 @@ const HeaderRF6: FC<HeaderProps> = ({
   };
 
   useEffect(() => {
-    if (!category || !chainId || !delegates) return
+    if (!category || !chainId || !delegates) return;
 
     const currentUserKey = `${chainId}_${address}`;
 
@@ -110,7 +109,7 @@ const HeaderRF6: FC<HeaderProps> = ({
 
     const categories = storedData[currentUserKey] || {};
     const isAlreadyShown = categories[category];
-    
+
     if (
       path.includes('comparison')
       && delegates?.toYou?.uniqueDelegators
@@ -121,14 +120,14 @@ const HeaderRF6: FC<HeaderProps> = ({
   }, [path]);
 
   const markAsShown = () => {
-    if (!category || !chainId || !delegates) return
+    if (!category || !chainId || !delegates) return;
 
     const currentUserKey = `${chainId}_${address}`;
 
     const storedData = JSON.parse(
       localStorage.getItem(StorageLabel.PRE_VOTING_DELEGATION_POPUP) || '{}'
     );
-    
+
     const categories = storedData[currentUserKey] || {};
 
     localStorage.setItem(
@@ -141,7 +140,7 @@ const HeaderRF6: FC<HeaderProps> = ({
         },
       })
     );
-      
+
     setIsDelegateModalOpen(false);
   };
 
