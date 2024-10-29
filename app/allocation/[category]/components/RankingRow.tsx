@@ -3,7 +3,6 @@ import Image from 'next/image';
 import { NumericFormat } from 'react-number-format';
 import { IProjectRanking } from '@/app/comparison/utils/types';
 import { Checkbox } from '@/app/utils/Checkbox';
-import { ExpandVertical } from '@/public/assets/icon-components/ExpandVertical';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
 import styles from '@/app/styles/Project.module.css';
@@ -63,11 +62,11 @@ const RankingRow: FC<IRankingRowProps> = ({
           {project.project.description}
         </p>
       </td>
-      <td className="pb-8 pl-4 pt-4">
+      {/* <td className="pb-8 pl-4 pt-4">
         <div className="flex items-center gap-2">
           <ExpandVertical />
         </div>
-      </td>
+      </td> */}
       <td className="pb-8 pl-4 pt-4">
         <div
           className={`flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 ${
