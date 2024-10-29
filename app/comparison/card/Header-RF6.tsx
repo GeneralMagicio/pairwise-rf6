@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect, useMemo } from 'react';
-import { useDisconnect } from 'wagmi';
+import { useDisconnect, useAccount } from 'wagmi';
 import { usePathname } from 'next/navigation';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
 import { PwLogo } from '@/public/assets/icon-components/PairwiseLogo';
@@ -15,6 +15,7 @@ import { useGetPublicBadges } from '@/app/utils/getBadges';
 import DelegationsModal from './modals/DelegationsModal';
 import { useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
 import StorageLabel from '@/app/lib/localStorage';
+
 interface HeaderProps {
   progress?: number
   category?: string
@@ -36,6 +37,8 @@ const HeaderRF6: FC<HeaderProps> = ({
   const { signOut, loginAddress } = useAuth();
   const { data: badges } = useGetPublicBadges();
   const { data: delegates } = useGetDelegationStatus();
+  const { address, chainId } = useAccount();
+
 
   const [isBadgesModalOpen, setIsBadgesModalOpen] = useState(false);
   const [isDelegateModalOpen, setIsDelegateModalOpen] = useState(false);
@@ -97,9 +100,17 @@ const HeaderRF6: FC<HeaderProps> = ({
   };
 
   useEffect(() => {
-    const isAlreadyShown
-      = localStorage.getItem(StorageLabel.PRE_VOTING_DELEGATION_POPUP) === 'true';
+    if (!category || !chainId || !delegates) return
 
+    const currentUserKey = `${chainId}_${address}`;
+
+    const storedData = JSON.parse(
+      localStorage.getItem(StorageLabel.PRE_VOTING_DELEGATION_POPUP) || '{}'
+    );
+
+    const categories = storedData[currentUserKey] || {};
+    const isAlreadyShown = categories[category];
+    
     if (
       path.includes('comparison')
       && delegates?.toYou?.uniqueDelegators
@@ -110,7 +121,27 @@ const HeaderRF6: FC<HeaderProps> = ({
   }, [path]);
 
   const markAsShown = () => {
-    localStorage.setItem(StorageLabel.PRE_VOTING_DELEGATION_POPUP, 'true');
+    if (!category || !chainId || !delegates) return
+
+    const currentUserKey = `${chainId}_${address}`;
+
+    const storedData = JSON.parse(
+      localStorage.getItem(StorageLabel.PRE_VOTING_DELEGATION_POPUP) || '{}'
+    );
+    
+    const categories = storedData[currentUserKey] || {};
+
+    localStorage.setItem(
+      StorageLabel.PRE_VOTING_DELEGATION_POPUP,
+      JSON.stringify({
+        ...storedData,
+        [currentUserKey]: {
+          ...categories,
+          [category]: true,
+        },
+      })
+    );
+      
     setIsDelegateModalOpen(false);
   };
 
