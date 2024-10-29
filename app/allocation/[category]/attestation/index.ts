@@ -3,7 +3,7 @@ import { Signer } from 'ethers';
 import { Wallet } from 'thirdweb/wallets';
 import { activeChain } from '@/app/lib/constants';
 import { axiosInstance } from '@/app/utils/axiosInstance';
-import { EASNetworks, SCHEMA_UID, convertRankingToAttestationFormat, generateRandomString, getPrevAttestationIds } from './utils';
+import { EASNetworks, SCHEMA_UID, convertRankingToAttestationFormat, generateRandomString, getPrevAttestationIds } from '../utils';
 
 export enum AttestationState {
   Initial,

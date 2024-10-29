@@ -33,7 +33,7 @@ import AttestationSuccessModal from './attestation/AttestationSuccessModal';
 import AttestationLoading from './attestation/AttestationLoading';
 import AttestationError from './attestation/AttestationError';
 import { attest, AttestationState } from './attestation';
-import { useSigner } from './attestation/utils';
+import { useSigner } from './utils';
 
 enum VotingStatus {
   VOTED,

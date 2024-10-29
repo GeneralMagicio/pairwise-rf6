@@ -54,10 +54,10 @@ import BallotSuccessModal from '../comparison/ballot/modals/BallotSuccessModal';
 import BallotNotReady from '../comparison/ballot/modals/BallotNotReady';
 import BallotErrorDelegated from '../comparison/ballot/modals/BallotErrorDelegated';
 import { attest, AttestationState } from './[category]/attestation';
-import { useSigner } from './[category]/attestation/utils';
 import AttestationError from './[category]/attestation/AttestationError';
 import AttestationLoading from './[category]/attestation/AttestationLoading';
 import AttestationSuccessModal from './[category]/attestation/AttestationSuccessModal';
+import { useSigner } from './[category]/utils';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
