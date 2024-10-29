@@ -6,7 +6,7 @@ export interface RankItem {
 }
 
 export const roundFractions = (value: number, fractions: number) => {
-  return value * Math.pow(10, fractions) / Math.pow(10, fractions);
+  return Math.round(value * Math.pow(10, fractions)) / Math.pow(10, fractions);
 };
 
 export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): T[] => {
@@ -30,7 +30,7 @@ export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): 
     if (item.locked) return item;
     else return {
       ...item,
-      percentage: roundFractions(item.percentage + (-1 * newValueDifference * item.percentage / restSum), 2),
+      percentage: roundFractions(item.percentage + (-1 * newValueDifference * item.percentage / restSum), 6),
       budget: roundFractions(item.budget + (-1 * newValueDifference * item.budget / restSum), 2),
     };
   });
