@@ -63,11 +63,11 @@ const RankingRow: FC<IRankingRowProps> = ({
           {project.project.description}
         </p>
       </td>
-      <td className="pb-8 pl-4 pt-4">
+      {/* <td className="pb-8 pl-4 pt-4">
         <div className="flex items-center gap-2">
           <ExpandVertical />
         </div>
-      </td>
+      </td> */}
       <td className="pb-8 pl-4 pt-4">
         <div
           className={`flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 ${
