@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '@/app/utils/axiosInstance';
-import { IProjectRanking, ICategory } from '@/app/comparison/utils/types';
+import { IProjectRanking, ICategory, IProject } from '@/app/comparison/utils/types';
 
 type TCategoryRanking = {
+  project: IProject
   ranking: ICategory[]
   userId: number
   projectId: number
