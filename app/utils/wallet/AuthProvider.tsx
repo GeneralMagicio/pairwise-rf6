@@ -123,10 +123,17 @@ export const useAuth = () => {
   const wallet = useActiveWallet();
   const { disconnect } = useThirdwebDisconnect();
 
+  const clearLocalStorage = () => {
+    localStorage.removeItem(StorageLabel.AUTH);
+    localStorage.removeItem(StorageLabel.AGORA_SIWE_JWT);
+    localStorage.removeItem(StorageLabel.LOGGED_IN_ADDRESS);
+    localStorage.removeItem(StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID);
+  };
+
   const signOut = async (redirectToLanding: boolean = true) => {
     signOutFromAgora();
     setLoggedToAgora('initial');
-    localStorage.clear();
+    clearLocalStorage();
     if (wallet) disconnect(wallet);
     logoutFromPwBackend();
     setLoginAddress({ value: undefined, confirmed: true });
@@ -136,7 +143,7 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    const loggedInAddress = localStorage.getItem('loggedInAddress');
+    const loggedInAddress = localStorage.getItem(StorageLabel.LOGGED_IN_ADDRESS);
     if (loggedInAddress)
       setLoginAddress({
         value: loggedInAddress as `0x${string}`,

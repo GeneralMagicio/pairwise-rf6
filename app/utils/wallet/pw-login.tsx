@@ -1,7 +1,8 @@
 import { axiosInstance } from '../axiosInstance';
+import StorageLabel from '../../lib/localStorage';
 
 export const isLoggedIn = async () => {
-  if (!localStorage.getItem('auth')) return false;
+  if (!localStorage.getItem(StorageLabel.AUTH)) return false;
   try {
     const { data } = await axiosInstance.get<Number>('/auth/isloggedin');
     return data;
@@ -31,8 +32,8 @@ export const loginToPwBackend = async (
   });
 
   const token = data.token;
-  window.localStorage.setItem('auth', token);
-  window.localStorage.setItem('loggedInAddress', address);
+  window.localStorage.setItem(StorageLabel.AUTH, token);
+  window.localStorage.setItem(StorageLabel.LOGGED_IN_ADDRESS, address);
   axiosInstance.defaults.headers.common['auth'] = token;
 
   return data;
@@ -40,8 +41,8 @@ export const loginToPwBackend = async (
 
 export const logoutFromPwBackend = () => {
   try {
-    window.localStorage.removeItem('auth');
-    window.localStorage.removeItem('loggedInAddress');
+    window.localStorage.removeItem(StorageLabel.AUTH);
+    window.localStorage.removeItem(StorageLabel.LOGGED_IN_ADDRESS);
     if (axiosInstance.defaults.headers.common['auth']) {
       delete axiosInstance.defaults.headers.common['auth'];
     }

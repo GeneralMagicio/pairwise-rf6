@@ -53,9 +53,8 @@ export const useCategoryRankings = () => {
 export const getProjectsRankingByCategoryId = async (
   cid: number | undefined
 ): Promise<IProjectsRankingResponse> => {
-  if (!cid) {
-    throw new Error('Invalid category id');
-  }
+  if (!cid) return { ranking: [], hasRanking: false, isFinished: false, progress: '', budget: 0, name: '', share: 0, id: 0 };
+
   return (
     await axiosInstance.get(`flow/ranking?cid=${cid}
 `)
@@ -74,9 +73,11 @@ export const updateProjectRanking = async ({
   cid,
   ranking,
 }: {
-  cid: number
+  cid: number | undefined
   ranking: IProjectRankingObj[]
 }) => {
+  if (!cid) return { data: undefined };
+
   return (
     await axiosInstance.post('flow/ranking/custom', {
       collectionId: cid,
@@ -94,10 +95,6 @@ export const useUpdateProjectRanking = ({
 }) => {
   const queryClient = useQueryClient();
 
-  if (!cid) {
-    throw new Error('Invalid category id');
-  }
-
   return useMutation({
     mutationFn: () => updateProjectRanking({ cid, ranking }),
     onSuccess: () => {
@@ -108,7 +105,9 @@ export const useUpdateProjectRanking = ({
   });
 };
 
-export const updateCategoriesRanking = async (ranking: IUpdateCategoriesRankingBody) => {
+export const updateCategoriesRanking = async (
+  ranking: IUpdateCategoriesRankingBody
+) => {
   return (
     await axiosInstance.post('flow/budget', {
       ...ranking,
@@ -116,7 +115,9 @@ export const updateCategoriesRanking = async (ranking: IUpdateCategoriesRankingB
   ).data;
 };
 
-export const useUpdateCategoriesRanking = (data: IUpdateCategoriesRankingBody) => {
+export const useUpdateCategoriesRanking = (
+  data: IUpdateCategoriesRankingBody
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({

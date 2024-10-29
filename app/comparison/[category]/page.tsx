@@ -116,6 +116,8 @@ export default function Home() {
 
   useEffect(() => {
     setLastAction(undefined);
+    setCoiLoading1(false);
+    setCoiLoading2(false);
   }, [project1, project2]);
 
   useEffect(() => {
@@ -231,7 +233,7 @@ export default function Home() {
     try {
       const pair = await getPairwisePairsForProject(cid, id2);
       setProject1(pair.pairs[0].find(project => project.id !== id2)!);
-      setRating1(pair.pairs[0].find(project => project.id === id2)!.rating);
+      setRating1(pair.pairs[0].find(project => project.id !== id2)!.rating);
     }
     catch (e) {
       queryClient.refetchQueries({
@@ -256,7 +258,7 @@ export default function Home() {
     try {
       const pair = await getPairwisePairsForProject(cid, id1);
       setProject2(pair.pairs[0].find(project => project.id !== id1)!);
-      setRating2(pair.pairs[0].find(project => project.id === id1)!.rating);
+      setRating2(pair.pairs[0].find(project => project.id !== id1)!.rating);
     }
     catch (e) {
       queryClient.refetchQueries({
@@ -307,22 +309,25 @@ export default function Home() {
   const handleVote = async (chosenId: number) => {
     setCoiLoading1(true);
     setCoiLoading2(true);
-    await vote({
-      data: {
-        project1Id: project1!.id,
-        project2Id: project2!.id,
-        project1Stars: rating1 ?? null,
-        project2Stars: rating2 ?? null,
-        pickedId: chosenId,
-      },
-    });
+    try {
+      await vote({
+        data: {
+          project1Id: project1!.id,
+          project2Id: project2!.id,
+          project1Stars: rating1 ?? null,
+          project2Stars: rating2 ?? null,
+          pickedId: chosenId,
+        },
+      });
 
-    if (getGetStarted().goodRating && !getGetStarted().postRating) {
-      updateGetStarted({ postRating: true });
+      if (getGetStarted().goodRating && !getGetStarted().postRating) {
+        updateGetStarted({ postRating: true });
+      }
     }
-
-    setCoiLoading1(false);
-    setCoiLoading2(false);
+    catch (e) {
+      setCoiLoading1(false);
+      setCoiLoading2(false);
+    }
   };
 
   const handleUndo = async () => {
@@ -443,7 +448,14 @@ export default function Home() {
             }}
           />
         )}
-        {showFinishModal && <PostVotingModal categorySlug={category} categoryLabel={convertCategoryToLabel(category as JWTPayload['category'])} />}
+        {showFinishModal && (
+          <PostVotingModal
+            categorySlug={category}
+            categoryLabel={convertCategoryToLabel(
+              category as JWTPayload['category']
+            )}
+          />
+        )}
       </Modal>
 
       <Modal
