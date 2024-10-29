@@ -4,12 +4,12 @@ import { decodeJwt } from 'jose';
 import { JWTPayload, VerifyResponse } from './types';
 import { axiosInstance } from '../axiosInstance';
 import { AgoraBallotPost } from '../../comparison/ballot/useGetBallot';
+import StorageLabel from '../../lib/localStorage';
 
 // TODO: this should probably be an environment variable
 // const BASE_URL = `https://vote.optimism.io`
 const BASE_URL = 'https://vote.optimism.io';
 const API_PREFIX = '/api/v1';
-const LOCAL_STORAGE_JWT_KEY = 'agora-siwe-jwt';
 export const AGORA_SIGN_IN = 'Sign in to Agora with Ethereum';
 
 /* There's currently nothing stored on the backend to maintain session state.
@@ -75,14 +75,14 @@ const verifyMessage = async ({ message, signature }: { message: string, signatur
 
   // save JWT from verify to local storage
   const token = res.data;
-  localStorage.setItem(LOCAL_STORAGE_JWT_KEY, JSON.stringify(token));
+  localStorage.setItem(StorageLabel.AGORA_SIWE_JWT, JSON.stringify(token));
   const payload: JWTPayload = decodeJwt(token.access_token);
   return payload;
 };
 
 export const isLoggedInToAgora = async (address: string): Promise<JWTPayload | false> => {
   try {
-    const agoraJwt = localStorage.getItem(LOCAL_STORAGE_JWT_KEY);
+    const agoraJwt = localStorage.getItem(StorageLabel.AGORA_SIWE_JWT);
     const parsed: VerifyResponse = JSON.parse(agoraJwt || '');
     const decoded: JWTPayload = decodeJwt(parsed.access_token);
 
@@ -103,7 +103,7 @@ export const uploadBallot = async (
   ballot: AgoraBallotPost,
   address: string,
 ) => {
-  const agoraJwt = localStorage.getItem(LOCAL_STORAGE_JWT_KEY);
+  const agoraJwt = localStorage.getItem(StorageLabel.AGORA_SIWE_JWT);
   const parsed: VerifyResponse = JSON.parse(agoraJwt || '');
 
   const { data } = await axiosInstance.post(`${BASE_URL}${API_PREFIX}/retrofunding/rounds/6/ballots/${address}/projects`,
@@ -117,12 +117,15 @@ export const uploadBallot = async (
 };
 
 export const signOutFromAgora = () => {
-  localStorage.removeItem(LOCAL_STORAGE_JWT_KEY);
+  localStorage.removeItem(StorageLabel.AGORA_SIWE_JWT);
 };
 
 export const getJWTData = (): JWTPayload => {
   if (typeof window !== 'undefined') {
-    const agoraJwt = localStorage.getItem(LOCAL_STORAGE_JWT_KEY);
+    const agoraJwt = localStorage.getItem(StorageLabel.AGORA_SIWE_JWT);
+    if (!agoraJwt) {
+      return {} as JWTPayload;
+    }
     const parsed: VerifyResponse = JSON.parse(agoraJwt || '');
     const decoded: JWTPayload = decodeJwt(parsed.access_token);
 

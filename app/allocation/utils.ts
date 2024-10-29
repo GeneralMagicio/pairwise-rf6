@@ -30,7 +30,7 @@ export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): 
     if (item.locked) return item;
     else return {
       ...item,
-      percentage: roundFractions(item.percentage + (-1 * newValueDifference * item.percentage / restSum), 2),
+      percentage: roundFractions(item.percentage + (-1 * newValueDifference * item.percentage / restSum), 6),
       budget: roundFractions(item.budget + (-1 * newValueDifference * item.budget / restSum), 2),
     };
   });
@@ -38,8 +38,6 @@ export const modifyPercentage = <T extends RankItem>(values: T[], newValue: T): 
   const sum = result.reduce((acc, curr) => acc += curr.percentage, 0);
 
   if (sum > 100.1) throw { msg: 'Bigger than 100 error', excess: sum - 100 };
-
-  if (sum < 100) throw { msg: 'Smaller than 100 error', deficit: 100 - sum };
 
   if (result.filter(el => !el.locked).length === 1) throw ({ msg: 'At least two categories must be unlocked' });
 
