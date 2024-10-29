@@ -173,10 +173,7 @@ const AllocationPage = () => {
   };
 
   const handleAttestationModalClose = () => {
-    if (attestationState === AttestationState.Success) {
-      router.push('/allocation');
-    }
-    else if (attestationState === AttestationState.Error) {
+    if (attestationState === AttestationState.Success || attestationState === AttestationState.Error) {
       setAttestationState(AttestationState.Initial);
     }
   };
