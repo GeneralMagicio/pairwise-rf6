@@ -14,7 +14,7 @@ import BudgetAllocation, {
   BudgetCategory,
 } from './components/BudgetAllocation';
 import ConnectBox from './components/ConnectBox';
-import { modifyPercentage, RankItem } from './utils';
+import { modifyPercentage, RankItem, roundFractions } from './utils';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { CustomizedSlider } from './components/Slider';
@@ -53,6 +53,11 @@ import BallotLoading from '../comparison/ballot/modals/BallotLoading';
 import BallotSuccessModal from '../comparison/ballot/modals/BallotSuccessModal';
 import BallotNotReady from '../comparison/ballot/modals/BallotNotReady';
 import BallotErrorDelegated from '../comparison/ballot/modals/BallotErrorDelegated';
+import { attest, AttestationState } from './[category]/attestation';
+import { useSigner } from './[category]/attestation/utils';
+import AttestationError from './[category]/attestation/AttestationError';
+import AttestationLoading from './[category]/attestation/AttestationLoading';
+import AttestationSuccessModal from './[category]/attestation/AttestationSuccessModal';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -81,6 +86,7 @@ enum BallotState {
 const AllocationPage = () => {
   const wallet = useActiveWallet();
   const router = useRouter();
+  const signer = useSigner();
   const { address } = useAccount();
   const { loggedToAgora } = useAuth();
   const { isBadgeholder, category } = getJWTData();
@@ -96,6 +102,9 @@ const AllocationPage = () => {
   const colDelegationFromYou = delegations?.fromYou?.collections;
   const budgetDelegateToYou = delegations?.toYou?.budget;
   const budgetDelegateFromYou = delegations?.fromYou?.budget;
+
+  const [attestationState, setAttestationState] = useState(AttestationState.Initial);
+  const [attestationLink, setAttestationLink] = useState<string>();
 
   const [ballotState, setBallotState] = useState<BallotState>(
     BallotState.Initial
@@ -124,11 +133,23 @@ const AllocationPage = () => {
     = useState<Pick<ICategory, 'id' | 'name'>>();
   const [targetDelegate, setTargetDelegate] = useState<TargetDelegate>();
 
-  const { mutate: updateCategoriesRanking } = useUpdateCategoriesRanking({
+  const { mutateAsync: updateCategoriesRanking } = useUpdateCategoriesRanking({
     budget: totalValue,
     allocationPercentages:
       categoriesRanking?.map(el => el.percentage / 100) || [],
   });
+
+  const handleSubmitVote = async () => {
+    await updateCategoriesRanking();
+
+    if (!wallet || !signer || !categoriesRanking) {
+      console.error('Requirements not met for attestations', wallet, signer, categoriesRanking);
+      return;
+    }
+
+    await attest({ ranking: { id: -1, name: 'Budget', ranking: categoriesRanking.map(el => ({ RF6Id: el.RF6Id, share: el.percentage / 100 })) },
+      setAttestationLink, setAttestationState, signer, wallet });
+  };
 
   const handleDelegate = async (username: string, target: TargetDelegate) => {
     if (!categoryToDelegate) return;
@@ -149,6 +170,24 @@ const AllocationPage = () => {
     });
     setTargetDelegate(target);
     setDelegationState(DelegationState.Success);
+  };
+
+  const handleAttestationModalClose = () => {
+    if (attestationState === AttestationState.Success) {
+      router.push('/allocation');
+    }
+    else if (attestationState === AttestationState.Error) {
+      setAttestationState(AttestationState.Initial);
+    }
+  };
+
+  const handleVoteBudget = () => {
+    console.log('wallet?', wallet);
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+    setAllocatingBudget(true);
   };
 
   const handleLock = (id: RankItem['id']) => () => {
@@ -268,8 +307,9 @@ const AllocationPage = () => {
     if (categoryRankings) {
       setCategoriesRanking(
         categoryRankings.ranking.map(el => ({
+          RF6Id: el.project.RF6Id,
           id: el.projectId,
-          percentage: Math.round(el.share * 100 * 100) / 100,
+          percentage: roundFractions(el.share * 100, 6),
           locked: false,
           budget: categoryRankings.budget * el.share,
         }))
@@ -280,6 +320,22 @@ const AllocationPage = () => {
 
   return (
     <div>
+      <Modal
+        isOpen={
+          attestationState !== AttestationState.Initial
+        }
+        onClose={handleAttestationModalClose}
+        showCloseButton={true}
+      >
+        {attestationState === AttestationState.Success && attestationLink && (
+          <AttestationSuccessModal
+            link={attestationLink}
+            onClose={() => setAttestationState(AttestationState.Initial)}
+          />
+        )}
+        {attestationState === AttestationState.Loading && <AttestationLoading />}
+        {attestationState === AttestationState.Error && <AttestationError onClick={handleSubmitVote} />}
+      </Modal>
       <Modal
         isOpen={ballotState !== BallotState.Initial}
         onClose={() => {}}
@@ -470,9 +526,7 @@ const AllocationPage = () => {
                             setCategoryToDelegate(budgetCategory);
                             setDelegationState(DelegationState.DelegationMethod);
                           }}
-                          onScore={() => {
-                            setAllocatingBudget(true);
-                          }}
+                          onScore={handleVoteBudget}
                           username={budgetDelegateFromYou?.metadata?.username}
                         />
                       )}
@@ -528,9 +582,7 @@ const AllocationPage = () => {
                     </button>
                     <button
                       className="flex items-center justify-center gap-3 rounded-lg bg-primary px-10 py-2 font-semibold text-white"
-                      onClick={() => {
-                        updateCategoriesRanking();
-                      }}
+                      onClick={handleSubmitVote}
                     >
                       Submit Vote
                       <ArrowRightIcon size={20} />
