@@ -55,7 +55,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
   }, [badges]);
   const router = useRouter();
   return (
-    <div className="relative flex max-w-3xl flex-col items-center justify-center gap-6 rounded-lg bg-voting-power bg-cover bg-no-repeat px-24 py-8 text-center">
+    <div className="relative flex max-w-3xl flex-col items-center justify-center gap-6 rounded-lg bg-badge-modal bg-cover bg-no-repeat px-24 py-8 text-center">
       <h2 className="w-fit text-wrap text-4xl font-bold">Welcome to the Pairwise voting for "Retro Funding 6"</h2>
       {badges && Object.keys(badges).length > 0
         ? (
