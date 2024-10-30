@@ -88,8 +88,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
             <div>Connects other accounts to claim more.</div>
           </div>
         </div>
-        <div className="flex w-full flex-col justify-start gap-2">
-
+        <div className="flex w-full max-w-md m-auto flex-col justify-start gap-2">
           <div>
             <button
               onClick={() => {
