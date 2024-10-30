@@ -149,6 +149,10 @@ const AllocationPage = () => {
 
     await attest({ ranking: { id: -1, name: 'Budget', ranking: categoriesRanking.map(el => ({ RF6Id: el.RF6Id, share: el.percentage / 100 })) },
       setAttestationLink, setAttestationState, signer, wallet });
+
+    queryClient.refetchQueries({
+      queryKey: ['category-ranking'],
+    });
   };
 
   const handleDelegate = async (username: string, target: TargetDelegate) => {
@@ -173,7 +177,11 @@ const AllocationPage = () => {
   };
 
   const handleAttestationModalClose = () => {
-    if (attestationState === AttestationState.Success || attestationState === AttestationState.Error) {
+    if (attestationState === AttestationState.Success) {
+      setAttestationState(AttestationState.Initial);
+      setAllocatingBudget(false);
+    }
+    if (attestationState === AttestationState.Error) {
       setAttestationState(AttestationState.Initial);
     }
   };
@@ -305,6 +313,12 @@ const AllocationPage = () => {
       }
     }
   }, [delegations]);
+
+  useEffect(() => {
+    if (categoryRankings && categoryRankings.progress === 'Attested' && dbudgetProgress === CollectionProgressStatusEnum.Pending) {
+      setDbudgetProgress(CollectionProgressStatusEnum.Attested);
+    }
+  }, [categoryRankings, dbudgetProgress]);
 
   useEffect(() => {
     if (categoryRankings) {
@@ -475,7 +489,7 @@ const AllocationPage = () => {
                 {allocatingBudget && (
                   <>
                     <div className="my-6 flex items-center gap-4">
-                      <span> 2M </span>
+                      <span> 1.1M </span>
                       <CustomizedSlider
                         className="my-2 min-w-[55%]"
                         value={totalValue / 1_000_000}
@@ -483,10 +497,10 @@ const AllocationPage = () => {
                         shiftStep={0.1}
                         step={0.1}
                         marks
-                        min={2}
-                        max={8}
+                        min={1.1}
+                        max={3.5}
                       />
-                      <span> 8M </span>
+                      <span> 3.5M </span>
                       <div className="w-64 whitespace-nowrap rounded-md border bg-gray-50 py-2 text-center text-sm text-gray-500">
                         {formatBudget(totalValue)}
                         {' '}
@@ -520,6 +534,7 @@ const AllocationPage = () => {
                         <BudgetAllocation
                           {...budgetCategory}
                           progress={dbudgetProgress}
+                          attestationLink={categoryRankings?.attestationLink || null}
                           delegations={budgetDelegateToYou?.length || 0}
                           loading={delegationsLoading}
                           isBadgeholder={isBadgeholder}
