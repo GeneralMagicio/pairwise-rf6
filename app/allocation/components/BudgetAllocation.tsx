@@ -22,6 +22,7 @@ interface IBudgetAllocationProps extends BudgetCategory {
   username?: string
   isBadgeholder: boolean
   bhCategory: string
+  attestationLink: string | null
   categorySlug: string
   onDelegate: () => void
   onScore: () => void
@@ -34,6 +35,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
   description,
   delegations,
   loading,
+  attestationLink,
   progress = CollectionProgressStatusEnum.Pending,
   username,
   isBadgeholder,
@@ -49,7 +51,14 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
       case CollectionProgressStatusEnum.Finished:
         return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
       case CollectionProgressStatusEnum.Attested:
-        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
+        return (
+          <VotedCategory
+            budgetEditHandle={onScore}
+            id={id}
+            isAutoConnecting={isAutoConnecting}
+            attestationLink={attestationLink}
+          />
+        );
       case CollectionProgressStatusEnum.Delegated:
         return (
           <DelegatedCategory
