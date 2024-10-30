@@ -88,7 +88,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
             <div>Connects other accounts to claim more.</div>
           </div>
         </div>
-        <div className="flex w-full max-w-md m-auto flex-col justify-start gap-2">
+        <div className="m-auto flex w-full max-w-md flex-col justify-center gap-2">
           <div>
             <button
               onClick={() => {
@@ -150,8 +150,8 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
                   onClick={() => {
                     router.push('/allocation');
                   }}
-                  className="w-3/5 rounded-md bg-primary px-4
-              py-2 text-white hover:bg-red-600 "
+                  className="m-auto w-3/5 rounded-md bg-primary
+              px-4 py-2 text-white hover:bg-red-600"
                 >
                   Continue →
                 </button>
