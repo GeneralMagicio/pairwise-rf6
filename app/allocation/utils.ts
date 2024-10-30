@@ -3,6 +3,7 @@ export interface RankItem {
   percentage: number
   locked: boolean
   budget: number
+  RF6Id: string
 }
 
 export const roundFractions = (value: number, fractions: number) => {

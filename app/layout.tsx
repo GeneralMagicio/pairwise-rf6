@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import Head from 'next/head';
 import '@smastrom/react-rating/style.css';
 import { Inter } from 'next/font/google';
 import AppKitProvider from './utils/wallet/provider';
@@ -25,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable}`}>
-      <Head>
+      <head>
         <script dangerouslySetInnerHTML={{
           __html: `
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -36,7 +35,7 @@ export default function RootLayout({
           `,
         }}
         />
-      </Head>
+      </head>
       <body>
         <noscript>
           <iframe

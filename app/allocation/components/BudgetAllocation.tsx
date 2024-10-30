@@ -67,7 +67,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
           />
         );
     }
-  }, [progress, delegations, isAutoConnecting]);
+  }, [progress, delegations, isAutoConnecting, onScore]);
 
   return (
     <div className="flex justify-between rounded-lg border bg-gray-50 p-4">
