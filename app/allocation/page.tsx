@@ -177,7 +177,11 @@ const AllocationPage = () => {
   };
 
   const handleAttestationModalClose = () => {
-    if (attestationState === AttestationState.Success || attestationState === AttestationState.Error) {
+    if (attestationState === AttestationState.Success) {
+      setAttestationState(AttestationState.Initial);
+      setAllocatingBudget(false);
+    }
+    if (attestationState === AttestationState.Error) {
       setAttestationState(AttestationState.Initial);
     }
   };
