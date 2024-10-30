@@ -217,7 +217,6 @@ const RankingPage = () => {
 
     await updateProjectRanking();
 
-    console.log("requirement not met for attestation", wallet, ranking, signer);
     if (!wallet || !ranking || !signer) {
       console.error('Requirements not met for attestations');
       setIsSubmitting(false);
