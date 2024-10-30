@@ -83,7 +83,12 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setStep }) => {
         )}
 
         <button
-          className="my-4 w-full rounded-lg border bg-primary px-4 py-2 font-semibold text-white transition duration-300"
+          className={`my-4 w-full rounded-lg border px-4 py-2 font-semibold transition duration-300
+            ${
+    error ? 'cursor-not-allowed bg-gray-300 text-gray-600' : 'bg-primary text-white'
+    }
+          `}
+          disabled={loading || !!error}
           onClick={connectEOA}
         >
           {loading ? 'Connecting...' : 'Connect'}

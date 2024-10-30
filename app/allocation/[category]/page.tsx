@@ -160,6 +160,11 @@ const RankingPage = () => {
       setLockedItems(lockedItems.filter(lockedId => lockedId !== id));
     }
     else {
+      if (projects && lockedItems.length >= projects?.length - 2) {
+        setTotalShareError('At least two projects must be unlocked');
+        window.scrollTo(0, document.body.scrollHeight);
+        return;
+      }
       setLockedItems([...lockedItems, id]);
     }
   };
@@ -168,7 +173,7 @@ const RankingPage = () => {
     if (!projects) return;
 
     if (checkedItems.length > projects?.length - 2) {
-      setTotalShareError('At least two categories must be unlocked');
+      setTotalShareError('At least two projects must be unlocked');
       window.scrollTo(0, document.body.scrollHeight);
       return;
     }
@@ -301,7 +306,7 @@ const RankingPage = () => {
     if (!projects) return;
 
     if (lockedItems.length > projects?.length - 2) {
-      setTotalShareError('At least two categories must be unlocked');
+      setTotalShareError('At least two projects must be unlocked');
       window.scrollTo(0, document.body.scrollHeight);
     }
     else {
