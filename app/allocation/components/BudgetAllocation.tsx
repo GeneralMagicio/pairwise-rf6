@@ -1,30 +1,30 @@
-import React, { useMemo } from 'react';
-import Image from 'next/image';
-import { useAuth } from '@/app/utils/wallet/AuthProvider';
-import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRightIcon';
-import { CollectionProgressStatusEnum } from '@/app/comparison/utils/types';
-import Loading from '@/app/components/Loading';
-import VotedCategory from './ProgressCards/VotedCategory';
-import DelegatedCategory from './ProgressCards/DelegatedCategory';
-import PendingCategory from './ProgressCards/PendingCategory';
+import React, { useMemo } from "react";
+import Image from "next/image";
+import { useAuth } from "@/app/utils/wallet/AuthProvider";
+import { ArrowRightIcon } from "@/public/assets/icon-components/ArrowRightIcon";
+import { CollectionProgressStatusEnum } from "@/app/comparison/utils/types";
+import Loading from "@/app/components/Loading";
+import VotedCategory from "./ProgressCards/VotedCategory";
+import DelegatedCategory from "./ProgressCards/DelegatedCategory";
+import PendingCategory from "./ProgressCards/PendingCategory";
 
 export interface BudgetCategory {
-  id: number
-  imageSrc: string
-  name: string
-  description: string
+  id: number;
+  imageSrc: string;
+  name: string;
+  description: string;
 }
 
 interface IBudgetAllocationProps extends BudgetCategory {
-  progress: CollectionProgressStatusEnum
-  delegations: number
-  loading: boolean
-  username?: string
-  isBadgeholder: boolean
-  bhCategory: string
-  categorySlug: string
-  onDelegate: () => void
-  onScore: () => void
+  progress: CollectionProgressStatusEnum;
+  delegations: number;
+  loading: boolean;
+  username?: string;
+  isBadgeholder: boolean;
+  bhCategory: string;
+  categorySlug: string;
+  onDelegate: () => void;
+  onScore: () => void;
 }
 
 const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
@@ -48,9 +48,15 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
     switch (progress) {
       case CollectionProgressStatusEnum.Finished:
         return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
+      case CollectionProgressStatusEnum.Attested:
+        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
       case CollectionProgressStatusEnum.Delegated:
         return (
-          <DelegatedCategory id={id} isAutoConnecting={isAutoConnecting} username={username} />
+          <DelegatedCategory
+            id={id}
+            isAutoConnecting={isAutoConnecting}
+            username={username}
+          />
         );
       case CollectionProgressStatusEnum.Pending:
       default:
@@ -89,7 +95,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
   );
 };
 
-const ImageContainer: React.FC<{ src: string, alt: string }> = ({
+const ImageContainer: React.FC<{ src: string; alt: string }> = ({
   src,
   alt,
 }) => (
@@ -99,13 +105,13 @@ const ImageContainer: React.FC<{ src: string, alt: string }> = ({
 );
 
 const ProjectInfo: React.FC<{
-  name: string
-  description: string
-  isDelegated?: boolean
-  onScore?: () => void
+  name: string;
+  description: string;
+  isDelegated?: boolean;
+  onScore?: () => void;
 }> = ({ name, description, isDelegated, onScore }) => (
   <div
-    className={`flex max-w-[70%] flex-col gap-2 ${isDelegated && 'opacity-40'}`}
+    className={`flex max-w-[70%] flex-col gap-2 ${isDelegated && "opacity-40"}`}
   >
     <button
       className="flex items-center gap-2 font-medium"
