@@ -160,6 +160,11 @@ const RankingPage = () => {
       setLockedItems(lockedItems.filter(lockedId => lockedId !== id));
     }
     else {
+      if (projects && lockedItems.length >= projects?.length - 2) {
+        setTotalShareError('At least two categories must be unlocked');
+        window.scrollTo(0, document.body.scrollHeight);
+        return;
+      }
       setLockedItems([...lockedItems, id]);
     }
   };
