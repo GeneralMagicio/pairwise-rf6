@@ -448,7 +448,7 @@ const AllocationPage = () => {
             <p className="mt-4 rounded-xl bg-[#FFFAEB] p-4 text-dark-500">
               Decide on the budget for this round, and score projects in each
               category using the Pairwise raking. You can also choose to
-              delegate your decision to someone on X (Twitter) or Farcaster.
+              delegate your decision to someone on X or Farcaster.
             </p>
           </div>
         )}
