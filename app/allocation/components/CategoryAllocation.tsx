@@ -53,6 +53,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   allocationPercentage,
   allocationBudget,
   locked,
+  attestationLink,
   delegations,
   loading,
   username,
@@ -97,6 +98,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
         return (
           <DelegatedCategory
             id={id}
+
             isAutoConnecting={isAutoConnecting}
             username={username}
           />
@@ -104,7 +106,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
       case CollectionProgressStatusEnum.Finished:
         return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
       case CollectionProgressStatusEnum.Attested:
-        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
+        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} attestationLink={attestationLink || ''} />;
       case CollectionProgressStatusEnum.Pending:
       default:
         return (

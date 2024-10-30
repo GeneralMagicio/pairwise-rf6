@@ -9,6 +9,7 @@ export type TCategory = {
   image: string
   projectCount: number
   progress: CollectionProgressStatus
+  attestationLink: string | null
 };
 
 export const getCategories = async (): Promise<TCategory[]> => {
