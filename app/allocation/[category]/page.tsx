@@ -58,7 +58,9 @@ const RankingPage = () => {
   const category = categorySlugIdMap.get((params?.category as string) || '');
 
   // const [search, setSearch] = useState<string>("");
-  const [attestationState, setAttestationState] = useState(AttestationState.Initial);
+  const [attestationState, setAttestationState] = useState(
+    AttestationState.Initial
+  );
   const [attestationLink, setAttestationLink] = useState<string>();
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [projects, setProjects] = useState<IProjectRanking[] | null>(null);
@@ -68,6 +70,7 @@ const RankingPage = () => {
   const [isLocked, setIsLocked] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [allocationBudget, setAllocationBudget] = useState<number>(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: categoryRankings, isLoading: rankingLoading }
     = useCategoryRankings();
@@ -120,8 +123,8 @@ const RankingPage = () => {
           projects.map(project => ({
             ...project,
             share:
-            (newRanking.find(el => el.id === project.projectId)
-              ?.percentage || 0) / 100,
+              (newRanking.find(el => el.id === project.projectId)
+                ?.percentage || 0) / 100,
           }))
         );
 
@@ -201,7 +204,8 @@ const RankingPage = () => {
   };
 
   const submitVotes = async () => {
-    console.log('Projects,', projects);
+    setIsSubmitting(true);
+
     if (!projects) return;
 
     const rankingArray = projects.map(project => ({
@@ -215,12 +219,26 @@ const RankingPage = () => {
 
     if (!wallet || !ranking || !signer) {
       console.error('Requirements not met for attestations');
+      setIsSubmitting(false);
       return;
     }
 
-    await attest({ ranking: { id: ranking.id, name: ranking.name,
-      ranking: projects.map(el => ({ RF6Id: el.project.RF6Id, share: el.share })) },
-    setAttestationLink, setAttestationState, signer, wallet });
+    await attest({
+      ranking: {
+        id: ranking.id,
+        name: ranking.name,
+        ranking: projects.map(el => ({
+          RF6Id: el.project.RF6Id,
+          share: el.share,
+        })),
+      },
+      setAttestationLink,
+      setAttestationState,
+      signer,
+      wallet,
+    });
+
+    setIsSubmitting(false);
   };
 
   const handleAttestationModalClose = () => {
@@ -296,9 +314,7 @@ const RankingPage = () => {
   return (
     <div>
       <Modal
-        isOpen={
-          attestationState !== AttestationState.Initial
-        }
+        isOpen={attestationState !== AttestationState.Initial}
         onClose={handleAttestationModalClose}
         showCloseButton={true}
       >
@@ -308,8 +324,12 @@ const RankingPage = () => {
             onClose={() => setAttestationState(AttestationState.Initial)}
           />
         )}
-        {attestationState === AttestationState.Loading && <AttestationLoading />}
-        {attestationState === AttestationState.Error && <AttestationError onClick={submitVotes} />}
+        {attestationState === AttestationState.Loading && (
+          <AttestationLoading />
+        )}
+        {attestationState === AttestationState.Error && (
+          <AttestationError onClick={submitVotes} />
+        )}
       </Modal>
       <HeaderRF6 />
       <div className="flex flex-col justify-between gap-4 px-6 py-16 lg:px-20 xl:px-52 2xl:px-72">
@@ -441,12 +461,25 @@ const RankingPage = () => {
               Back to Categories
             </button>
             <button
-              className="flex items-center justify-center gap-3 rounded-lg bg-primary px-10 py-2 font-semibold text-white"
+              className={`font-semibold" flex items-center justify-center gap-3 rounded-lg px-10 py-2
+              ${
+    totalShareError
+      ? 'bg-gray-200 text-gray-400'
+      : 'bg-primary text-white'
+    }`}
               onClick={submitVotes}
               disabled={!!totalShareError}
             >
-              Submit Vote
-              <ArrowRightIcon size={20} />
+              {isSubmitting
+                ? (
+                    'Submitting votes...'
+                  )
+                : (
+                    <>
+                      Submit votes
+                      <ArrowRightIcon />
+                    </>
+                  )}
             </button>
           </div>
         </div>
