@@ -68,6 +68,8 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
 
   const hrefLink
     = progress === CollectionProgressStatusEnum.Finished
+    || progress === CollectionProgressStatusEnum.Delegated
+    || progress === CollectionProgressStatusEnum.Attested
       ? `/allocation/${categoryIdSlugMap.get(id)}`
       : `/comparison/${categoryIdSlugMap.get(id)}`;
 
@@ -100,6 +102,8 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
           />
         );
       case CollectionProgressStatusEnum.Finished:
+        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
+      case CollectionProgressStatusEnum.Attested:
         return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
       case CollectionProgressStatusEnum.Pending:
       default:

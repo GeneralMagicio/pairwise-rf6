@@ -48,9 +48,15 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
     switch (progress) {
       case CollectionProgressStatusEnum.Finished:
         return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
+      case CollectionProgressStatusEnum.Attested:
+        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
       case CollectionProgressStatusEnum.Delegated:
         return (
-          <DelegatedCategory id={id} isAutoConnecting={isAutoConnecting} username={username} />
+          <DelegatedCategory
+            id={id}
+            isAutoConnecting={isAutoConnecting}
+            username={username}
+          />
         );
       case CollectionProgressStatusEnum.Pending:
       default:

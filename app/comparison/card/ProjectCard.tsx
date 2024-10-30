@@ -241,7 +241,7 @@ export const ProjectCard: React.FC<Props> = ({
     coi || coiLoading ? 'brightness-50' : ''
     }`}
       >
-        <div ref={parentRef} className="h-[78vh] gap-10 p-2 overflow-y-auto">
+        <div ref={parentRef} className="h-[78vh] gap-10 overflow-y-auto p-2">
           <div className="mr-4">
             {/* Cover Image and Profile Avatar */}
             <div className="relative h-40">
