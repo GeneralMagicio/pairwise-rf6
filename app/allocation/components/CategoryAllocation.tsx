@@ -98,15 +98,19 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
         return (
           <DelegatedCategory
             id={id}
-
             isAutoConnecting={isAutoConnecting}
             username={username}
           />
         );
-      case CollectionProgressStatusEnum.Finished:
-        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
       case CollectionProgressStatusEnum.Attested:
-        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} attestationLink={attestationLink || ''} />;
+        return (
+          <VotedCategory
+            id={id}
+            isAutoConnecting={isAutoConnecting}
+            attestationLink={attestationLink || ''}
+          />
+        );
+      case CollectionProgressStatusEnum.Finished:
       case CollectionProgressStatusEnum.Pending:
       default:
         return (
