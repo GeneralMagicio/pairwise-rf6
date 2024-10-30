@@ -149,6 +149,10 @@ const AllocationPage = () => {
 
     await attest({ ranking: { id: -1, name: 'Budget', ranking: categoriesRanking.map(el => ({ RF6Id: el.RF6Id, share: el.percentage / 100 })) },
       setAttestationLink, setAttestationState, signer, wallet });
+
+    queryClient.refetchQueries({
+      queryKey: ['category-ranking'],
+    });
   };
 
   const handleDelegate = async (username: string, target: TargetDelegate) => {
@@ -305,6 +309,12 @@ const AllocationPage = () => {
       }
     }
   }, [delegations]);
+
+  useEffect(() => {
+    if (categoryRankings && categoryRankings.progress === 'Attested' && dbudgetProgress === CollectionProgressStatusEnum.Pending) {
+      setDbudgetProgress(CollectionProgressStatusEnum.Attested);
+    }
+  }, [categoryRankings, dbudgetProgress]);
 
   useEffect(() => {
     if (categoryRankings) {
@@ -520,6 +530,7 @@ const AllocationPage = () => {
                         <BudgetAllocation
                           {...budgetCategory}
                           progress={dbudgetProgress}
+                          attestationLink={categoryRankings?.attestationLink || null}
                           delegations={budgetDelegateToYou?.length || 0}
                           loading={delegationsLoading}
                           isBadgeholder={isBadgeholder}
