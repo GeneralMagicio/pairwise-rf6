@@ -49,7 +49,12 @@ export const ConnectButton = () => {
   );
 
   return (
-    <button onClick={handleOpen} className="flex h-max items-center gap-2 rounded-full bg-primary px-4 py-1.5 font-semibold text-white shadow-md transition duration-300 hover:bg-red-600 sm:px-6 sm:py-2 md:px-8 md:py-3">
+    <button
+      onClick={handleOpen}
+      className="flex h-max items-center gap-2 rounded-full
+     bg-primary px-4 py-1.5 font-semibold text-white shadow-md transition duration-300
+     hover:bg-red-600 sm:px-6 sm:py-2 md:px-8 md:py-3"
+    >
       <span className="ml-2">Connect</span>
       <ArrowRightIcon />
     </button>
@@ -63,7 +68,9 @@ const ConnectWalletModal = () => {
         <h2 className="mb-6 text-2xl font-bold">Connect wallet</h2>
 
         <div className="space-y-3">
-          <button className="flex w-full items-center justify-between rounded-lg bg-gray-100 p-4 transition-colors hover:bg-gray-200">
+          <button className="flex w-full items-center justify-between rounded-lg bg-gray-100 p-4 transition-colors
+           hover:bg-gray-200"
+          >
             <div className="flex items-center">
               <MetaMaskIcon />
               <span className="ml-2 text-lg">MetaMask</span>

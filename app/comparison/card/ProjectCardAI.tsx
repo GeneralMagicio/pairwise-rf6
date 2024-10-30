@@ -7,21 +7,18 @@ import ConflictOfInterestModal from './modals/CoIModal';
 import CoILoadingModal from './modals/CoILoading';
 import { StarsIcon } from '@/public/assets/icon-components/Stars';
 
-
-
 interface Props {
-  project: ProjectMetadata;
-  coi: boolean;
-  onCoICancel: () => void;
-  onCoIConfirm: () => void;
-  coiLoading: boolean;
-  key1: string;
-  key2: string;
-  summaryData: ProjectAiSummary;
-  aiMode: boolean;
-  setAi: () => void;
+  project: ProjectMetadata
+  coi: boolean
+  onCoICancel: () => void
+  onCoIConfirm: () => void
+  coiLoading: boolean
+  key1: string
+  key2: string
+  summaryData: ProjectAiSummary
+  aiMode: boolean
+  setAi: () => void
 }
-
 
 export const ProjectCardAI: React.FC<Props> = ({
   project,
@@ -93,8 +90,8 @@ export const ProjectCardAI: React.FC<Props> = ({
         className={`container relative mx-auto my-4
       h-[80vh] w-full rounded-xl border 
       border-gray-200 bg-gray-50 px-4 pb-8 pt-4 ${
-        coi || coiLoading ? 'brightness-50' : ''
-      }`}
+    coi || coiLoading ? 'brightness-50' : ''
+    }`}
       >
         <div ref={parentRef} className="h-[78vh] gap-10 overflow-y-auto">
           <div className="mr-4">
@@ -138,11 +135,11 @@ export const ProjectCardAI: React.FC<Props> = ({
                   />
                 )}
                 <div className="flex flex-col gap-3">
-                  <h1 className="font-inter text-3xl font-semibold">
+                  <h1 className="text-3xl font-semibold">
                     {project.name}
                   </h1>
                   {project.organization && (
-                    <div className="flex items-center gap-1 font-inter font-medium leading-6 text-slate-600">
+                    <div className="flex items-center gap-1 font-medium leading-6 text-slate-600">
                       <p>By</p>
                       {project.organization.organizationAvatarUrl && (
                         <Image
@@ -176,10 +173,10 @@ export const ProjectCardAI: React.FC<Props> = ({
             </div>
             {project.socialLinks && (
               <div className="mb-6 flex flex-wrap gap-x-6 gap-y-2 text-slate-600">
-                {project.socialLinks.website?.map((item) => (
+                {project.socialLinks.website?.map(item => (
                   <ExternalLink key={item} address={item} type="website" />
                 ))}
-                {project.socialLinks.farcaster?.map((item) => (
+                {project.socialLinks.farcaster?.map(item => (
                   <ExternalLink key={item} address={item} type="warpcast" />
                 ))}
                 {project.socialLinks.twitter && (
@@ -196,9 +193,9 @@ export const ProjectCardAI: React.FC<Props> = ({
                 )}
               </div>
             )}
-            <div className='space-y-4'>
-              {summaryData.map((section) => (
-                <SummaryBox key={section.subHeader + key1} section={section}/>
+            <div className="space-y-4">
+              {summaryData.map(section => (
+                <SummaryBox key={section.subHeader + key1} section={section} />
               ))}
             </div>
           </div>
@@ -208,17 +205,24 @@ export const ProjectCardAI: React.FC<Props> = ({
   );
 };
 
-const SummaryBox : FC<{section: ProjectAiSummary[0]}> = ({section}) => {
-
+const SummaryBox: FC<{ section: ProjectAiSummary[0] }> = ({ section }) => {
   return (
-  <div className='list-item border-t-2 border-gray-200 pt-4'>
-    <h3 className='mb-2 text-lg font-bold'> {section.subHeader} </h3>
-    <ul className=''>
-    {section.points.map((point) => (
-      <li className='list-inside list-disc p-2 text-slate-600' key={point}> {point} </li>
-    ))}
-    </ul>
-  </div>
+    <div className="list-item border-t-2 border-gray-200 pt-4">
+      <h3 className="mb-2 text-lg font-bold">
+        {' '}
+        {section.subHeader}
+        {' '}
+      </h3>
+      <ul className="">
+        {section.points.map(point => (
+          <li className="list-inside list-disc p-2 text-slate-600" key={point}>
+            {' '}
+            {point}
+            {' '}
+          </li>
+        ))}
+      </ul>
+    </div>
 
   );
 };

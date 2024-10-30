@@ -2,9 +2,9 @@ import { FC, useEffect, useState } from 'react';
 import { Rating as RatingComponent, Star } from '@smastrom/react-rating';
 
 interface Props {
-  value: number;
-  disabled?: boolean;
-  onChange: (value: number) => void;
+  value: number
+  disabled?: boolean
+  onChange: (value: number) => void
 }
 
 export const Rating: FC<Props> = ({ value, disabled, onChange }) => {
@@ -35,7 +35,8 @@ export const Rating: FC<Props> = ({ value, disabled, onChange }) => {
     if (hoverValue) {
       setStarsColoring(getStarsColoring(hoverValue).hoverFillColor);
       setCurrentValue(hoverValue);
-    } else {
+    }
+    else {
       setStarsColoring(getStarsColoring(value).activeFillColor);
       setCurrentValue(value);
     }

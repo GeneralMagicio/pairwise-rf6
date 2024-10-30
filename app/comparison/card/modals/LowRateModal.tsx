@@ -11,7 +11,7 @@ const LowRateModal: FC<ILowRateModalProps> = ({
   cancelSelection,
 }) => {
   return (
-    <div className="mx-auto rounded-lg bg-white bg-rating-illustration bg-no-repeat p-6 shadow-lg">
+    <div className="mx-auto w-[300px] rounded-lg bg-white bg-rating-illustration bg-no-repeat p-6 shadow-lg md:w-[500px] md:px-10">
       <div className="mb-4 flex justify-center">
         <div className="rounded-full p-2">
           <Image
@@ -40,7 +40,8 @@ const LowRateModal: FC<ILowRateModalProps> = ({
 
       <button
         onClick={cancelSelection}
-        className="w-full rounded-md border border-gray-200 bg-gray-50 py-2 text-gray-600 transition duration-300 hover:bg-gray-300"
+        className="w-full rounded-md border border-gray-200 bg-gray-50 py-2 text-gray-600
+         transition duration-300 hover:bg-gray-300"
       >
         Cancel
       </button>

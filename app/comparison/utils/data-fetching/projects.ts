@@ -1,12 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
 import { axiosInstance } from '@/app/utils/axiosInstance';
 import { IProject } from '../types';
 
 export const getProjectsByCategoryId = async (
   id: number,
-): Promise<AxiosResponse<IProject[]>> => {
-  return axiosInstance.get(`flow/projects?cid=${id}`);
+): Promise<IProject[]> => {
+  return (await axiosInstance.get(`flow/projects?cid=${id}`)).data;
 };
 
 export const useProjectsByCategoryId = (id: number) => {

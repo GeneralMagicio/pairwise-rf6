@@ -1,0 +1,74 @@
+{
+	"extends": [
+		"next/core-web-vitals",
+		"eslint:recommended",
+		"plugin:tailwindcss/recommended",
+		"plugin:@stylistic/recommended-extends"
+	],
+	"plugins": [
+		"@stylistic",
+		"unused-imports"
+	],
+	"rules": {
+		"@stylistic/max-len": [
+			"error",
+			{
+				"code": 125,
+				"ignoreUrls": true,
+				"ignoreStrings": true,
+				"ignoreTemplateLiterals": true,
+				"ignoreRegExpLiterals": true
+			}
+		],
+		"@stylistic/semi": "off",
+		"no-unused-vars": "off",
+		"react/no-unescaped-entities": "warn",
+		"import/order": [
+			"error",
+			{
+				"groups": [
+					"builtin",
+					"external",
+					[
+						"internal",
+						"parent",
+						"sibling"
+					],
+					"index",
+					"object",
+					"type"
+				]
+			}
+		],
+		"unused-imports/no-unused-imports": "error",
+		"unused-imports/no-unused-vars": [
+			"warn",
+			{
+				"vars": "all",
+				"varsIgnorePattern": "^_",
+				"args": "after-used",
+				"argsIgnorePattern": "^_"
+			}
+		],
+		"import/no-duplicates": [
+			"error",
+			{
+				"considerQueryString": true
+			}
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"quotes": [
+			"error",
+			"single"
+		]
+	},
+	"settings": {
+		"import/resolver": {
+			"typescript": {}
+		}
+	},
+	"parser": "@typescript-eslint/parser"
+}

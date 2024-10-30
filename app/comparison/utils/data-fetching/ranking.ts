@@ -1,32 +1,133 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '@/app/utils/axiosInstance';
+import { IProjectRanking, ICategory, IProject, CollectionProgressStatus } from '@/app/comparison/utils/types';
+
+type TCategoryRanking = {
+  project: IProject
+  ranking: ICategory[]
+  userId: number
+  projectId: number
+  share: number
+  stars: number
+};
+
+interface ICategoryRankingResponse
+  extends Omit<IProjectsRankingResponse, 'ranking'> {
+  ranking: TCategoryRanking[]
+}
 
 export interface IProjectsRankingResponse {
-  ranking: {  rank: number
-    star: number
-    name: string
-    share: number
-  }[]
+  ranking: IProjectRanking[]
   hasRanking: boolean
   isFinished: boolean
-  progress: string
+  attestationLink?: string
+  progress: CollectionProgressStatus
+  budget: number
   name: string
   share: number
   id: number
-
 }
 
-export const getProjectsRankingByCategoryId = async (
-  cid: number,
-): Promise<IProjectsRankingResponse> => {
-  return (await axiosInstance.get(`flow/ranking?cid=${cid}
-`)).data;
+export interface IProjectRankingObj {
+  id: number
+  share: number
+}
+
+export interface IUpdateCategoriesRankingBody {
+  budget: number
+  allocationPercentages: number[]
+}
+
+export const getCategoryRankings
+  = async (): Promise<ICategoryRankingResponse> => {
+    const res = await axiosInstance.get('flow/ranking');
+
+    return res.data;
+  };
+
+export const useCategoryRankings = () => {
+  return useQuery({
+    queryKey: ['category-ranking'],
+    queryFn: () => getCategoryRankings(),
+  });
 };
 
-export const useProjectsRankingByCategoryId = (cid: number) => {
+export const getProjectsRankingByCategoryId = async (
+  cid: number | undefined
+): Promise<IProjectsRankingResponse> => {
+  if (!cid) return { ranking: [], hasRanking: false, isFinished: false, progress: 'Pending', attestationLink: '', budget: 0, name: '', share: 0, id: 0 };
+
+  return (
+    await axiosInstance.get(`flow/ranking?cid=${cid}
+`)
+  ).data;
+};
+
+export const useProjectsRankingByCategoryId = (cid: number | undefined) => {
   return useQuery({
     queryKey: ['projects-ranking', cid],
     queryFn: () => getProjectsRankingByCategoryId(cid),
     staleTime: Infinity,
+  });
+};
+
+export const updateProjectRanking = async ({
+  cid,
+  ranking,
+}: {
+  cid: number | undefined
+  ranking: IProjectRankingObj[]
+}) => {
+  if (!cid) return { data: undefined };
+
+  return (
+    await axiosInstance.post('flow/ranking/custom', {
+      collectionId: cid,
+      ranking,
+    })
+  ).data;
+};
+
+export const useUpdateProjectRanking = ({
+  cid,
+  ranking,
+}: {
+  cid: number | undefined
+  ranking: IProjectRankingObj[]
+}) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => updateProjectRanking({ cid, ranking }),
+    onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: ['projects-ranking', cid],
+      });
+    },
+  });
+};
+
+export const updateCategoriesRanking = async (
+  ranking: IUpdateCategoriesRankingBody
+) => {
+  return (
+    await axiosInstance.post('flow/budget', {
+      ...ranking,
+    })
+  ).data;
+};
+
+export const useUpdateCategoriesRanking = (
+  data: IUpdateCategoriesRankingBody
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => updateCategoriesRanking(data),
+    onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: ['category-ranking'],
+      });
+    },
   });
 };

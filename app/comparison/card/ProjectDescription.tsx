@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styles from '@/app/styles/Project.module.css';
 
 interface ProjectDescriptionProps {
-  description: string;
+  description: string
 }
 
 const ProjectDescription: React.FC<ProjectDescriptionProps> = ({ description }) => {
@@ -29,7 +29,7 @@ const ProjectDescription: React.FC<ProjectDescriptionProps> = ({ description }) 
       <p
         ref={textRef}
         onClick={toggleExpand}
-        className={`mb-2 cursor-pointer font-inter text-base font-normal leading-6 text-slate-600 ${
+        className={`mb-2 cursor-pointer text-base font-normal leading-6 text-slate-600 ${
           !isExpanded && showButtons ? styles.lineClamp : ''
         }`}
       >
