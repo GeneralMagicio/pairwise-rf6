@@ -133,6 +133,11 @@ const AllocationPage = () => {
     = useState<Pick<ICategory, 'id' | 'name'>>();
   const [targetDelegate, setTargetDelegate] = useState<TargetDelegate>();
 
+  const [rankingProgress, setRankingProgress]
+    = useState<CollectionProgressStatusEnum>(
+      CollectionProgressStatusEnum.Pending
+    );
+
   const { mutateAsync: updateCategoriesRanking } = useUpdateCategoriesRanking({
     budget: totalValue,
     allocationPercentages:
@@ -305,6 +310,12 @@ const AllocationPage = () => {
   };
 
   useEffect(() => {
+    if (categoryRankings) {
+      setRankingProgress(categoryRankings.progress);
+    }
+  }, [categoryRankings]);
+
+  useEffect(() => {
     if (delegations) {
       const budgetDelegateFromYou = delegations?.fromYou?.budget;
 
@@ -315,10 +326,14 @@ const AllocationPage = () => {
   }, [delegations]);
 
   useEffect(() => {
-    if (categoryRankings && categoryRankings.progress === 'Attested' && dbudgetProgress === CollectionProgressStatusEnum.Pending) {
+    if (
+      rankingProgress === CollectionProgressStatusEnum.Attested
+      && dbudgetProgress === CollectionProgressStatusEnum.Pending
+    ) {
       setDbudgetProgress(CollectionProgressStatusEnum.Attested);
     }
-  }, [categoryRankings, dbudgetProgress]);
+    else setDbudgetProgress(CollectionProgressStatusEnum.Pending);
+  }, [rankingProgress]);
 
   useEffect(() => {
     if (categoryRankings) {

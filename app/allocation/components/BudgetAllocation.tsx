@@ -48,15 +48,13 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
 
   const renderProgressState = useMemo(() => {
     switch (progress) {
-      case CollectionProgressStatusEnum.Finished:
-        return <VotedCategory id={id} isAutoConnecting={isAutoConnecting} />;
       case CollectionProgressStatusEnum.Attested:
         return (
           <VotedCategory
             budgetEditHandle={onScore}
             id={id}
             isAutoConnecting={isAutoConnecting}
-            attestationLink={attestationLink}
+            attestationLink={attestationLink || ''}
           />
         );
       case CollectionProgressStatusEnum.Delegated:
@@ -67,6 +65,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
             username={username}
           />
         );
+      case CollectionProgressStatusEnum.Finished:
       case CollectionProgressStatusEnum.Pending:
       default:
         return (
