@@ -55,7 +55,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
   }, [badges]);
   const router = useRouter();
   return (
-    <div className="relative flex max-w-3xl flex-col items-center justify-center gap-6 rounded-lg bg-voting-power bg-cover bg-no-repeat px-24 py-8 text-center">
+    <div className="relative flex max-w-3xl flex-col items-center justify-center gap-6 rounded-lg bg-badge-modal bg-cover bg-no-repeat px-24 py-8 text-center">
       <h2 className="w-fit text-wrap text-4xl font-bold">Welcome to the Pairwise voting for "Retro Funding 6"</h2>
       {badges && Object.keys(badges).length > 0
         ? (
@@ -88,7 +88,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
             <div>Connects other accounts to claim more.</div>
           </div>
         </div>
-        <div className="flex w-full max-w-md m-auto flex-col justify-start gap-2">
+        <div className="m-auto flex w-full max-w-md flex-col justify-center gap-2">
           <div>
             <button
               onClick={() => {
@@ -150,8 +150,8 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
                   onClick={() => {
                     router.push('/allocation');
                   }}
-                  className="w-3/5 rounded-md bg-primary px-4
-              py-2 text-white hover:bg-red-600 "
+                  className="m-auto w-3/5 rounded-md bg-primary
+              px-4 py-2 text-white hover:bg-red-600"
                 >
                   Continue →
                 </button>

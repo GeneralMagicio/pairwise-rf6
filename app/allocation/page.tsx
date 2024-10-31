@@ -506,12 +506,6 @@ const AllocationPage = () => {
                         {' '}
                         OP
                       </div>
-                      <button
-                        onClick={() => {}}
-                        className="ml-auto rounded-md border px-4 py-2 text-sm font-medium text-gray-700"
-                      >
-                        Delegate
-                      </button>
                     </div>
                     <p className="text-gray-400">
                       Next, decide how much OP should go to each category
