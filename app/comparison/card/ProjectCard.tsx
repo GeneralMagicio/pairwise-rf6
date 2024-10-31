@@ -466,7 +466,7 @@ export const ProjectCard: React.FC<Props> = ({
                         </p>
                       </div>
                       <div className="space-y-2">
-                        {project.impactStatement.statement?.create?.map(
+                        {project.impactStatement.statement?.map(
                           ({ question, answer }) => (
                             <QABox
                               key={question}
@@ -497,8 +497,8 @@ export const ProjectCard: React.FC<Props> = ({
                 && typeof project.pricingModel === 'object'
                   ? (
                       <SimpleInfoBox
-                        title={project.pricingModel.type || ''}
-                        description={project.pricingModel.details || ''}
+                        title={project.pricingModel || ''}
+                        description=""
                         type="pricing"
                       />
                     )
