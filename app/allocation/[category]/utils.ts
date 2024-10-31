@@ -108,7 +108,7 @@ export const convertRankingToAttestationFormat = async (
     impactCategory: ['PAIRWISE'],
     impactEvaluationDescription: `This list has been carefully curated and ranked by Pairwise among projects related to ${collectionName}.`,
     listContent: ranking.map(item => ({
-      RPGF3_Application_UID: item.RF6Id,
+      RF6_Application_UID: item.RF6Id,
       allocation: item.share,
     })),
   };
