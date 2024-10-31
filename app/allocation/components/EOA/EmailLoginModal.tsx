@@ -151,7 +151,7 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
                 className="flex items-center gap-1 font-medium text-primary"
                 onClick={() =>
                   window.open(
-                    'https://pairwise.vote/blog/2021/09/15/why-we-need-anonymous-voting/',
+                    'https://paragraph.xyz/@pairwise/empowering-superchain-with-pseudonymous',
                     '_blank'
                   )}
               >
