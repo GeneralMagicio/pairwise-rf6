@@ -63,7 +63,7 @@ const PendingCategory = ({
           </p>
         </div>
       )}
-      {progress === 'WIP'
+      {progress === 'WIP' || progress === 'Finished'
       && !(isBadgeholder && bhCategory !== categorySlug) && (
         <div className="flex w-full justify-center gap-2 rounded-xl border border-[#FFA15A] bg-[#FFF7ED] py-1">
           <p className="text-xs font-medium text-[#FFA15A]">Voting</p>
