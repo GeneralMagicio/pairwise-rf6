@@ -31,6 +31,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = (
       holderType,
       delegateType,
       worldCoinVerified,
+      badgeholderType,
       ...rest
     }: BadgeData = badges;
     const badgePoints = { ...rest };

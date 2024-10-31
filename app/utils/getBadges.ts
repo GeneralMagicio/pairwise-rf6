@@ -20,6 +20,7 @@ export type BadgeData = {
   holderType?: MedalTypes
   delegateType?: MedalTypes
   worldCoinVerified?: boolean
+  badgeholderType?: 'Guest' | 'Citizen'
 };
 
 export const getBadgeMedal = (
