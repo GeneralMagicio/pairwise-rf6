@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '@/app/utils/axiosInstance';
-import { IProjectRanking, ICategory, IProject, CollectionProgressStatus } from '@/app/comparison/utils/types';
+import { IProjectRanking, ICategory, IProject, CollectionProgressStatusEnum } from '@/app/comparison/utils/types';
 
 type TCategoryRanking = {
   project: IProject
@@ -21,7 +21,7 @@ export interface IProjectsRankingResponse {
   hasRanking: boolean
   isFinished: boolean
   attestationLink?: string
-  progress: CollectionProgressStatus
+  progress: CollectionProgressStatusEnum
   budget: number
   name: string
   share: number
@@ -55,7 +55,7 @@ export const useCategoryRankings = () => {
 export const getProjectsRankingByCategoryId = async (
   cid: number | undefined
 ): Promise<IProjectsRankingResponse> => {
-  if (!cid) return { ranking: [], hasRanking: false, isFinished: false, progress: 'Pending', attestationLink: '', budget: 0, name: '', share: 0, id: 0 };
+  if (!cid) return { ranking: [], hasRanking: false, isFinished: false, progress: CollectionProgressStatusEnum.Pending, attestationLink: '', budget: 0, name: '', share: 0, id: 0 };
 
   return (
     await axiosInstance.get(`flow/ranking?cid=${cid}
