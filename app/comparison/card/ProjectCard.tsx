@@ -161,9 +161,9 @@ export const ProjectCard: React.FC<Props> = ({
 
     const handleScroll = () => {
       if (parentRef.current && titleRef.current) {
-        const rect = titleRef.current.getBoundingClientRect();
+        const rect = titleRef.current.getBoundingClientRect()?.top;
         const offset = parentRef.current.getBoundingClientRect()?.top;
-        setIsSticky(rect.top <= offset && rect.top >= -offset);
+        setIsSticky(rect <= offset && rect >= -offset);
       }
     };
 
@@ -241,7 +241,7 @@ export const ProjectCard: React.FC<Props> = ({
     coi || coiLoading ? 'brightness-50' : ''
     }`}
       >
-        <div ref={parentRef} className="h-[78vh] gap-10 overflow-y-auto p-2">
+        <div ref={parentRef} className="h-[78vh] gap-10 overflow-y-auto">
           <div className="mr-4">
             {/* Cover Image and Profile Avatar */}
             <div className="relative h-40">
@@ -424,7 +424,7 @@ export const ProjectCard: React.FC<Props> = ({
                 />
                 {project.testimonials?.length && (
                   <SimpleInfoBox
-                    title={`https://www.metricsgarden.xyz/projects/${project.projectId}/contributions/${project.projectId}`}
+                    title={`https://www.metricsgarden.xyz/projects/${project.projectId}/?tab=insights`}
                     description=""
                     type="link"
                     showIcon={false}
