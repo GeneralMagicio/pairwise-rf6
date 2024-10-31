@@ -28,7 +28,7 @@ const PendingCategory = ({
           onClick={onScore}
           className={`whitespace-nowrap rounded-md py-3 text-sm font-medium ${
             isAutoConnecting || (isBadgeholder && bhCategory !== categorySlug)
-              ? 'border bg-gray-300 text-gray-600'
+              ? 'border bg-gray-300 text-gray-500'
               : 'bg-primary text-white'
           } ${
             isBadgeholder && bhCategory === categorySlug ? 'w-full' : 'w-[48%]'
