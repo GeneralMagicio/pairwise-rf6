@@ -13,7 +13,7 @@ import {
   createEmailEoa,
   createSmartWalletFromEOA,
 } from '@/app/lib/third-web/methods';
-import StorageLabel from '@/app/lib/localStorage';
+import { axiosInstance } from '@/app/utils/axiosInstance';
 
 interface IOTPVerificationProps {
   otpData: TOTPData
@@ -82,6 +82,11 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
       }
     };
 
+  const getUserSmartWallet = async () => {
+    const userSmartWallet = await axiosInstance.get('auth/thirdweb/sa-address');
+    return userSmartWallet.data;
+  };
+
   const handleEmailLogin = async () => {
     setOtpData({ ...otpData, loading: true });
     setStep(Step.LOADING);
@@ -109,10 +114,6 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
     }
 
     try {
-      const personalWalletId = localStorage.getItem(
-        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
-      );
-
       const emailEoa = await createEmailEoa(email, verificationCode);
       const account = emailEoa.getAccount();
 
@@ -128,7 +129,9 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
 
       connect(smartWallet);
 
-      if (!personalWalletId) {
+      const userSmartWallet = await getUserSmartWallet();
+
+      if (!userSmartWallet) {
         setStep(Step.CONNECT_EOA);
       }
       else {

@@ -8,7 +8,7 @@ import {
 } from '@/app/lib/third-web/methods';
 import { TOTPData, TOAuthData, Step } from './EmailLoginModal';
 import { InfoIcon } from '@/public/assets/icon-components/Info';
-import StorageLabel from '@/app/lib/localStorage';
+import { axiosInstance } from '@/app/utils/axiosInstance';
 
 interface IMethodSelectionProps {
   pickedMethod: Strategy | 'email' | null
@@ -35,12 +35,13 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
 }) => {
   const { connect } = useConnect();
 
+  const getUserSmartWallet = async () => {
+    const userSmartWallet = await axiosInstance.get('auth/thirdweb/sa-address');
+    return userSmartWallet.data;
+  };
+
   const handleOAuthConnect = (strategy: Strategy) => async () => {
     try {
-      const personalWalletId = localStorage.getItem(
-        StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
-      );
-
       setPickedMethod(strategy);
       setOAuthData({ ...oAuthData, loading: true });
       const socialEoa = await createSocialEoa(strategy);
@@ -51,9 +52,11 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
       const smartWallet = await createSmartWalletFromEOA(account);
       setOAuthData({ ...oAuthData, loading: false });
 
+      const userSmartWallet = await getUserSmartWallet();
+
       connect(smartWallet);
 
-      if (!personalWalletId) {
+      if (!userSmartWallet) {
         setStep(Step.CONNECT_EOA);
         setPickedMethod(null);
       }
