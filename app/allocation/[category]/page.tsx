@@ -172,7 +172,7 @@ const RankingPage = () => {
   const lockSelection = () => {
     if (!projects) return;
 
-    if (checkedItems.length > projects?.length - 2) {
+    if (checkedItems.length > projects?.length - 2 || lockedItems.length >= projects?.length - 2) {
       setTotalShareError('At least two projects must be unlocked');
       window.scrollTo(0, document.body.scrollHeight);
       return;
