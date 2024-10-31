@@ -466,7 +466,7 @@ const AllocationPage = () => {
             </p>
           </div>
         )}
-        <div className={`flex ${allocatingBudget?'justify-center':'justify-between'} gap-4`}>
+        <div className={`flex ${allocatingBudget ? 'justify-center' : 'justify-between'} gap-4`}>
           <div className="flex w-[72%] flex-col gap-6 rounded-xl border p-6">
             <div>
               <h3 className="mb-4 w-full border-b pb-6 text-2xl font-bold">
@@ -619,21 +619,23 @@ const AllocationPage = () => {
                   </button>
                 )}
           </div>
-          {!allocatingBudget && <div className="w-[25%]">
-            <ConnectBox
-              onConnectFarcaster={() => {
-                setIsOpenFarcasterModal(true);
-              }}
-              onConnectTwitter={() => {}}
-              onConnectWorldID={(isError?: boolean) => {
-                if (isError) {
-                  setIsWorldIdSignErrorModal(true);
-                  return;
-                }
-                setIsWorldIdSignSuccessModal(true);
-              }}
-            />
-          </div>}
+          {!allocatingBudget && (
+            <div className="w-[25%]">
+              <ConnectBox
+                onConnectFarcaster={() => {
+                  setIsOpenFarcasterModal(true);
+                }}
+                onConnectTwitter={() => {}}
+                onConnectWorldID={(isError?: boolean) => {
+                  if (isError) {
+                    setIsWorldIdSignErrorModal(true);
+                    return;
+                  }
+                  setIsWorldIdSignSuccessModal(true);
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
