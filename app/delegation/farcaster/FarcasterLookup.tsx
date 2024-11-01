@@ -64,7 +64,7 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName, handleDelegate 
           width={35}
           height={15}
         />
-        <h2 className="my-2 text-xl font-medium">Delegate on Farcaster</h2>
+        <h2 className="my-2 text-xl font-medium">Delegate with Farcaster</h2>
       </div>
       <p className="mb-4 text-center text-gray-600">
         <span className="text-sm"> Delegating for </span>
@@ -72,10 +72,10 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName, handleDelegate 
         <span className="font-bold text-red-500">
           {categoryName}
         </span>
-        <span className="font-bold"> decision to someone you trust </span>
+        <span className="font-bold"> category</span>
       </p>
       <p className="mb-4 text-center text-gray-600">
-        Enter username or paste profile link to delegate voting power to someone on Farcaster
+        Enter username or paste profile link to delegate your voting power to someone you trust
       </p>
       <input
         type="text"
@@ -100,7 +100,7 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName, handleDelegate 
                         unoptimized
                       />
                     </div>
-                    is available on Faracster
+                    on Farcaster
                   </div>
                 )
 
