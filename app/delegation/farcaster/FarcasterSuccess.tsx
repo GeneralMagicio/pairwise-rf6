@@ -54,16 +54,30 @@ const DelegationConfirmation: React.FC<Props> = ({
         <p className="text-gray-400">
           I just delegated on
           <span className="mx-1 text-primary">@pairwise</span>
-          for Retro Funding 6
-          <span className="mx-1">
-            {categoryName}
-          </span>
-          to
+          's Liquid Democracy Experiment.
+          <br />
+          <br />
+          I chose
+          {' '}
           <span className="ml-1 text-primary">
             @
             {username}
           </span>
-          .
+          {' '}
+          to vote (or delegate) for me in the
+          <span className="mx-1">
+            {categoryName}
+          </span>
+          category of
+          {' '}
+          <span className="mx-1 text-primary">@optimism</span>
+          's RF6.
+          <br />
+          <br />
+          You can try it out too!
+          <br />
+          <br />
+          https://app.pairwise.vote/
         </p>
       </div>
 

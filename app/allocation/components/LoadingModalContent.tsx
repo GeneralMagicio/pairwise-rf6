@@ -8,7 +8,7 @@ interface ModalProps {
 const LoadingModalContent: React.FC<ModalProps> = ({ isFarcaster }) => {
   const socialConnectionName = isFarcaster ? 'Farcaster' : 'X';
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-6 px-4 py-6">
+    <div className="flex w-full max-w-md flex-col items-center justify-center gap-6 px-4 py-6">
       <div className="flex w-full flex-col items-center justify-center gap-2">
         <Lottie
           animationData={spinner}
