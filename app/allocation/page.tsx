@@ -556,6 +556,7 @@ const AllocationPage = () => {
                           loading={delegationsLoading}
                           isBadgeholder={isBadgeholder}
                           bhCategory={category}
+                          isBHCategoryAtessted={isBHCategoryAtessted()}
                           categorySlug={category}
                           onDelegate={() => {
                             setCategoryToDelegate(budgetCategory);
