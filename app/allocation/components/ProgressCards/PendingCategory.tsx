@@ -9,6 +9,7 @@ type TPendingCategoryProps = {
   isBadgeholder: boolean
   bhCategory: string
   categorySlug: string
+  isBHCategoryAtessted: boolean
 };
 
 const PendingCategory = ({
@@ -20,6 +21,7 @@ const PendingCategory = ({
   isBadgeholder,
   bhCategory,
   categorySlug,
+  isBHCategoryAtessted,
 }: TPendingCategoryProps) => {
   return (
     <div className="flex w-full flex-col items-center justify-center gap-2">
@@ -64,7 +66,7 @@ const PendingCategory = ({
         </div>
       )}
       {(progress === 'WIP' || progress === 'Finished')
-      && !(isBadgeholder && bhCategory !== categorySlug) && (
+      && !(isBadgeholder && bhCategory !== categorySlug && !isBHCategoryAtessted) && (
         <div className="flex w-full justify-center gap-2 rounded-xl border border-[#FFA15A] bg-[#FFF7ED] py-1">
           <p className="text-xs font-medium text-[#FFA15A]">Voting</p>
         </div>
