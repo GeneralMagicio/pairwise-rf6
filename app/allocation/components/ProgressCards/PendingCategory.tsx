@@ -29,14 +29,14 @@ const PendingCategory = ({
         <button
           onClick={onScore}
           className={`whitespace-nowrap rounded-md py-3 text-sm font-medium ${
-            isAutoConnecting || (isBadgeholder && bhCategory !== categorySlug)
+            isAutoConnecting || (isBadgeholder && bhCategory !== categorySlug && !isBHCategoryAtessted)
               ? 'border bg-gray-300 text-gray-600'
               : 'bg-primary text-white'
           } ${
             isBadgeholder && bhCategory === categorySlug ? 'w-full' : 'w-[48%]'
           }`}
           disabled={
-            isAutoConnecting || (isBadgeholder && bhCategory !== categorySlug)
+            isAutoConnecting || (isBadgeholder && bhCategory !== categorySlug && !isBHCategoryAtessted)
           }
         >
           Vote
