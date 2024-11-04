@@ -22,6 +22,7 @@ interface IBudgetAllocationProps extends BudgetCategory {
   username?: string
   isBadgeholder: boolean
   bhCategory: string
+  isBHCategoryAtessted: boolean
   attestationLink: string | null
   categorySlug: string
   onDelegate: () => void
@@ -39,6 +40,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
   progress = CollectionProgressStatusEnum.Pending,
   username,
   isBadgeholder,
+  isBHCategoryAtessted,
   bhCategory,
   categorySlug,
   onScore,
@@ -78,6 +80,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
             isBadgeholder={isBadgeholder}
             bhCategory={bhCategory}
             categorySlug={categorySlug}
+            isBHCategoryAtessted={isBHCategoryAtessted}
           />
         );
     }
