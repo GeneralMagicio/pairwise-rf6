@@ -55,13 +55,13 @@ const GithubBox: FC<Props> = ({ repo }) => {
           {isExpanded
             ? (
                 <div className="flex items-center gap-2">
-                  <span> Hide metrics </span>
+                  {'metrics' in repo && repo.metrics && <span> Hide metrics </span>}
                   <ArrowUpIcon />
                 </div>
               )
             : (
                 <div className="flex items-center gap-2">
-                  <span> View metrics </span>
+                  {'metrics' in repo && repo.metrics && <span> View metrics </span>}
                   <ArrowDownIcon />
                 </div>
               )}

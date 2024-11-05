@@ -172,7 +172,10 @@ const RankingPage = () => {
   const lockSelection = () => {
     if (!projects) return;
 
-    if (checkedItems.length > projects?.length - 2) {
+    if (
+      checkedItems.length > projects?.length - 2
+      || lockedItems.length >= projects?.length - 2
+    ) {
       setTotalShareError('At least two projects must be unlocked');
       window.scrollTo(0, document.body.scrollHeight);
       return;
@@ -367,7 +370,7 @@ const RankingPage = () => {
             </div>
           </div>
           {/* <SearchBar search={search} setSearch={setSearch} /> */}
-          <div className="flex items-center justify-between rounded-lg bg-gray-100 px-8 py-3">
+          <div className="flex items-center justify-between rounded-lg bg-gray-100 px-4 py-3 lg:px-8">
             <div className="flex items-center gap-4">
               <div className="flex items-center justify-center gap-2">
                 <Checkbox
@@ -428,23 +431,25 @@ const RankingPage = () => {
               )
             : projects?.length
               ? (
-                  <table className="w-full">
-                    <tbody className="flex flex-col gap-6">
-                      {projects.map((project, index) => (
-                        <RankingRow
-                          key={project.projectId}
-                          index={index}
-                          budget={allocationBudget * project.share}
-                          project={project}
-                          selected={checkedItems.includes(project.projectId)}
-                          locked={lockedItems.includes(project.projectId)}
-                          onLock={handleLocck}
-                          onSelect={selectItem}
-                          onVote={handleVote}
-                        />
-                      ))}
-                    </tbody>
-                  </table>
+                  <div className="w-full overflow-x-auto">
+                    <table className="w-full min-w-full">
+                      <tbody className="flex flex-col gap-6">
+                        {projects.map((project, index) => (
+                          <RankingRow
+                            key={project.projectId}
+                            index={index}
+                            budget={allocationBudget * project.share}
+                            project={project}
+                            selected={checkedItems.includes(project.projectId)}
+                            locked={lockedItems.includes(project.projectId)}
+                            onLock={handleLocck}
+                            onSelect={selectItem}
+                            onVote={handleVote}
+                          />
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 )
               : (
                   <p className="text-center text-gray-400">No projects found</p>

@@ -24,11 +24,11 @@ const StarRating: FC<IStarRatingProps> = ({ color, numRated }) => (
 );
 
 const ratingOptions = [
-  { color: '#FF1D1D', numRated: 1, label: 'No impact on the OP stack' },
-  { color: '#FF8C22', numRated: 2, label: 'Low impact on the OP stack' },
-  { color: '#F8CE00', numRated: 3, label: 'Medium impact on the OP stack' },
-  { color: '#46C34C', numRated: 4, label: 'High impact on the OP stack' },
-  { color: '#479F78', numRated: 5, label: 'Very High impact on the OP stack' },
+  { color: '#FF1D1D', numRated: 1, label: 'No impact on the OP Governance' },
+  { color: '#FF8C22', numRated: 2, label: 'Low impact on the OP Governance' },
+  { color: '#F8CE00', numRated: 3, label: 'Medium impact on the OP Governance' },
+  { color: '#46C34C', numRated: 4, label: 'High impact on the OP Governance' },
+  { color: '#479F78', numRated: 5, label: 'Very High impact on the OP Governance' },
 ];
 
 const GoodRatingModal: FC<IGoodRatingModalProps> = ({ confirm }) => (

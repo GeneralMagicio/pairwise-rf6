@@ -133,6 +133,11 @@ const AllocationPage = () => {
     = useState<Pick<ICategory, 'id' | 'name'>>();
   const [targetDelegate, setTargetDelegate] = useState<TargetDelegate>();
 
+  const [rankingProgress, setRankingProgress]
+    = useState<CollectionProgressStatusEnum>(
+      CollectionProgressStatusEnum.Pending
+    );
+
   const { mutateAsync: updateCategoriesRanking } = useUpdateCategoriesRanking({
     budget: totalValue,
     allocationPercentages:
@@ -304,6 +309,20 @@ const AllocationPage = () => {
     );
   };
 
+  const isBHCategoryAtessted = () => {
+    const bhCategoryProgress = categories?.find(
+      el => el.id === categorySlugIdMap.get(category)
+    )?.progress;
+
+    return bhCategoryProgress === CollectionProgressStatusEnum.Attested;
+  };
+
+  useEffect(() => {
+    if (categoryRankings) {
+      setRankingProgress(categoryRankings.progress);
+    }
+  }, [categoryRankings]);
+
   useEffect(() => {
     if (delegations) {
       const budgetDelegateFromYou = delegations?.fromYou?.budget;
@@ -315,10 +334,14 @@ const AllocationPage = () => {
   }, [delegations]);
 
   useEffect(() => {
-    if (categoryRankings && categoryRankings.progress === 'Attested' && dbudgetProgress === CollectionProgressStatusEnum.Pending) {
+    if (
+      rankingProgress === CollectionProgressStatusEnum.Attested
+      && dbudgetProgress === CollectionProgressStatusEnum.Pending
+    ) {
       setDbudgetProgress(CollectionProgressStatusEnum.Attested);
     }
-  }, [categoryRankings, dbudgetProgress]);
+    else setDbudgetProgress(CollectionProgressStatusEnum.Pending);
+  }, [rankingProgress]);
 
   useEffect(() => {
     if (categoryRankings) {
@@ -533,6 +556,7 @@ const AllocationPage = () => {
                           loading={delegationsLoading}
                           isBadgeholder={isBadgeholder}
                           bhCategory={category}
+                          isBHCategoryAtessted={isBHCategoryAtessted()}
                           categorySlug={category}
                           onDelegate={() => {
                             setCategoryToDelegate(budgetCategory);
@@ -558,6 +582,7 @@ const AllocationPage = () => {
                             loading={delegationsLoading}
                             isBadgeholder={isBadgeholder}
                             bhCategory={category}
+                            isBHCategoryAtessted={isBHCategoryAtessted()}
                             categorySlug={categoryIdSlugMap.get(cat.id)!}
                             onDelegate={() => {
                               setCategoryToDelegate(cat);

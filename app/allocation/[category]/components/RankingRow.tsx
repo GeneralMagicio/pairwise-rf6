@@ -39,13 +39,13 @@ const RankingRow: FC<IRankingRowProps> = ({
         locked && 'bg-gray-100'
       }`}
     >
-      <td className="pb-8 pl-4 pt-4">
+      <td className="pb-8 pl-1 pt-4 lg:pl-4">
         <Checkbox
           checked={selected}
           onChange={() => onSelect(project.projectId)}
         />
       </td>
-      <td className="pb-8 pl-4 pt-4">
+      <td className="pb-8 pl-1 pt-4 lg:pl-4">
         <Image
           src={project.project.image || '/assets/images/placeholder.png'}
           alt={project.project.name}
@@ -54,7 +54,7 @@ const RankingRow: FC<IRankingRowProps> = ({
           unoptimized
         />
       </td>
-      <td className="w-[50%] pb-8 pl-4 pt-4">
+      <td className="2xl:w-[50%] xl:w-[35%] w-[30%] pb-8 pl-1 pt-4 lg:pl-4">
         <p className={`font-medium text-gray-700 ${styles.oneLineClamp}`}>
           {project.project.name}
         </p>
@@ -62,12 +62,12 @@ const RankingRow: FC<IRankingRowProps> = ({
           {project.project.description}
         </p>
       </td>
-      {/* <td className="pb-8 pl-4 pt-4">
+      {/* <td className="pb-8 lg:pl-4 pl-1 pt-4">
         <div className="flex items-center gap-2">
           <ExpandVertical />
         </div>
       </td> */}
-      <td className="pb-8 pl-4 pt-4">
+      <td className="pb-8 pl-1 pt-4 lg:pl-4">
         <div
           className={`flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 ${
             locked && 'bg-gray-100'
@@ -76,7 +76,7 @@ const RankingRow: FC<IRankingRowProps> = ({
           <p className="text-gray-700">{index + 1}</p>
         </div>
       </td>
-      <td className="relative pb-8 pl-4 pt-4">
+      <td className="relative pb-8 pl-1 pt-4 lg:pl-4">
         <NumericFormat
           suffix="%"
           decimalScale={2}
