@@ -36,6 +36,7 @@ interface CategoryAllocationProps extends TCategory {
   username?: string
   isBadgeholder: boolean
   bhCategory: string
+  isBHCategoryAtessted: boolean
   categorySlug: string
   onDelegate: () => void
   onScore: () => void
@@ -60,6 +61,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   isBadgeholder,
   bhCategory,
   categorySlug,
+  isBHCategoryAtessted,
   onDelegate,
   onScore,
   onLockClick,
@@ -123,6 +125,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
             isBadgeholder={isBadgeholder}
             bhCategory={bhCategory}
             categorySlug={categorySlug}
+            isBHCategoryAtessted={isBHCategoryAtessted}
           />
         );
     }

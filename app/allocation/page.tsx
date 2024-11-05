@@ -309,6 +309,14 @@ const AllocationPage = () => {
     );
   };
 
+  const isBHCategoryAtessted = () => {
+    const bhCategoryProgress = categories?.find(
+      el => el.id === categorySlugIdMap.get(category)
+    )?.progress;
+
+    return bhCategoryProgress === CollectionProgressStatusEnum.Attested;
+  };
+
   useEffect(() => {
     if (categoryRankings) {
       setRankingProgress(categoryRankings.progress);
@@ -548,6 +556,7 @@ const AllocationPage = () => {
                           loading={delegationsLoading}
                           isBadgeholder={isBadgeholder}
                           bhCategory={category}
+                          isBHCategoryAtessted={isBHCategoryAtessted()}
                           categorySlug={category}
                           onDelegate={() => {
                             setCategoryToDelegate(budgetCategory);
@@ -573,6 +582,7 @@ const AllocationPage = () => {
                             loading={delegationsLoading}
                             isBadgeholder={isBadgeholder}
                             bhCategory={category}
+                            isBHCategoryAtessted={isBHCategoryAtessted()}
                             categorySlug={categoryIdSlugMap.get(cat.id)!}
                             onDelegate={() => {
                               setCategoryToDelegate(cat);
