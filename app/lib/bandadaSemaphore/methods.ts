@@ -1,4 +1,5 @@
 import {Identity} from "@semaphore-protocol/identity";
+import {Group as SemaphoreGroup} from "@semaphore-protocol/group";
 import {ApiSdk, Group} from "@bandada/api-sdk";
 
 const bandadaApi = new ApiSdk();
@@ -35,8 +36,15 @@ export const getUserBandadaGroup = async (signature: string): Promise<Group| nul
         try {
             await bandadaApi.addMemberByApiKey(attestationGroupID,identityString,apiKey);
             /* create group using semaphore */;
-            
+            const groupArray = await getUsersInBandadaGroup();
             /* store the root in DB */
+            if(!groupArray){
+                return null;
+            }
+            const group = new SemaphoreGroup(groupArray);
+            const groupRoot = group.root;
+            /* save group root in database */
+            return (await bandadaApi.getGroup(attestationGroupID));
 
         } catch(error: any) {
             console.error(error);
