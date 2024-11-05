@@ -385,8 +385,9 @@ export const ProjectCard: React.FC<Props> = ({
                       {project.links?.map(link => (
                         <SimpleInfoBox
                           key={link.url}
-                          description={link.description}
                           title={link.name}
+                          link={link.url}
+                          description={link.description}
                           type="link"
                         />
                       ))}
