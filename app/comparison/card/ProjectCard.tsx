@@ -386,7 +386,7 @@ export const ProjectCard: React.FC<Props> = ({
                         <SimpleInfoBox
                           key={link.url}
                           description={link.description}
-                          title={link.url}
+                          title={link.name}
                           type="link"
                         />
                       ))}
