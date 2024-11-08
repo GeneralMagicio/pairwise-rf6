@@ -13,7 +13,7 @@ export default function ShowMobileMessage({
     <div className="relative h-screen w-screen">
       {showMobileMessage && (
         <>
-          <div className="absolute top-0 aspect-square w-full">
+          <div className="absolute top-0 aspect-[2/1] w-full">
             <Image className="object-cover" fill src="/assets/images/mobile-header.svg" alt="" />
           </div>
           <div className={`flex h-full flex-col items-center justify-center gap-4 px-4 ${(showMobileMessage) ? 'block sm:hidden' : 'hidden'}`}>
