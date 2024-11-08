@@ -54,7 +54,7 @@ const RankingRow: FC<IRankingRowProps> = ({
           unoptimized
         />
       </td>
-      <td className="2xl:w-[50%] xl:w-[35%] w-[30%] pb-8 pl-1 pt-4 lg:pl-4">
+      <td className="w-[30%] pb-8 pl-1 pt-4 lg:pl-4 xl:w-[35%] 2xl:w-[50%]">
         <p className={`font-medium text-gray-700 ${styles.oneLineClamp}`}>
           {project.project.name}
         </p>
