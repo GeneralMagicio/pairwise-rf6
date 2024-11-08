@@ -3,6 +3,7 @@ import '@smastrom/react-rating/style.css';
 import { Inter } from 'next/font/google';
 import AppKitProvider from './utils/wallet/provider';
 import FarcasterProvider from '@/app/utils/FarcasterProvider';
+import ShowMobileMessage from './utils/wallet/ShowMobileMessage';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -46,11 +47,13 @@ export default function RootLayout({
           >
           </iframe>
         </noscript>
-        <AppKitProvider>
-          <FarcasterProvider>
-            {children}
-          </FarcasterProvider>
-        </AppKitProvider>
+        <ShowMobileMessage>
+          <AppKitProvider>
+            <FarcasterProvider>
+              {children}
+            </FarcasterProvider>
+          </AppKitProvider>
+        </ShowMobileMessage>
         <div id="modal-root"></div>
       </body>
     </html>
