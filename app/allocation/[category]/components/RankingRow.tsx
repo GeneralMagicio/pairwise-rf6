@@ -59,15 +59,15 @@ const RankingRow: FC<IRankingRowProps> = ({
           unoptimized
         />
         <div className="w-[30%] pb-8 pl-1 pt-4 lg:pl-4 xl:w-[35%] 2xl:w-[50%]">
-        <p className={`font-medium text-gray-700 ${styles.oneLineClamp}`}>
-          {project.project.name}
-        </p>
-        <p className={`text-sm text-gray-400 ${styles.oneLineClamp}`}>
-          {project.project.description}
-        </p>
-      </div>
+          <p className={`font-medium text-gray-700 ${styles.oneLineClamp}`}>
+            {project.project.name}
+          </p>
+          <p className={`text-sm text-gray-400 ${styles.oneLineClamp}`}>
+            {project.project.description}
+          </p>
+        </div>
       </td>
-      
+
       {/* <td className="pb-8 lg:pl-4 pl-1 pt-4">
         <div className="flex items-center gap-2">
           <ExpandVertical />
@@ -107,9 +107,9 @@ const RankingRow: FC<IRankingRowProps> = ({
               isAllowed={values => handleAllowdValue(values)}
               disabled={locked || coi}
             />
-              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs text-gray-400">
-                {formatBudget(budget)}
-              </span>
+            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs text-gray-400">
+              {formatBudget(budget)}
+            </span>
           </div>
           <button
             className={`flex items-center justify-center rounded-md border p-2
