@@ -63,7 +63,8 @@
 		"quotes": [
 			"error",
 			"single"
-		]
+		],
+		"brace-style": ["error", "1tbs", { "allowSingleLine": true }]
 	},
 	"settings": {
 		"import/resolver": {
