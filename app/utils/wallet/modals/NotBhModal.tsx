@@ -54,11 +54,11 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
     }
   }, [shouldRedirect, showModal, router]);
 
-  const handleCloseModal = () => {
-    console.log('Modal closed. Redirecting to /allocation.');
-    setShowModal(false);
-    setShouldRedirect(true); // Trigger redirection after modal closes
-  };
+  // const handleCloseModal = () => {
+  // console.log('Modal closed. Redirecting to /allocation.');
+  // setShowModal(false);
+  // setShouldRedirect(true); // Trigger redirection after modal closes
+  // };
 
   const badgeCards = useMemo(() => {
     if (!badges) return null;
