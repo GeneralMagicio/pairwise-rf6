@@ -8,7 +8,7 @@ export default function ShowMobileMessage({
 }: Readonly<{
   children: ReactNode
 }>) {
-  const [showMobileMessage, setShowMobileMessage] = useState(true);
+  const [showMobileMessage] = useState(true);
   return (
     <div className="relative h-screen w-screen">
       {showMobileMessage && (
@@ -20,12 +20,6 @@ export default function ShowMobileMessage({
             <Image src="/assets/images/star-blonde.svg" width={100} height={120} alt="" />
             <div className="text-wrap text-center text-xl font-semibold text-dark-500">Change or update your browser for a better experience</div>
             <div className="text-wrap text-center text-base text-gray-400">Pairwise works best on desktop browsers. For the best experience, please switch to your desktop device.</div>
-            <button
-              className="rounded-lg bg-primary p-6 py-2.5 text-white"
-              onClick={() => setShowMobileMessage(false)}
-            >
-              Ok
-            </button>
           </div>
         </>
       )}
