@@ -169,6 +169,16 @@ const RankingPage = () => {
     }
   };
 
+  const handleCOI = (id: number) => {
+    if (projects) {
+      setProjects(projects.map(project =>
+        project.projectId === id
+          ? { ...project, coi: !project.coi }
+          : project
+      ));
+    }
+  };
+
   const lockSelection = () => {
     if (!projects) return;
 
@@ -434,19 +444,41 @@ const RankingPage = () => {
                   <div className="w-full overflow-x-auto">
                     <table className="w-full min-w-full">
                       <tbody className="flex flex-col gap-6">
-                        {projects.map((project, index) => (
-                          <RankingRow
-                            key={project.projectId}
-                            index={index}
-                            budget={allocationBudget * project.share}
-                            project={project}
-                            selected={checkedItems.includes(project.projectId)}
-                            locked={lockedItems.includes(project.projectId)}
-                            onLock={handleLocck}
-                            onSelect={selectItem}
-                            onVote={handleVote}
-                          />
-                        ))}
+                        {projects.filter(project => (!project.coi))
+                          .map((project, index) => (
+                            <RankingRow
+                              key={project.projectId}
+                              index={index}
+                              budget={allocationBudget * project.share}
+                              project={project}
+                              selected={checkedItems.includes(project.projectId)}
+                              locked={lockedItems.includes(project.projectId)}
+                              onLock={handleLocck}
+                              onSelect={selectItem}
+                              onVote={handleVote}
+                              coi={project.coi}
+                              onToggleCOI={handleCOI}
+                            />
+                          ))}
+                        <tr>
+                          <th>Conflict Of Interest</th>
+                        </tr>
+                        {projects.filter(project => (project.coi))
+                          .map((project, index) => (
+                            <RankingRow
+                              key={project.projectId}
+                              index={index}
+                              budget={allocationBudget * project.share}
+                              project={project}
+                              selected={checkedItems.includes(project.projectId)}
+                              locked={lockedItems.includes(project.projectId)}
+                              onLock={handleLocck}
+                              onSelect={selectItem}
+                              onVote={handleVote}
+                              coi={project.coi}
+                              onToggleCOI={handleCOI}
+                            />
+                          ))}
                       </tbody>
                     </table>
                   </div>
