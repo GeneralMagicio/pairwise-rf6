@@ -7,15 +7,18 @@ import { LockIcon } from '@/public/assets/icon-components/Lock';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
 import styles from '@/app/styles/Project.module.css';
 import { formatBudget } from '@/app/comparison/utils/helpers';
+import { COI } from '@/public/assets/icon-components/COI';
 interface IRankingRowProps {
   index: number
   project: IProjectRanking
   budget: number
   locked: boolean
+  coi: boolean
   onLock: (id: number) => void
   selected: boolean
   onSelect: (id: number) => void
   onVote: (id: number, share: number) => void
+  onToggleCOI: (id: number) => void
 }
 
 const RankingRow: FC<IRankingRowProps> = ({
@@ -24,6 +27,8 @@ const RankingRow: FC<IRankingRowProps> = ({
   budget,
   locked,
   onLock,
+  coi,
+  onToggleCOI,
   selected,
   onSelect,
   onVote,
@@ -32,7 +37,7 @@ const RankingRow: FC<IRankingRowProps> = ({
     const { floatValue } = values;
     return !floatValue || floatValue <= 100;
   };
-
+  console.log(coi);
   return (
     <tr
       className={`flex w-full items-center justify-around rounded-lg border border-gray-200 ${
@@ -67,7 +72,13 @@ const RankingRow: FC<IRankingRowProps> = ({
           <ExpandVertical />
         </div>
       </td> */}
-      <td className="pb-8 pl-1 pt-4 lg:pl-4">
+      <td className="flex flex-row">
+        <button
+          className="w-9 pb-8 pl-1 pt-4 lg:pl-4"
+          onClick={() => onToggleCOI(project.projectId)}
+        >
+          <COI isActive={coi} />
+        </button>
         <div
           className={`flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 ${
             locked && 'bg-gray-100'
@@ -75,30 +86,30 @@ const RankingRow: FC<IRankingRowProps> = ({
         >
           <p className="text-gray-700">{index + 1}</p>
         </div>
-      </td>
-      <td className="relative pb-8 pl-1 pt-4 lg:pl-4">
-        <NumericFormat
-          suffix="%"
-          decimalScale={2}
-          value={project.share * 100}
-          onValueChange={(values) => {
-            onVote(
-              project.projectId,
-              values?.floatValue ? values.floatValue / 100 : 0
-            );
-          }}
-          className={`w-24 rounded-md border border-gray-200 px-4 py-2 text-center focus:outline-none focus:ring-1 ${
-            locked && 'bg-gray-100'
-          }`}
-          placeholder="0.00%"
-          isAllowed={values => handleAllowdValue(values)}
-          disabled={locked}
-        />
-        <span className="absolute bottom-2 right-7 text-xs text-gray-400">
-          {formatBudget(budget)}
-        </span>
-      </td>
-      <td className="pb-8 pt-4">
+        <div className="relative pb-8 pl-1 pt-4 lg:pl-4">
+          <NumericFormat
+            suffix="%"
+            decimalScale={2}
+            value={project.share * 100}
+            onValueChange={(values) => {
+              onVote(
+                project.projectId,
+                values?.floatValue ? values.floatValue / 100 : 0
+              );
+            }}
+            className={`w-24 rounded-md border border-gray-200 px-4 py-2 text-center focus:outline-none focus:ring-1 ${
+              locked && 'bg-gray-100'
+            }`}
+            placeholder="0.00%"
+            isAllowed={values => handleAllowdValue(values)}
+            disabled={locked}
+          />
+          {!coi && (
+            <span className="absolute bottom-2 right-7 text-xs text-gray-400">
+              {formatBudget(budget)}
+            </span>
+          )}
+        </div>
         <button
           className={`flex items-center justify-center rounded-md border p-2
         ${

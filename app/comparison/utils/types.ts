@@ -3374,6 +3374,7 @@ export interface IProjectRanking {
   name: string
   share: number
   locked: boolean
+  coi: boolean
 }
 
 export type ProjectAiSummary = {
