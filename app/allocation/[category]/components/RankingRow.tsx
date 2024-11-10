@@ -6,8 +6,8 @@ import { Checkbox } from '@/app/utils/Checkbox';
 import { LockIcon } from '@/public/assets/icon-components/Lock';
 import { UnlockIcon } from '@/public/assets/icon-components/Unlock';
 import styles from '@/app/styles/Project.module.css';
-import { formatBudget } from '@/app/comparison/utils/helpers';
 import { COI } from '@/public/assets/icon-components/COI';
+import { formatBudget } from '@/app/comparison/utils/helpers';
 interface IRankingRowProps {
   index: number
   project: IProjectRanking
@@ -58,67 +58,69 @@ const RankingRow: FC<IRankingRowProps> = ({
           height={50}
           unoptimized
         />
-      </td>
-      <td className="w-[30%] pb-8 pl-1 pt-4 lg:pl-4 xl:w-[35%] 2xl:w-[50%]">
+        <div className="w-[30%] pb-8 pl-1 pt-4 lg:pl-4 xl:w-[35%] 2xl:w-[50%]">
         <p className={`font-medium text-gray-700 ${styles.oneLineClamp}`}>
           {project.project.name}
         </p>
         <p className={`text-sm text-gray-400 ${styles.oneLineClamp}`}>
           {project.project.description}
         </p>
+      </div>
       </td>
+      
       {/* <td className="pb-8 lg:pl-4 pl-1 pt-4">
         <div className="flex items-center gap-2">
           <ExpandVertical />
         </div>
       </td> */}
-      <td className="flex flex-row">
-        <button
-          className="w-9 pb-8 pl-1 pt-4 lg:pl-4"
-          onClick={() => onToggleCOI(project.projectId)}
-        >
-          <COI isActive={coi} />
-        </button>
-        <div
-          className={`flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 ${
-            locked && 'bg-gray-100'
-          }`}
-        >
-          <p className="text-gray-700">{index + 1}</p>
-        </div>
-        <div className="relative pb-8 pl-1 pt-4 lg:pl-4">
-          <NumericFormat
-            suffix="%"
-            decimalScale={2}
-            value={project.share * 100}
-            onValueChange={(values) => {
-              onVote(
-                project.projectId,
-                values?.floatValue ? values.floatValue / 100 : 0
-              );
-            }}
-            className={`w-24 rounded-md border border-gray-200 px-4 py-2 text-center focus:outline-none focus:ring-1 ${
+
+      <td>
+        <div className="flex flex-row justify-center gap-1">
+          <button
+            className="m-auto flex size-9 items-center justify-center"
+            onClick={() => onToggleCOI(project.projectId)}
+          >
+            <COI isActive={coi} />
+          </button>
+          <div
+            className={`m-auto flex items-center justify-center rounded-md border border-gray-200 px-4 py-2 ${
               locked && 'bg-gray-100'
             }`}
-            placeholder="0.00%"
-            isAllowed={values => handleAllowdValue(values)}
-            disabled={locked}
-          />
-          {!coi && (
-            <span className="absolute bottom-2 right-7 text-xs text-gray-400">
-              {formatBudget(budget)}
-            </span>
-          )}
-        </div>
-        <button
-          className={`flex items-center justify-center rounded-md border p-2
+          >
+            <p className="text-gray-700">{index + 1}</p>
+          </div>
+          <div className="relative">
+            <NumericFormat
+              suffix="%"
+              decimalScale={2}
+              value={project.share * 100}
+              onValueChange={(values) => {
+                onVote(
+                  project.projectId,
+                  values?.floatValue ? values.floatValue / 100 : 0
+                );
+              }}
+              className={`w-24 rounded-md border border-gray-200 px-4 py-2 text-center focus:outline-none focus:ring-1 ${
+                locked && 'bg-gray-100'
+              }`}
+              placeholder="0.00%"
+              isAllowed={values => handleAllowdValue(values)}
+              disabled={locked || coi}
+            />
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs text-gray-400">
+                {formatBudget(budget)}
+              </span>
+          </div>
+          <button
+            className={`flex items-center justify-center rounded-md border p-2
         ${
     locked ? 'rounded-md border-[#232634] bg-[#232634]' : 'border-gray-50'
     }`}
-          onClick={() => onLock(project.projectId)}
-        >
-          {locked ? <LockIcon color="#fff" /> : <UnlockIcon />}
-        </button>
+            onClick={() => onLock(project.projectId)}
+          >
+            {locked ? <LockIcon color="#fff" /> : <UnlockIcon />}
+          </button>
+        </div>
       </td>
     </tr>
   );
