@@ -8,7 +8,8 @@ interface UnlockBallotProps {
 }
 
 const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
-  const [confirmed, setConfirmed] = useState(false);
+  const [confirmed1, setConfirmed1] = useState(false);
+  const [confirmed2, setConfirmed2] = useState(false);
   return (
     <div className="mx-auto flex max-h-[95vh] w-[750px] flex-col items-center gap-2 overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat p-6 py-12 shadow-lg">
       <div className="relative h-[250px] w-[320px] sl:h-[160px] sl:w-[250px]">
@@ -38,14 +39,20 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
       </div>
       <div className="flex w-3/5 flex-col gap-1">
         <div className="mb-2 flex gap-6">
-          <input className="size-8 self-start" checked={confirmed} onChange={() => setConfirmed(!confirmed)} type="checkbox" />
+          <input className="size-8 self-start" checked={confirmed1} onChange={() => setConfirmed1(!confirmed1)} type="checkbox" />
           <p className="text-slate-700">
-            I confirm that I understand and will not change the allocation method on OP Vote application
+            I confirm that I will not change the allocation method on OP Vote application
+          </p>
+        </div>
+        <div className="mb-2 flex gap-6">
+          <input className="size-8 self-start" checked={confirmed2} onChange={() => setConfirmed2(!confirmed2)} type="checkbox" />
+          <p className="text-slate-700">
+            I confirm that I must vote on Budget allocation on the Optimism Voting app
           </p>
         </div>
         <a href={link} className="w-full" target="_blank">
           <button
-            disabled={!confirmed}
+            disabled={!(confirmed1 && confirmed2)}
             className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4
           py-3 text-white transition duration-300 ease-in-out disabled:bg-op-neutral-300 disabled:text-slate-700 sl:p-2"
           >
@@ -53,18 +60,6 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
             <ExternalLinkIcon />
           </button>
         </a>
-        {confirmed && (
-          <a href="https://docs.google.com/forms/d/1n3Dwq2WoPTX8vtsGT_GQ2FsyQ6TIUabXJgYsYzVUK4o/edit" className="w-full" target="_blank">
-            <button
-              disabled={!confirmed}
-              className="mb-2 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-slate-300 bg-white px-4 py-3
-          text-slate-700 transition duration-300 ease-in-out sl:p-2"
-            >
-              Send Feedback
-              <ExternalLinkIcon />
-            </button>
-          </a>
-        )}
         <button
           onClick={onClose}
           className="flex w-full items-center justify-center rounded-lg px-4 py-3
