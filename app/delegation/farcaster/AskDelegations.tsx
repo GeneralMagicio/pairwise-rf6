@@ -8,7 +8,7 @@ interface Props {
 }
 
 const createWarpcastIntention = (categoryName: string) => {
-  return `https://warpcast.com/~/compose?text=I voted in @pairwise liquid Democracy Experiment, ranking the ${categoryName} category of @optimism RF6.`;
+  return `https://warpcast.com/~/compose?text=I voted in @pairwise Liquid Democracy Experiment, ranking the ${categoryName} category of @optimism RF6.`;
 };
 
 const AskDelegations: React.FC<Props> = ({
