@@ -640,7 +640,7 @@ const AllocationPage = () => {
                       || (isBadgeholder && !isBGCategoryVoted())
                     }
                   >
-                    Update ballot on Optimism
+                    Update Ballot on Optimism
                   </button>
                 )}
           </div>
