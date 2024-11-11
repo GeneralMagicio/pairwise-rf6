@@ -12,8 +12,9 @@ import Modal from '@/app/utils/Modal';
 import { uploadBallot } from '@/app/utils/wallet/agora-login';
 import { useAuth } from '@/app/utils/wallet/AuthProvider';
 import { ExternalLinkIcon } from '@/public/assets/icon-components/ExternalLink';
+import AskDelegations from '@/app/delegation/farcaster/AskDelegations';
 
-export const enum BallotState {
+export enum BallotState {
   Initial,
   Loading,
   Error,
@@ -23,7 +24,7 @@ export const enum BallotState {
   Success,
 }
 
-export const UpdateBallotButton: FC<{ isBadgeHolderAndNotVoted?: boolean }> = ({ isBadgeHolderAndNotVoted = false }) => {
+export const UpdateBallotButton: FC<{ isBadgeHolderAndNotVoted?: boolean,closeAttestationModal?: ()=>void }> = ({ isBadgeHolderAndNotVoted = false, closeAttestationModal }) => {
   const [ballotState, setBallotState] = useState<BallotState>(
     BallotState.Initial
   );
@@ -46,7 +47,7 @@ export const UpdateBallotButton: FC<{ isBadgeHolderAndNotVoted?: boolean }> = ({
       const ballot = await getBallot(cid);
       await uploadBallot(ballot, address);
       await ballotSuccessPost();
-      setBallotState(BallotState.Success);
+      setBallotState(BallotState.FarcasterPost);
     }
     catch (e: any) {
       if (e.response.data.pwCode === 'e-1005')
@@ -64,8 +65,20 @@ export const UpdateBallotButton: FC<{ isBadgeHolderAndNotVoted?: boolean }> = ({
         {ballotState === BallotState.Success && (
           <BallotSuccessModal
             link={`${process.env.NEXT_PUBLIC_OPTIMISM_URL}/ballot`}
-            onClose={() => setBallotState(BallotState.Initial)}
+            onClose={() => {
+              setBallotState(BallotState.Initial);
+
+              if(closeAttestationModal) {
+                closeAttestationModal();
+              }
+            }}
           />
+        )}
+        {ballotState === BallotState.FarcasterPost && loggedToAgora!=='error'
+          && loggedToAgora!=='initial' && (
+          <AskDelegations
+            categoryName={loggedToAgora.category}
+            onClose={()=> setBallotState(BallotState.Success)}/>
         )}
         {ballotState === BallotState.Loading && <BallotLoading />}
         {ballotState === BallotState.Error && (
