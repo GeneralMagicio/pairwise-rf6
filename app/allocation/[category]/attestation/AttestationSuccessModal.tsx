@@ -9,7 +9,7 @@ interface Props {
 const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
   const [hideAttestation, setHideAttestation] = useState(false);
   return (
-    <div className={`${hideAttestation ? 'hidden' : 'block'} mx-auto flex max-w-md flex-col items-center gap-6 overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat p-6 py-10 text-center shadow-lg`}>
+    <div className={`${hideAttestation ? 'hidden' : 'mx-auto flex max-w-md flex-col items-center gap-6 overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat p-6 py-10 text-center shadow-lg'}`}>
       <Image
         src="/assets/images/op-voting-char.svg"
         alt="Celebration"
@@ -23,7 +23,7 @@ const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
           Attestation done successfully!!
         </h2>
         <p className="text-gray-400">
-          It's time to celebrate!! Your have votes have been attested successfully.
+          It&39;s time to celebrate!! Your votes have been attested successfully.
         </p>
         <p className="text-gray-400">
           You can update your ballot on Optimism.
