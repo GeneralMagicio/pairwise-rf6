@@ -15,6 +15,14 @@ const AskDelegations: React.FC<Props> = ({
   categoryName,
   onClose,
 }) => {
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(`I voted in @pairwise Liquid Democracy Experiment, ranking the ${categoryName} category of @optimism RF6.`);
+    }
+    catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  };
   return (
     <div className="mx-auto flex max-w-lg flex-col items-center gap-6 rounded-lg bg-white px-6 py-10 shadow-lg">
       <Image src="/assets/images/finish-celebration.png" width={300} height={150} alt="celebrate" />
@@ -30,7 +38,7 @@ const AskDelegations: React.FC<Props> = ({
       </div>
 
       <div className="flex flex-col items-center gap-4">
-        <div className="rounded-lg border-2 border-op-neutral-300 p-3 pb-14">
+        <div className="relative rounded-lg border-2 border-op-neutral-300 p-3 pb-14">
           <p className="text-gray-400">
             I voted in
             <span className="mx-1 inline text-primary">@pairwise</span>
@@ -43,6 +51,9 @@ const AskDelegations: React.FC<Props> = ({
             <span className="mx-1 text-primary">@optimism</span>
             RF6.
           </p>
+          <button onClick={handleCopy} className="absolute bottom-1 right-1 m-0 p-0">
+            <Image src="/assets/images/copy-icon.svg" width={20} height={20} alt="copy" />
+          </button>
         </div>
 
         <a className="w-full" target="_blank" href={createWarpcastIntention(categoryName)}>
