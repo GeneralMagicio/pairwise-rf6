@@ -38,16 +38,16 @@ const BallotSuccessModal: React.FC<UnlockBallotProps> = ({ link, onClose }) => {
         />
       </div>
       <div className="flex w-3/5 flex-col gap-1">
-      <div className="mb-2 flex gap-6">
+        <div className="mb-2 flex gap-6">
           <input className="size-8 self-start" checked={confirmed1} onChange={() => setConfirmed1(!confirmed1)} type="checkbox" />
           <p className="text-slate-700">
-          I confirm that I will not change the allocation method on OP Vote application
+            I confirm that I will not change the allocation method on OP Vote application
           </p>
         </div>
         <div className="mb-2 flex gap-6">
           <input className="size-8 self-start" checked={confirmed2} onChange={() => setConfirmed2(!confirmed2)} type="checkbox" />
           <p className="text-slate-700">
-          I confirm that I must vote on Budget allocation on the Optimism Voting app
+            I confirm that I must vote on Budget allocation on the Optimism Voting app
           </p>
         </div>
         <a href={link} className="w-full" target="_blank">

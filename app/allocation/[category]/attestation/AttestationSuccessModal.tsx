@@ -9,7 +9,7 @@ interface Props {
 const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
   const [hideAttestation, setHideAttestation] = useState(false);
   return (
-    <div className={`${hideAttestation?"hidden":"block"} mx-auto flex max-w-md flex-col items-center gap-6 overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat p-6 py-10 text-center shadow-lg`}>
+    <div className={`${hideAttestation ? 'hidden' : 'block'} mx-auto flex max-w-md flex-col items-center gap-6 overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat p-6 py-10 text-center shadow-lg`}>
       <Image
         src="/assets/images/op-voting-char.svg"
         alt="Celebration"
@@ -30,8 +30,8 @@ const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
         </p>
       </div>
       <div>
-        <div onClick={()=>setHideAttestation(true)}>
-          <UpdateBallotButton closeAttestationModal={()=>onClose()}/>
+        <div onClick={() => setHideAttestation(true)}>
+          <UpdateBallotButton closeAttestationModal={() => onClose()} />
         </div>
       </div>
       <a href={link} className="w-full" target="_blank">
