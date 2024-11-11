@@ -17,7 +17,6 @@ function extractFarcasterUsername(input: string) {
   if (trimmedInput.includes('@')) {
     return trimmedInput.split('@')[1];
   }
-
   else if (trimmedInput.includes('warpcast.com/')) {
     return trimmedInput.split('warpcast.com/')[1];
   }
