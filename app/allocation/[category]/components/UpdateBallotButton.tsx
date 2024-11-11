@@ -24,7 +24,12 @@ export enum BallotState {
   Success,
 }
 
-export const UpdateBallotButton: FC<{ isBadgeHolderAndNotVoted?: boolean,closeAttestationModal?: ()=>void }> = ({ isBadgeHolderAndNotVoted = false, closeAttestationModal }) => {
+interface IProps {
+  isBadgeHolderAndNotVoted?: boolean
+  closeAttestationModal?: () => void
+}
+
+export const UpdateBallotButton: FC<IProps> = ({ isBadgeHolderAndNotVoted = false, closeAttestationModal }) => {
   const [ballotState, setBallotState] = useState<BallotState>(
     BallotState.Initial
   );
@@ -68,17 +73,18 @@ export const UpdateBallotButton: FC<{ isBadgeHolderAndNotVoted?: boolean,closeAt
             onClose={() => {
               setBallotState(BallotState.Initial);
 
-              if(closeAttestationModal) {
+              if (closeAttestationModal) {
                 closeAttestationModal();
               }
             }}
           />
         )}
-        {ballotState === BallotState.FarcasterPost && loggedToAgora!=='error'
-          && loggedToAgora!=='initial' && (
+        {ballotState === BallotState.FarcasterPost && loggedToAgora !== 'error'
+        && loggedToAgora !== 'initial' && (
           <AskDelegations
             categoryName={loggedToAgora.category}
-            onClose={()=> setBallotState(BallotState.Success)}/>
+            onClose={() => setBallotState(BallotState.Success)}
+          />
         )}
         {ballotState === BallotState.Loading && <BallotLoading />}
         {ballotState === BallotState.Error && (
