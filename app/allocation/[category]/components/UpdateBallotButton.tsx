@@ -89,7 +89,7 @@ export const UpdateBallotButton: FC<{ isBadgeHolderAndNotVoted?: boolean }> = ({
         )}
       </Modal>
       <button
-        className={`flex flex-row items-center justify-center gap-2.5 w-fit self-end rounded-lg px-4 py-3 ${
+        className={`flex w-fit flex-row items-center justify-center gap-2.5 self-end rounded-lg px-4 py-3 ${
           ballotState === BallotState.Loading
           || (isBadgeHolderAndNotVoted)
             ? 'bg-gray-300 text-gray-500'
@@ -102,7 +102,7 @@ export const UpdateBallotButton: FC<{ isBadgeHolderAndNotVoted?: boolean }> = ({
         }
       >
         <p>Update Ballot on Optimism</p>
-        <span className="m-auto"><ExternalLinkIcon size={24}/></span>
+        <span className="m-auto"><ExternalLinkIcon size={24} /></span>
       </button>
     </>
   );
