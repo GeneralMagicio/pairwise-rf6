@@ -58,6 +58,7 @@ import AttestationError from './[category]/attestation/AttestationError';
 import AttestationLoading from './[category]/attestation/AttestationLoading';
 import AttestationSuccessModal from './[category]/attestation/AttestationSuccessModal';
 import { useSigner } from './[category]/utils';
+import { UpdateBallotButton } from './[category]/components/UpdateBallotButton';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -627,21 +628,7 @@ const AllocationPage = () => {
                   </div>
                 )
               : (
-                  <button
-                    className={`w-fit self-end rounded-lg px-4 py-3 ${
-                      ballotState === BallotState.Loading
-                      || (isBadgeholder && !isBGCategoryVoted())
-                        ? 'bg-gray-300 text-gray-500'
-                        : 'bg-primary text-white'
-                    }`}
-                    onClick={handleUploadBallot}
-                    disabled={
-                      ballotState === BallotState.Loading
-                      || (isBadgeholder && !isBGCategoryVoted())
-                    }
-                  >
-                    Update Ballot
-                  </button>
+                  <UpdateBallotButton isBadgeHolderAndNotVoted={(isBadgeholder && !isBGCategoryVoted())} />
                 )}
           </div>
           {!allocatingBudget && (
