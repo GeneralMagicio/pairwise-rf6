@@ -1,16 +1,19 @@
 type TCheckboxProps = {
   checked?: boolean
+  disabled?: boolean
   onChange: () => void
 };
 
-export const Checkbox = ({ checked, onChange }: TCheckboxProps) => {
+export const Checkbox = ({ checked, disabled, onChange }: TCheckboxProps) => {
   return (
     <div className="inline-flex items-center">
       <label className="relative flex cursor-pointer items-center">
         <input
           type="checkbox"
-          className="0 peer size-4 cursor-pointer appearance-none rounded border border-gray-400 shadow transition-all checked:border-primary checked:bg-primary hover:shadow-md"
+          className={`0 peer size-4 cursor-pointer appearance-none rounded border transition-all checked:border-primary checked:bg-primary
+          ${disabled ? 'cursor-not-allowed border-gray-200 bg-gray-50' : 'cursor-pointer border-gray-400 shadow hover:shadow-md'}`}
           checked={checked}
+          disabled={disabled}
           onChange={onChange}
         />
         <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100">
