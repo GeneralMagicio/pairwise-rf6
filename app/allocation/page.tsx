@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveWallet } from 'thirdweb/react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAccount } from 'wagmi';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import Modal from '../utils/Modal';
 import EmailLoginModal from './components/EOA/EmailLoginModal';
@@ -20,6 +21,7 @@ import { CustomizedSlider } from './components/Slider';
 import {
   categoryIdSlugMap,
   categorySlugIdMap,
+  convertCategoryToLabel,
   formatBudget,
 } from '../comparison/utils/helpers';
 import { useCategories } from '../comparison/utils/data-fetching/categories';
@@ -40,13 +42,22 @@ import {
   useCategoryRankings,
   useUpdateCategoriesRanking,
 } from '@/app/comparison/utils/data-fetching/ranking';
-import { getJWTData } from '../utils/wallet/agora-login';
+import { uploadBallot, getJWTData } from '../utils/wallet/agora-login';
+import { useAuth } from '../utils/wallet/AuthProvider';
+import {
+  ballotSuccessPost,
+  getBallot,
+} from '../comparison/ballot/useGetBallot';
+import BallotError from '../comparison/ballot/modals/BallotError';
+import BallotLoading from '../comparison/ballot/modals/BallotLoading';
+import BallotSuccessModal from '../comparison/ballot/modals/BallotSuccessModal';
+import BallotNotReady from '../comparison/ballot/modals/BallotNotReady';
+import BallotErrorDelegated from '../comparison/ballot/modals/BallotErrorDelegated';
 import { attest, AttestationState } from './[category]/attestation';
 import AttestationError from './[category]/attestation/AttestationError';
 import AttestationLoading from './[category]/attestation/AttestationLoading';
 import AttestationSuccessModal from './[category]/attestation/AttestationSuccessModal';
 import { useSigner } from './[category]/utils';
-import { UpdateBallotButton } from './[category]/components/UpdateBallotButton';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -63,10 +74,21 @@ enum DelegationState {
   Success,
 }
 
+enum BallotState {
+  Initial,
+  Loading,
+  Error,
+  ErrorNotReady,
+  ErrorDelegated,
+  Success,
+}
+
 const AllocationPage = () => {
   const wallet = useActiveWallet();
   const router = useRouter();
   const signer = useSigner();
+  const { address } = useAccount();
+  const { loggedToAgora } = useAuth();
   const { isBadgeholder, category } = getJWTData();
 
   const { data: categories, isLoading: categoriesLoading } = useCategories();
@@ -84,6 +106,9 @@ const AllocationPage = () => {
   const [attestationState, setAttestationState] = useState(AttestationState.Initial);
   const [attestationLink, setAttestationLink] = useState<string>();
 
+  const [ballotState, setBallotState] = useState<BallotState>(
+    BallotState.Initial
+  );
   const [totalValue, setTotalValue] = useState(categoryRankings?.budget || 0);
   const [percentageError, setPercentageError] = useState<string>();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
@@ -229,6 +254,32 @@ const AllocationPage = () => {
     setTargetDelegate(undefined);
   };
 
+  const handleUploadBallot = async () => {
+    if (loggedToAgora === 'error' || loggedToAgora === 'initial' || !address)
+      return;
+    setBallotState(BallotState.Loading);
+    // const agoraPayload = await isLoggedInToAgora(address);
+
+    const cid = categorySlugIdMap.get(loggedToAgora.category);
+
+    if (!cid) throw new Error('Undefined category id');
+    if (categories?.find(el => el.id === cid)?.progress === 'Delegated') {
+      setBallotState(BallotState.ErrorDelegated);
+      return;
+    }
+    try {
+      const ballot = await getBallot(cid);
+      await uploadBallot(ballot, address);
+      await ballotSuccessPost();
+      setBallotState(BallotState.Success);
+    }
+    catch (e: any) {
+      if (e.response.data.pwCode === 'e-1005')
+        setBallotState(BallotState.ErrorNotReady);
+      else setBallotState(BallotState.Error);
+    }
+  };
+
   const handleScoreProjects = (id: RankItem['id']) => () => {
     setSelectedCategoryId(id);
 
@@ -324,6 +375,38 @@ const AllocationPage = () => {
         )}
         {attestationState === AttestationState.Loading && <AttestationLoading />}
         {attestationState === AttestationState.Error && <AttestationError onClick={handleSubmitVote} />}
+      </Modal>
+      <Modal
+        isOpen={ballotState !== BallotState.Initial}
+        onClose={() => {}}
+        showCloseButton={false}
+      >
+        {ballotState === BallotState.Success && (
+          <BallotSuccessModal
+            link={`${process.env.NEXT_PUBLIC_OPTIMISM_URL}/ballot`}
+            onClose={() => setBallotState(BallotState.Initial)}
+          />
+        )}
+        {ballotState === BallotState.Loading && <BallotLoading />}
+        {ballotState === BallotState.Error && (
+          <BallotError onClick={handleUploadBallot} />
+        )}
+        {ballotState === BallotState.ErrorNotReady
+        && typeof loggedToAgora === 'object' && (
+          <BallotNotReady
+            categoryName={convertCategoryToLabel(loggedToAgora.category)}
+            onClick={() => {
+              setBallotState(BallotState.Initial);
+            }}
+          />
+        )}
+        {ballotState === BallotState.ErrorDelegated && typeof loggedToAgora === 'object'
+        && (
+          <BallotErrorDelegated
+            categoryName={convertCategoryToLabel(loggedToAgora.category)}
+            onClick={() => { setBallotState(BallotState.Initial); }}
+          />
+        )}
       </Modal>
       <Modal
         isOpen={
@@ -544,7 +627,21 @@ const AllocationPage = () => {
                   </div>
                 )
               : (
-                  <UpdateBallotButton isBadgeHolderAndNotVoted={(isBadgeholder && !isBGCategoryVoted())} />
+                  <button
+                    className={`w-fit self-end rounded-lg px-4 py-3 ${
+                      ballotState === BallotState.Loading
+                      || (isBadgeholder && !isBGCategoryVoted())
+                        ? 'bg-gray-300 text-gray-500'
+                        : 'bg-primary text-white'
+                    }`}
+                    onClick={handleUploadBallot}
+                    disabled={
+                      ballotState === BallotState.Loading
+                      || (isBadgeholder && !isBGCategoryVoted())
+                    }
+                  >
+                    Update Ballot on Optimism
+                  </button>
                 )}
           </div>
           {!allocatingBudget && (
