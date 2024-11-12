@@ -13,9 +13,6 @@ interface WorldIdModalProps {
 const WorldIdSignInSuccessModal: React.FC<WorldIdModalProps> = ({
   isOpen, onClose, isError,
 }) => {
-  if(!isOpen) {
-    return null;
-  }
   const { data: badges } = useGetPublicBadges();
   return (
     <Modal isOpen={isOpen} onClose={onClose} showCloseButton>

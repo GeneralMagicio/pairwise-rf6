@@ -64,19 +64,23 @@ export default function Modals() {
 
     <>
 
-      <WorldIdSignInSuccessModal
-        isOpen={isWorldIdSignSuccessModal}
-        onClose={() => {
-          setIsWorldIdSignSuccessModal(false);
-        }}
-      />
-      <WorldIdSignInSuccessModal
-        isOpen={isWorldIdSignErrorModal}
-        onClose={() => {
-          setIsWorldIdSignErrorModal(false);
-        }}
-        isError
-      />
+      {isWorldIdSignSuccessModal && (
+        <WorldIdSignInSuccessModal
+          isOpen={isWorldIdSignSuccessModal}
+          onClose={() => {
+            setIsWorldIdSignSuccessModal(false);
+          }}
+        />
+      )}
+      {isWorldIdSignErrorModal && (
+        <WorldIdSignInSuccessModal
+          isOpen={isWorldIdSignErrorModal}
+          onClose={() => {
+            setIsWorldIdSignErrorModal(false);
+          }}
+          isError
+        />
+      )}
       <IDKitWidget
         app_id={appId}
         action={actionId}
