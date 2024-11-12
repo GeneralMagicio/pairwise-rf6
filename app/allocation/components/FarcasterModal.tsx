@@ -12,6 +12,9 @@ interface FarcasterModalProps {
 }
 
 const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
+  if(!isOpen) {
+    return null;
+  }
   const { isPending: loading, isError, mutateAsync: connectFarcaster } = useFarcasterSignIn();
   const [terminate, setTerminate] = useState(false);
   const onSuccessCallback = useCallback(
