@@ -117,12 +117,14 @@ export default function Modals() {
           </>
         )}
       </IDKitWidget>
-      <FarcasterModal
-        isOpen={isOpenFarcasterModal}
-        onClose={() => {
-          setIsOpenFarcasterModal(false);
-        }}
-      />
+      {isOpenFarcasterModal && (
+        <FarcasterModal
+          isOpen={isOpenFarcasterModal}
+          onClose={() => {
+            setIsOpenFarcasterModal(false);
+          }}
+        />
+      )}
       <Modal
         isOpen={
           loginAddress.value !== address || loginAddress.confirmed === false
