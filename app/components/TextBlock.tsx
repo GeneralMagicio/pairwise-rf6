@@ -25,7 +25,7 @@ const TextBlock: FC<{
     scale?: number
   }
 }> = ({ mainText, highlightText, description, highlightImage, midtext, maintext2, header, endImage }) => (
-  <p className={`sm:w-[35%]] w-full ${(header) ? '' : 'text-start text-3xl xl:text-4xl xl:leading-[3rem]'}
+  <p className={`w-full ${(header) ? '' : 'text-start text-3xl xl:text-4xl xl:leading-[3rem]'}
   font-bold text-dark-500`}
   >
     {mainText}
@@ -52,7 +52,7 @@ const TextBlock: FC<{
     {' '}
     {maintext2 && <span className="text-primary">{maintext2}</span>}
     {' '}
-    <span className="relative inline-block">
+    <span className="relative inline">
       <span>{description}</span>
       {endImage && (
         <Image
