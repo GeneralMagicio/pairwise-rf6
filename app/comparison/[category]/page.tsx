@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { redirect, useParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useActiveWallet } from 'thirdweb/react';
 import { useAccount } from 'wagmi';
 import { JWTPayload } from '@/app/utils/wallet/types';
 import { AutoScrollAction, ProjectCard } from '../card/ProjectCard';
@@ -44,6 +45,7 @@ export default function Home() {
   const { category } = useParams() ?? {};
   const queryClient = useQueryClient();
   const { address, chainId } = useAccount();
+  const wallet = useActiveWallet();
 
   const [rating1, setRating1] = useState<number | null>(null);
   const [rating2, setRating2] = useState<number | null>(null);
@@ -244,10 +246,18 @@ export default function Home() {
   };
 
   const cancelCoI1 = () => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
     setCoi1(false);
   };
 
   const showCoI1 = () => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
     setCoi1(true);
   };
 
@@ -277,6 +287,11 @@ export default function Home() {
   };
 
   const setUserAsVisited = () => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+
     if (address && chainId) {
       const hasVisitedKey = `has_visited_${chainId}_${address}`;
       localStorage.setItem(hasVisitedKey, 'true');
@@ -307,6 +322,11 @@ export default function Home() {
   };
 
   const handleVote = async (chosenId: number) => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+
     setCoiLoading1(true);
     setCoiLoading2(true);
     try {
@@ -331,6 +351,11 @@ export default function Home() {
   };
 
   const handleUndo = async () => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+
     if (data?.votedPairs === 0) return;
     setRevertingBack(true);
     setCoi1(false);
@@ -565,7 +590,9 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center gap-4 lg:flex-row xl:gap-8">
             <Rating
               value={rating1 || 0}
-              onChange={setRating1}
+              onChange={(value) => {
+                !wallet ? setShowLoginModal(true) : setRating1(value);
+              }}
               disabled={coiLoading1 || isAnyModalOpen()}
             />
             <VoteButton
@@ -588,7 +615,9 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center gap-4 lg:flex-row xl:gap-8">
             <Rating
               value={rating2 || 0}
-              onChange={setRating2}
+              onChange={(value) => {
+                !wallet ? setShowLoginModal(true) : setRating2(value);
+              }}
               disabled={coiLoading2 || isAnyModalOpen()}
             />
             <VoteButton
