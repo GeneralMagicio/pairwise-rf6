@@ -45,8 +45,9 @@ const RankingRow: FC<IRankingRowProps> = ({
     >
       <td className="pb-8 pl-1 pt-4 lg:pl-4">
         <Checkbox
-          checked={selected}
+          checked={selected && !coi}
           onChange={() => onSelect(project.projectId)}
+          disabled={coi}
         />
       </td>
       <td className="flex flex-row pb-8 pl-1 pt-4 lg:pl-4">
