@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useActiveWallet } from 'thirdweb/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
+import Image from 'next/image';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import styles from '../styles/BadgeholderModal.module.css';
 import Modal from '../utils/Modal';
@@ -21,8 +22,6 @@ import { useCategoryRankings, useUpdateCategoriesRanking } from '@/app/compariso
 import { getJWTData } from '../utils/wallet/agora-login';
 import { useAuth } from '../utils/wallet/AuthProvider';
 import { uploadBallot, ballotSuccessPost } from '../comparison/ballot/useGetBallot';
-import BadgeholderIllustration from '/public/assets/images/badgeholder-illustration.svg';
-
 
 enum BallotState {
   Initial,
@@ -68,10 +67,10 @@ const AllocationPage = () => {
   useEffect(() => {
     if (isBadgeholder) {
       const modalKey = `hasSeenBadgeHolderModal_${address}`;
-      const hasSeen = sessionStorage.getItem(modalKey); // Use sessionStorage to track modal state
+      const hasSeen = sessionStorage.getItem(modalKey);
       if (!hasSeen) {
-        setShowBadgeholderModal(true); // Show modal
-        sessionStorage.setItem(modalKey, 'true'); // Mark modal as shown in sessionStorage
+        setShowBadgeholderModal(true);
+        sessionStorage.setItem(modalKey, 'true');
       }
     }
   }, [isBadgeholder, address]);
@@ -93,9 +92,9 @@ const AllocationPage = () => {
   }, [categoryRankings]);
 
   const handleStartVoting = () => {
-    setShowBadgeholderModal(false); // Close Badgeholder Modal
+    setShowBadgeholderModal(false);
     if (!wallet) {
-      setShowLoginModal(true); // Trigger login modal if no wallet
+      setShowLoginModal(true);
       return;
     }
     router.push(`/voting/${category}`);
@@ -103,8 +102,8 @@ const AllocationPage = () => {
 
   const handleScoreProjects = (id: number) => {
     if (!wallet) {
-      setSelectedCategoryId(id); // Store category for login modal
-      setShowLoginModal(true); // Open login modal
+      setSelectedCategoryId(id);
+      setShowLoginModal(true);
       return;
     }
     router.push(`/comparison/${categoryIdSlugMap.get(id)}`);
@@ -133,6 +132,7 @@ const AllocationPage = () => {
       });
       setCategoriesRanking(newRanking);
       setPercentageError(undefined);
+    // eslint-disable-next-line @stylistic/brace-style
     } catch (e: any) {
       setPercentageError(e.msg);
     }
@@ -145,6 +145,7 @@ const AllocationPage = () => {
       const ballot = await uploadBallot(address);
       await ballotSuccessPost();
       setBallotState(BallotState.Success);
+    // eslint-disable-next-line @stylistic/brace-style
     } catch (error) {
       setBallotState(BallotState.Error);
     }
@@ -156,11 +157,14 @@ const AllocationPage = () => {
       {showBadgeholderModal && (
         <div className={styles['badgeholder-modal']}>
           <div className={styles['modal-content']}>
-            <img
+            <Image
               src="/assets/images/badgeholder-illustration.svg"
               alt="Badgeholder Illustration"
               className={styles.modalIllustration}
+              width={200} // Adjusted to fit the modal properly
+              height={200}
             />
+
             <h2 className={styles['modal-title']}>Welcome Badgeholder!</h2>
             <p className={styles['modal-text']}>
               You are assigned to vote on
@@ -227,13 +231,6 @@ const AllocationPage = () => {
                     const rank = categoriesRanking?.find(el => el.id === cat.id);
                     return (
                       <CategoryAllocation
-                        allocatingBudget={false}
-                        locked={false}
-                        delegations={0}
-                        loading={false}
-                        isBadgeholder={false}
-                        bhCategory=""
-                        categorySlug=""
                         onDelegate={function (): void {
                           throw new Error('Function not implemented.');
                         }}
@@ -243,6 +240,13 @@ const AllocationPage = () => {
                         onPercentageChange={function (value: number): void {
                           throw new Error('Function not implemented.');
                         }}
+                        allocatingBudget={false}
+                        locked={false}
+                        delegations={0}
+                        loading={false}
+                        isBadgeholder={false}
+                        bhCategory=""
+                        categorySlug=""
                         {...cat}
                         key={cat.id}
                         allocationPercentage={rank?.percentage || 0}
@@ -274,13 +278,9 @@ const AllocationPage = () => {
 
           <div className="w-[25%]">
             <ConnectBox
-              onConnectWorldID={() => { }}
-              onConnectTwitter={function (): void {
-                throw new Error('Function not implemented.');
-              }}
-              onConnectFarcaster={function (): void {
-                throw new Error('Function not implemented.');
-              }}
+              onConnectWorldID={() => {}}
+              onConnectTwitter={() => {}}
+              onConnectFarcaster={() => {}}
             />
           </div>
         </div>

@@ -94,3 +94,9 @@
     width: 200px;
     height: auto;
   }
+  .modalIllustration {
+    display: block;
+    margin: 0 auto; /* Center the image */
+    max-width: 100%; /* Ensure responsiveness */
+    height: auto; /* Maintain aspect ratio */
+  }
