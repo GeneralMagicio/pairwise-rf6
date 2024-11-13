@@ -425,7 +425,7 @@ const AllocationPage = () => {
         showCloseButton
       >
         <BadgeholderModal
-          categoryName={convertCategoryToLabel(category)}
+          categoryName={category ? convertCategoryToLabel(category) : ''}
           categorySlug={category}
           onClose={() => {
             setShowBHGuideModal(false);
