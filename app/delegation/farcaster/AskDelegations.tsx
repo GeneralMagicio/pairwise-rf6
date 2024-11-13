@@ -19,7 +19,6 @@ const AskDelegations: React.FC<Props> = ({
   link,
   onClose,
 }) => {
-  console.log(isBadgeHolder);
   const text = isBadgeHolder
     ? `I voted in @pairwise Liquid Democracy Experiment, ranking the ${categoryName} category of @optimism RF6.\n\nDelegate to me here:\nhttps://app.pairwise.vote/`
     : `I voted in @pairwise Liquid Democracy Experiment, ranking the ${categoryName} category of @optimism RF6.`;
