@@ -20,10 +20,10 @@ const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
 
       <div className="items-around flex flex-col gap-4">
         <h2 className="whitespace-nowrap text-2xl font-bold text-dark-500">
-          Attestation done successfully!!
+          Attestation done successfully!
         </h2>
         <p className="text-gray-400">
-          It&39;s time to celebrate!! Your votes have been attested successfully.
+          It&39;s time to celebrate! Your votes have been attested successfully.
         </p>
         <p className="text-gray-400">
           You can update your ballot on Optimism.
