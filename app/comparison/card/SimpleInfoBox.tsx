@@ -6,6 +6,7 @@ import { ArrowUpIcon } from '@/public/assets/icon-components/ArrowUp';
 
 interface Props {
   title: string
+  link?: string
   description: string
   type: 'link' | 'pricing'
   showIcon?: boolean
@@ -17,8 +18,9 @@ const ICONS_MAP: Record<Props['type'], React.ReactNode> = {
 };
 
 const SimpleInfoBox: FC<Props> = ({
-  description,
   title,
+  link,
+  description,
   type,
   showIcon = true,
 }) => {
@@ -27,7 +29,7 @@ const SimpleInfoBox: FC<Props> = ({
   const renderTitle = () => {
     if (type === 'pricing') return title;
 
-    const href = title;
+    const href = link || title;
     const displayTitle = title.replace(/(https?:\/\/)|(https:)/, '');
 
     return (

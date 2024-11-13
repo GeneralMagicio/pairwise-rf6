@@ -8,6 +8,7 @@ import { EASNetworks, SCHEMA_UID, convertRankingToAttestationFormat, generateRan
 export enum AttestationState {
   Initial,
   Loading,
+  FarcasterDelegate,
   Success,
   Error,
 }
@@ -262,7 +263,7 @@ export const attest = async ({ ranking, signer, wallet, setAttestationState, set
       attestationId: attestationLink,
     });
 
-    setAttestationState(AttestationState.Success);
+    setAttestationState(AttestationState.FarcasterDelegate);
     setAttestationLink(attestationLink);
   }
  catch (e) {

@@ -1,6 +1,6 @@
 import React, { FC, useState, useEffect, useMemo } from 'react';
 import { useDisconnect, useAccount } from 'wagmi';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ConnectButton } from '@/app/utils/wallet/Connect';
 import { PwLogo } from '@/public/assets/icon-components/PairwiseLogo';
 import { ThinExternalLinkIcon } from '@/public/assets/icon-components/ThinExternalLink';
@@ -33,6 +33,7 @@ const HeaderRF6: FC<HeaderProps> = ({
   isFirstSelection = false,
 }) => {
   const path = usePathname();
+  const router = useRouter();
   const { disconnectAsync } = useDisconnect();
   const { signOut, loginAddress } = useAuth();
   const { data: badges } = useGetPublicBadges();
@@ -168,7 +169,7 @@ const HeaderRF6: FC<HeaderProps> = ({
       <div className="relative z-40 w-full border-b bg-white">
         <div className="flex items-center justify-between px-6 py-4 md:px-12 lg:px-4">
           {!isFirstSelection && (
-            <div className="flex items-center">
+            <div onClick={() => router.push('/allocation')} className="flex cursor-pointer items-center">
               <PwLogo />
             </div>
           )}

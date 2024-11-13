@@ -15,7 +15,11 @@ import CategoryAllocation from './components/CategoryAllocation';
 import BudgetAllocation, { BudgetCategory } from './components/BudgetAllocation';
 import ConnectBox from './components/ConnectBox';
 import SmallSpinner from '../components/SmallSpinner';
-import { RankItem, modifyPercentage, roundFractions } from './utils';
+import {
+  RankItem,
+  modifyPercentage,
+  roundFractions,
+} from './utils';
 import { categoryIdSlugMap } from '../comparison/utils/helpers';
 import { useCategories } from '../comparison/utils/data-fetching/categories';
 import { useCategoryRankings, useUpdateCategoriesRanking } from '@/app/comparison/utils/data-fetching/ranking';
@@ -35,7 +39,8 @@ enum BallotState {
 const budgetCategory: BudgetCategory = {
   id: -1,
   name: 'Budget',
-  description: 'Decide how much OP to allocate or delegate the budget to someone you trust.',
+  description:
+    'Choose how much OP should be allocated or delegate this decision to someone you trust.',
   imageSrc: '/assets/images/budget-card.svg',
 };
 
@@ -58,12 +63,6 @@ const AllocationPage = () => {
   const [percentageError, setPercentageError] = useState<string>();
   const [ballotState, setBallotState] = useState(BallotState.Initial);
 
-  const { mutateAsync: updateCategoriesRanking } = useUpdateCategoriesRanking({
-    budget: totalValue,
-    allocationPercentages: categoriesRanking?.map(el => el.percentage / 100) || [],
-  });
-
-  // Show Badgeholder Modal on initial page load if user is a Badgeholder
   useEffect(() => {
     if (isBadgeholder) {
       const modalKey = `hasSeenBadgeHolderModal_${address}`;
@@ -75,11 +74,10 @@ const AllocationPage = () => {
     }
   }, [isBadgeholder, address]);
 
-  // Set categories and rankings
   useEffect(() => {
     if (categoryRankings) {
       setCategoriesRanking(
-        categoryRankings.ranking.map(el => ({
+        categoryRankings.ranking.map((el) => ({
           RF6Id: el.project.RF6Id,
           id: el.projectId,
           percentage: roundFractions(el.share * 100, 6),
@@ -100,44 +98,6 @@ const AllocationPage = () => {
     router.push(`/voting/${category}`);
   };
 
-  const handleScoreProjects = (id: number) => {
-    if (!wallet) {
-      setSelectedCategoryId(id);
-      setShowLoginModal(true);
-      return;
-    }
-    router.push(`/comparison/${categoryIdSlugMap.get(id)}`);
-  };
-
-  const handleSliderChange = (_event: Event, newValue: number | number[]) => {
-    if (typeof newValue === 'number') {
-      setTotalValue(newValue * 1_000_000);
-      setCategoriesRanking(
-        categoriesRanking?.map(el => ({
-          ...el,
-          budget: el.budget * (newValue / (totalValue / 1_000_000)),
-        }))
-      );
-    }
-  };
-
-  const handleNewValue = (id: RankItem['id']) => (percentage: number) => {
-    try {
-      if (!categoriesRanking) return;
-      const currValue = categoriesRanking.find(el => el.id === id)!;
-      const newRanking = modifyPercentage(categoriesRanking, {
-        ...currValue,
-        percentage,
-        budget: currValue.budget * (percentage / currValue.percentage),
-      });
-      setCategoriesRanking(newRanking);
-      setPercentageError(undefined);
-    // eslint-disable-next-line @stylistic/brace-style
-    } catch (e: any) {
-      setPercentageError(e.msg);
-    }
-  };
-
   const handleUploadBallot = async () => {
     if (loggedToAgora === 'error' || loggedToAgora === 'initial' || !address) return;
     setBallotState(BallotState.Loading);
@@ -145,7 +105,6 @@ const AllocationPage = () => {
       const ballot = await uploadBallot(address);
       await ballotSuccessPost();
       setBallotState(BallotState.Success);
-    // eslint-disable-next-line @stylistic/brace-style
     } catch (error) {
       setBallotState(BallotState.Error);
     }
@@ -161,16 +120,14 @@ const AllocationPage = () => {
               src="/assets/images/badgeholder-illustration.svg"
               alt="Badgeholder Illustration"
               className={styles.modalIllustration}
-              width={200} // Adjusted to fit the modal properly
+              width={200}
               height={200}
             />
 
             <h2 className={styles['modal-title']}>Welcome Badgeholder!</h2>
             <p className={styles['modal-text']}>
-              You are assigned to vote on
-              {' '}
-              <strong>{category?.replace('_', ' ') || 'your category'}</strong>
-              .
+              You are assigned to vote on{' '}
+              <strong>{category?.replace('_', ' ') || 'your category'}</strong>.
             </p>
             <div className={styles['modal-buttons']}>
               <button className={styles['modal-button-primary']} onClick={handleStartVoting}>
@@ -197,83 +154,29 @@ const AllocationPage = () => {
       <div className="flex flex-col gap-6 p-16">
         <div className="flex justify-between gap-4">
           <div className="flex w-[72%] flex-col gap-6 rounded-xl border p-6">
-            {allocatingBudget
-              ? (
-                  <BudgetAllocation
-                    budget={totalValue}
-                    onSliderChange={handleSliderChange}
-                    categories={categoriesRanking || []}
-                    onPercentageChange={handleNewValue}
+            {allocatingBudget ? (
+              <BudgetAllocation
+                budget={totalValue}
+                onSliderChange={() => {}}
+                categories={categoriesRanking || []}
+                onPercentageChange={() => {}}
+              />
+            ) : (
+              categories &&
+              categories.map((cat) => {
+                const rank = categoriesRanking?.find((el) => el.id === cat.id);
+                return (
+                  <CategoryAllocation
+                    {...cat}
+                    key={cat.id}
+                    allocationPercentage={rank?.percentage || 0}
+                    allocationBudget={rank?.budget || 0}
+                    onScore={() => handleStartVoting()}
                   />
-                )
-              : (
-                  <BudgetAllocation
-                    {...budgetCategory}
-                    progress={BallotState.Initial}
-                    attestationLink={null}
-                    delegations={0}
-                    loading={false}
-                    isBadgeholder={isBadgeholder}
-                    bhCategory={category}
-                    categorySlug={category}
-                    onScore={handleStartVoting}
-                    onDelegate={() => {}}
-                  />
-                )}
-
-            {categoriesLoading
-              ? (
-                  <SmallSpinner />
-                )
-              : (
-                  categories
-                  && categories.map((cat) => {
-                    const rank = categoriesRanking?.find(el => el.id === cat.id);
-                    return (
-                      <CategoryAllocation
-                        onDelegate={function (): void {
-                          throw new Error('Function not implemented.');
-                        }}
-                        onLockClick={function (): void {
-                          throw new Error('Function not implemented.');
-                        }}
-                        onPercentageChange={function (value: number): void {
-                          throw new Error('Function not implemented.');
-                        }}
-                        allocatingBudget={false}
-                        locked={false}
-                        delegations={0}
-                        loading={false}
-                        isBadgeholder={false}
-                        bhCategory=""
-                        categorySlug=""
-                        {...cat}
-                        key={cat.id}
-                        allocationPercentage={rank?.percentage || 0}
-                        allocationBudget={rank?.budget || 0}
-                        onScore={() => handleScoreProjects(cat.id)}
-                      />
-                    );
-                  })
-                )}
-
-            {!allocatingBudget && (
-              <button
-                className={`w-fit self-end rounded-lg px-4 py-3 ${
-                  ballotState === BallotState.Loading
-                  || (isBadgeholder && !categories?.find(el => el.id === category)?.progress)
-                    ? 'bg-gray-300 text-gray-500'
-                    : 'bg-primary text-white'
-                }`}
-                onClick={handleUploadBallot}
-                disabled={
-                  ballotState === BallotState.Loading
-                  || (isBadgeholder && !categories?.find(el => el.id === category)?.progress)
-                }
-              >
-                Update Ballot on Optimism
-              </button>
+                );
+              })
             )}
+            {categoriesLoading && <SmallSpinner />}
           </div>
 
           <div className="w-[25%]">
