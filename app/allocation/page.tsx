@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveWallet } from 'thirdweb/react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAccount } from 'wagmi';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import Modal from '../utils/Modal';
 import EmailLoginModal from './components/EOA/EmailLoginModal';
@@ -20,6 +21,7 @@ import { CustomizedSlider } from './components/Slider';
 import {
   categoryIdSlugMap,
   categorySlugIdMap,
+  convertCategoryToLabel,
   formatBudget,
 } from '../comparison/utils/helpers';
 import { useCategories } from '../comparison/utils/data-fetching/categories';
@@ -71,7 +73,6 @@ const AllocationPage = () => {
   const router = useRouter();
   const signer = useSigner();
   const { chainId, address } = useAccount();
-  const { loggedToAgora } = useAuth();
   const { isBadgeholder, category } = getJWTData();
 
   const { data: categories, isLoading: categoriesLoading } = useCategories();
@@ -318,7 +319,6 @@ const AllocationPage = () => {
     if (!address || !chainId || !isBadgeholder || isBGCategoryVoted()) return;
 
     const currentUserKey = `${chainId}_${address}`;
-
 
     const storedData = JSON.parse(
       localStorage.getItem(StorageLabel.BADGEHOLDER_GUIDE_MODAL) || '{}'
