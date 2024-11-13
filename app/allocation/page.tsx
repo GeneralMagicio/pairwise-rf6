@@ -42,17 +42,7 @@ import {
   useCategoryRankings,
   useUpdateCategoriesRanking,
 } from '@/app/comparison/utils/data-fetching/ranking';
-import { uploadBallot, getJWTData } from '../utils/wallet/agora-login';
-import { useAuth } from '../utils/wallet/AuthProvider';
-import {
-  ballotSuccessPost,
-  getBallot,
-} from '../comparison/ballot/useGetBallot';
-import BallotError from '../comparison/ballot/modals/BallotError';
-import BallotLoading from '../comparison/ballot/modals/BallotLoading';
-import BallotSuccessModal from '../comparison/ballot/modals/BallotSuccessModal';
-import BallotNotReady from '../comparison/ballot/modals/BallotNotReady';
-import BallotErrorDelegated from '../comparison/ballot/modals/BallotErrorDelegated';
+import { getJWTData } from '../utils/wallet/agora-login';
 import { attest, AttestationState } from './[category]/attestation';
 import AttestationError from './[category]/attestation/AttestationError';
 import AttestationLoading from './[category]/attestation/AttestationLoading';
@@ -60,6 +50,8 @@ import AttestationSuccessModal from './[category]/attestation/AttestationSuccess
 import { useSigner } from './[category]/utils';
 import BadgeholderModal from './components/BadgeholderModal';
 import StorageLabel from '../lib/localStorage';
+import { UpdateBallotButton } from './[category]/components/UpdateBallotButton';
+import AskDelegations from '../delegation/farcaster/AskDelegations';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -76,21 +68,11 @@ enum DelegationState {
   Success,
 }
 
-enum BallotState {
-  Initial,
-  Loading,
-  Error,
-  ErrorNotReady,
-  ErrorDelegated,
-  Success,
-}
-
 const AllocationPage = () => {
   const wallet = useActiveWallet();
   const router = useRouter();
   const signer = useSigner();
   const { chainId, address } = useAccount();
-  const { loggedToAgora } = useAuth();
   const { isBadgeholder, category } = getJWTData();
 
   const { data: categories, isLoading: categoriesLoading } = useCategories();
@@ -108,9 +90,6 @@ const AllocationPage = () => {
   const [attestationState, setAttestationState] = useState(AttestationState.Initial);
   const [attestationLink, setAttestationLink] = useState<string>();
 
-  const [ballotState, setBallotState] = useState<BallotState>(
-    BallotState.Initial
-  );
   const [totalValue, setTotalValue] = useState(categoryRankings?.budget || 0);
   const [percentageError, setPercentageError] = useState<string>();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
@@ -258,32 +237,6 @@ const AllocationPage = () => {
     setTargetDelegate(undefined);
   };
 
-  const handleUploadBallot = async () => {
-    if (loggedToAgora === 'error' || loggedToAgora === 'initial' || !address)
-      return;
-    setBallotState(BallotState.Loading);
-    // const agoraPayload = await isLoggedInToAgora(address);
-
-    const cid = categorySlugIdMap.get(loggedToAgora.category);
-
-    if (!cid) throw new Error('Undefined category id');
-    if (categories?.find(el => el.id === cid)?.progress === 'Delegated') {
-      setBallotState(BallotState.ErrorDelegated);
-      return;
-    }
-    try {
-      const ballot = await getBallot(cid);
-      await uploadBallot(ballot, address);
-      await ballotSuccessPost();
-      setBallotState(BallotState.Success);
-    }
-    catch (e: any) {
-      if (e.response.data.pwCode === 'e-1005')
-        setBallotState(BallotState.ErrorNotReady);
-      else setBallotState(BallotState.Error);
-    }
-  };
-
   const handleScoreProjects = (id: RankItem['id']) => () => {
     setSelectedCategoryId(id);
 
@@ -367,7 +320,6 @@ const AllocationPage = () => {
 
     const currentUserKey = `${chainId}_${address}`;
 
-
     const storedData = JSON.parse(
       localStorage.getItem(StorageLabel.BADGEHOLDER_GUIDE_MODAL) || '{}'
     );
@@ -396,6 +348,21 @@ const AllocationPage = () => {
         onClose={handleAttestationModalClose}
         showCloseButton={true}
       >
+        {attestationState === AttestationState.FarcasterDelegate && attestationLink && (
+          <AskDelegations
+            categoryName={category}
+            link={attestationLink}
+            onClose={() => {
+              if (isBadgeholder) {
+                setAttestationState(AttestationState.Success);
+              }
+              else {
+                setAttestationState(AttestationState.Initial);
+              }
+            }}
+            isBadgeHolder={isBadgeholder}
+          />
+        )}
         {attestationState === AttestationState.Success && attestationLink && (
           <AttestationSuccessModal
             link={attestationLink}
@@ -404,38 +371,6 @@ const AllocationPage = () => {
         )}
         {attestationState === AttestationState.Loading && <AttestationLoading />}
         {attestationState === AttestationState.Error && <AttestationError onClick={handleSubmitVote} />}
-      </Modal>
-      <Modal
-        isOpen={ballotState !== BallotState.Initial}
-        onClose={() => {}}
-        showCloseButton={false}
-      >
-        {ballotState === BallotState.Success && (
-          <BallotSuccessModal
-            link={`${process.env.NEXT_PUBLIC_OPTIMISM_URL}/ballot`}
-            onClose={() => setBallotState(BallotState.Initial)}
-          />
-        )}
-        {ballotState === BallotState.Loading && <BallotLoading />}
-        {ballotState === BallotState.Error && (
-          <BallotError onClick={handleUploadBallot} />
-        )}
-        {ballotState === BallotState.ErrorNotReady
-        && typeof loggedToAgora === 'object' && (
-          <BallotNotReady
-            categoryName={convertCategoryToLabel(loggedToAgora.category)}
-            onClick={() => {
-              setBallotState(BallotState.Initial);
-            }}
-          />
-        )}
-        {ballotState === BallotState.ErrorDelegated && typeof loggedToAgora === 'object'
-        && (
-          <BallotErrorDelegated
-            categoryName={convertCategoryToLabel(loggedToAgora.category)}
-            onClick={() => { setBallotState(BallotState.Initial); }}
-          />
-        )}
       </Modal>
       <Modal
         isOpen={
@@ -672,21 +607,7 @@ const AllocationPage = () => {
                   </div>
                 )
               : (
-                  <button
-                    className={`w-fit self-end rounded-lg px-4 py-3 ${
-                      ballotState === BallotState.Loading
-                      || (isBadgeholder && !isBGCategoryVoted())
-                        ? 'bg-gray-300 text-gray-500'
-                        : 'bg-primary text-white'
-                    }`}
-                    onClick={handleUploadBallot}
-                    disabled={
-                      ballotState === BallotState.Loading
-                      || (isBadgeholder && !isBGCategoryVoted())
-                    }
-                  >
-                    Update Ballot on Optimism
-                  </button>
+                  <UpdateBallotButton isBadgeHolderAndNotVoted={(isBadgeholder && !isBGCategoryVoted())} />
                 )}
           </div>
           {!allocatingBudget && (

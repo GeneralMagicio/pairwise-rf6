@@ -37,6 +37,8 @@ import {
   useMarkCoi,
   useUnmarkCoi,
 } from '@/app/comparison/utils/data-fetching/coi';
+import AskDelegations from '@/app/delegation/farcaster/AskDelegations';
+import { getJWTData } from '@/app/utils/wallet/agora-login';
 
 enum VotingStatus {
   VOTED,
@@ -82,6 +84,8 @@ const RankingPage = () => {
     = useUpdateProjectRanking(category);
   const { mutateAsync: markProjectCoI } = useMarkCoi();
   const { mutateAsync: unmarkProjectCoI } = useUnmarkCoi();
+
+  const { isBadgeholder } = getJWTData();
 
   const handleBulkSelection = () => {
     if (!nonCoIProjects) return;
@@ -395,8 +399,23 @@ const RankingPage = () => {
       <Modal
         isOpen={attestationState !== AttestationState.Initial}
         onClose={handleAttestationModalClose}
-        showCloseButton={true}
+        showCloseButton={attestationState !== AttestationState.FarcasterDelegate}
       >
+        {attestationState === AttestationState.FarcasterDelegate && attestationLink && (
+          <AskDelegations
+            categoryName={params?.category as string}
+            link={attestationLink}
+            onClose={() => {
+              if (isBadgeholder) {
+                setAttestationState(AttestationState.Success);
+              }
+              else {
+                setAttestationState(AttestationState.Initial);
+              }
+            }}
+            isBadgeHolder={isBadgeholder}
+          />
+        )}
         {attestationState === AttestationState.Success && attestationLink && (
           <AttestationSuccessModal
             link={attestationLink}
