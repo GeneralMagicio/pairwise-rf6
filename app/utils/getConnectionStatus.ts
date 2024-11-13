@@ -21,14 +21,14 @@ const updateFarcaster = async ({ message, signature, custody }: IUpdateFarcaster
     }
     return response.data;
   }
-  catch (error: any) {
+ catch (error: any) {
     if (error.response) {
       if (error.response.data?.message) {
         throw new Error(error.response.data.message);
       }
       throw new Error(error.response.message);
     }
-    else {
+ else {
       throw new Error('No response received from the server');
     }
   }
@@ -71,14 +71,14 @@ const updateWorldID = async (proof: ISuccessResult) => {
     }
     return response.data;
   }
-  catch (error: any) {
+ catch (error: any) {
     if (error.response) {
       if (error.response.data?.message) {
         throw new Error(error.response.data.message);
       }
       throw new Error(error.response.message);
     }
-    else {
+ else {
       throw new Error('No response received from the server');
     }
   }

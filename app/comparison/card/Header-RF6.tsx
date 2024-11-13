@@ -81,7 +81,7 @@ const HeaderRF6: FC<HeaderProps> = ({
       if (window.scrollY > HEADER_HEIGHT) {
         setIsBarFixed(true);
       }
-      else {
+ else {
         setIsBarFixed(false);
       }
     };

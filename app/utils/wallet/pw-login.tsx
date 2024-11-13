@@ -7,7 +7,7 @@ export const isLoggedIn = async () => {
     const { data } = await axiosInstance.get<Number>('/auth/isloggedin');
     return data;
   }
-  catch (err) {
+ catch (err) {
     return false;
   }
 };
@@ -48,7 +48,7 @@ export const logoutFromPwBackend = () => {
     }
     // await axios.post('/auth/logout')
   }
-  catch (err) {
+ catch (err) {
     console.error(err);
   }
 };

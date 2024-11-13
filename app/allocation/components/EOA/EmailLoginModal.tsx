@@ -89,7 +89,7 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
         sentAt: Date.now(),
       });
     }
-    catch (e) {
+ catch (e) {
       setOtpData({
         ...otpData,
         loading: false,

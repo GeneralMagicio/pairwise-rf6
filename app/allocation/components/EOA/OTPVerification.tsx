@@ -134,11 +134,11 @@ export const OTPVerification: FC<IOTPVerificationProps> = ({
       if (!userSmartWallet) {
         setStep(Step.CONNECT_EOA);
       }
-      else {
+ else {
         closeModal();
       }
     }
-    catch {
+ catch {
       setOtpData({
         ...otpData,
         loading: false,

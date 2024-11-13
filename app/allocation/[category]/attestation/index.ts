@@ -265,7 +265,7 @@ export const attest = async ({ ranking, signer, wallet, setAttestationState, set
     setAttestationState(AttestationState.Success);
     setAttestationLink(attestationLink);
   }
-  catch (e) {
+ catch (e) {
     console.error('error on sending tx:', e);
     setAttestationState(AttestationState.Error);
   }

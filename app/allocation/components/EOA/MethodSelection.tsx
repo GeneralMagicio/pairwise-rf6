@@ -60,11 +60,11 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
         setStep(Step.CONNECT_EOA);
         setPickedMethod(null);
       }
-      else {
+ else {
         closeModal();
       }
     }
-    catch (error: any) {
+ catch (error: any) {
       setOAuthData({
         ...oAuthData,
         loading: true,
@@ -87,7 +87,7 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
         emailError: 'Please enter a valid email',
       });
     }
-    else {
+ else {
       setOtpData({
         ...otpData,
         email: value,

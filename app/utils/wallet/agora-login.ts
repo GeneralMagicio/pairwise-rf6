@@ -94,7 +94,7 @@ export const isLoggedInToAgora = async (address: string): Promise<JWTPayload | f
     });
     return decoded;
   }
-  catch (e) {
+ catch (e) {
     return false;
   }
 };
@@ -131,7 +131,7 @@ export const getJWTData = (): JWTPayload => {
 
     return decoded;
   }
-  else {
+ else {
     return {} as JWTPayload;
   }
 };

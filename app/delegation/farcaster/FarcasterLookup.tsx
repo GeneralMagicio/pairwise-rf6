@@ -17,8 +17,7 @@ function extractFarcasterUsername(input: string) {
   if (trimmedInput.includes('@')) {
     return trimmedInput.split('@')[1];
   }
-
-  else if (trimmedInput.includes('warpcast.com/')) {
+ else if (trimmedInput.includes('warpcast.com/')) {
     return trimmedInput.split('warpcast.com/')[1];
   }
 
@@ -42,7 +41,7 @@ export const FarcasterLookup: React.FC<Props> = ({ categoryName, handleDelegate 
       const { data } = await axiosInstance.get<FarcasterUserByFid>(`flow/farcaster/user-by-username?username=${username}`);
       setIsValid(data.result.user);
     }
-    catch {
+ catch {
       setIsValid(false);
     }
   }

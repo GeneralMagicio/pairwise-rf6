@@ -22,7 +22,7 @@ const VotedCategory = ({
       budgetEditHandle();
       return;
     }
-    else router.push(`/allocation/${categoryIdSlugMap.get(id)}`);
+ else router.push(`/allocation/${categoryIdSlugMap.get(id)}`);
   };
 
   return (

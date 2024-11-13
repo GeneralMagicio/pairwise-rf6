@@ -50,7 +50,7 @@ const FarcasterModal: React.FC<FarcasterModalProps> = ({ isOpen, onClose }) => {
     try {
       if (url) await navigator.clipboard.writeText(url);
     }
-    catch (err) {
+ catch (err) {
       console.error('Failed to copy: ', err);
     }
   };

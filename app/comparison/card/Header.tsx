@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({
       if (window.scrollY > 100) {
         setIsBarFixed(true);
       }
-      else {
+ else {
         setIsBarFixed(false);
       }
     };

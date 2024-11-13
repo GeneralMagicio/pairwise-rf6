@@ -30,15 +30,15 @@ export function formatAmount(amount: string) {
   if (num >= 1000000) {
     return (num / 1000000).toFixed(1) + 'M';
   }
-  else if (num >= 1000) {
+ else if (num >= 1000) {
     return (num / 1000).toFixed(1) + 'K';
   }
-  else {
+ else {
     const decimalPlaces = (num.toString().split('.')[1] || []).length;
     if (decimalPlaces > 3) {
       return num.toFixed(3);
     }
-    else {
+ else {
       return num.toString();
     }
   }
@@ -59,7 +59,7 @@ const GrantBox: FC<Props> = ({
     if (type === 'grant') {
       return 'Grant: ' + title.split('-').join(' ');
     }
-    else return title;
+ else return title;
   };
 
   return (

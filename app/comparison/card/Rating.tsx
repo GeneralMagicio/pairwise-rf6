@@ -36,7 +36,7 @@ export const Rating: FC<Props> = ({ value, disabled, onChange }) => {
       setStarsColoring(getStarsColoring(hoverValue).hoverFillColor);
       setCurrentValue(hoverValue);
     }
-    else {
+ else {
       setStarsColoring(getStarsColoring(value).activeFillColor);
       setCurrentValue(value);
     }

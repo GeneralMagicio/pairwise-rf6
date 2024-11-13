@@ -86,7 +86,7 @@ const RankingPage = () => {
     if (checkedItems.length === projects.length) {
       setCheckedItems([]);
     }
-    else {
+ else {
       setCheckedItems(projects.map(project => project.projectId));
     }
   };
@@ -138,7 +138,7 @@ const RankingPage = () => {
           window.scrollTo(0, document.body.scrollHeight);
         }
       }
-      catch (e: any) {
+ catch (e: any) {
         if (e.msg === 'Bigger than 100 error') {
           setTotalShareError(
             `Percentages must add up to 100% (remove ${
@@ -146,7 +146,7 @@ const RankingPage = () => {
             }% from your ballot)`
           );
         }
-        else {
+ else {
           setTotalShareError(e.msg);
         }
         window.scrollTo(0, document.body.scrollHeight);
@@ -159,7 +159,7 @@ const RankingPage = () => {
     if (lockedItems.includes(id)) {
       setLockedItems(lockedItems.filter(lockedId => lockedId !== id));
     }
-    else {
+ else {
       if (projects && lockedItems.length >= projects?.length - 2) {
         setTotalShareError('At least two projects must be unlocked');
         window.scrollTo(0, document.body.scrollHeight);
@@ -203,7 +203,7 @@ const RankingPage = () => {
     if (checkedItems.includes(id)) {
       setCheckedItems(checkedItems.filter(checkedId => checkedId !== id));
     }
-    else {
+ else {
       setCheckedItems([...checkedItems, id]);
     }
   };
@@ -250,7 +250,7 @@ const RankingPage = () => {
     if (attestationState === AttestationState.Success) {
       router.push('/allocation');
     }
-    else if (attestationState === AttestationState.Error) {
+ else if (attestationState === AttestationState.Error) {
       setAttestationState(AttestationState.Initial);
     }
   };
@@ -275,15 +275,15 @@ const RankingPage = () => {
       setIsLocked(true);
       setIsUnlocked(false);
     }
-    else if (noneLocked || checkedUnlocked) {
+ else if (noneLocked || checkedUnlocked) {
       setIsLocked(false);
       setIsUnlocked(true);
     }
-    else if (someLocked || someUnlocked) {
+ else if (someLocked || someUnlocked) {
       setIsLocked(true);
       setIsUnlocked(true);
     }
-    else {
+ else {
       setIsLocked(false);
       setIsUnlocked(false);
     }
@@ -309,7 +309,7 @@ const RankingPage = () => {
       setTotalShareError('At least two projects must be unlocked');
       window.scrollTo(0, document.body.scrollHeight);
     }
-    else {
+ else {
       setTotalShareError(null);
     }
   }, [lockedItems]);

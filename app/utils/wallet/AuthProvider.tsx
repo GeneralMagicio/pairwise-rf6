@@ -158,14 +158,14 @@ export const useAuth = () => {
         confirmed: true,
       });
     }
-    else if (
+ else if (
       prevAddress
       && connectedAddress !== prevAddress
       && !path?.includes('comparison')
     ) {
       signOut();
     }
-    else if (
+ else if (
       prevAddress
       && connectedAddress !== prevAddress
       && path?.includes('comparison')
@@ -185,7 +185,7 @@ export const useAuth = () => {
     if (validToken) {
       setLoggedToPw(LogginToPwBackendState.LoggedIn);
     }
-    else {
+ else {
       setLoggedToPw(LogginToPwBackendState.Error);
     }
   }, [
@@ -218,7 +218,7 @@ export const useAuth = () => {
         setLoggedToAgora(res);
       }
     }
-    catch (e) {
+ catch (e) {
       console.log('agora err');
       setLoggedToAgora('error');
       setLoginInProgress(false);
@@ -232,7 +232,7 @@ export const useAuth = () => {
         console.log('vt:', validToken);
         setLoggedToPw(LogginToPwBackendState.LoggedIn);
       }
-      else {
+ else {
         if (!message || !signature) {
           const { message: val1, signature: val2 } = await getMessageAndSignature(address, chainId, signMessageAsync);
           message = val1;
@@ -252,12 +252,12 @@ export const useAuth = () => {
         setLoggedToPw(LogginToPwBackendState.LoggedIn);
       }
     }
-    catch (e) {
+ catch (e) {
       console.log('pw error', e);
       setLoggedToPw(LogginToPwBackendState.Error);
       return;
     }
-    finally {
+ finally {
       setLoginInProgress(false);
     }
   }, [chainId, connectedAddress]);
@@ -303,7 +303,7 @@ export const useAuth = () => {
         await smartWallet.connect({ personalAccount, client: client });
         await connect(smartWallet);
       }
-      finally {
+ finally {
         setIsAutoConnecting(false);
       }
     };

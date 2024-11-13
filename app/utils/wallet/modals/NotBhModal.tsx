@@ -39,8 +39,9 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
       console.log('First login detected. Showing modal.');
       setShowModal(true);
       localStorage.setItem(hasSeenModalKey, 'true');
-    // eslint-disable-next-line @stylistic/brace-style
-    } else {
+    // eslint-disable-next-line brace-style
+    }
+    else {
       console.log('Subsequent login detected. Skipping modal.');
       setShouldRedirect(true);
     }
@@ -54,11 +55,11 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
     }
   }, [shouldRedirect, showModal, router]);
 
-  // const handleCloseModal = () => {
-  // console.log('Modal closed. Redirecting to /allocation.');
-  // setShowModal(false);
-  // setShouldRedirect(true); // Trigger redirection after modal closes
-  // };
+  const handleCloseModal = () => {
+    console.log('Modal closed. Redirecting to /allocation.');
+    setShowModal(false);
+    setShouldRedirect(true); // Trigger redirection after modal closes
+  };
 
   const badgeCards = useMemo(() => {
     if (!badges) return null;
@@ -76,15 +77,20 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
           amount={getBadgeAmount(key, badges)}
         />
       );
-    });
+    }
+    );
   }, [badges]);
 
   // Render nothing if modal should not be shown and redirection is pending
-  if (!showModal && shouldRedirect) return null;
+  if (!showModal && shouldRedirect) {
+    return null;
+  }
 
   return (
     <div className="relative flex max-w-3xl flex-col items-center justify-center gap-6 rounded-lg bg-badge-modal bg-cover bg-no-repeat px-24 py-8 text-center">
-      <h2 className="w-fit text-wrap text-4xl font-bold">Welcome to the Pairwise voting for "Retro Funding 6"</h2>
+      <h2 className="w-fit text-wrap text-4xl font-bold">
+        Welcome to the Pairwise voting for &quot;Retro Funding 6&quot;
+      </h2>
       {badges && Object.keys(badges).length > 0
         ? (
             <div className="flex flex-col justify-center">
@@ -113,79 +119,60 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
           </div>
         </div>
         <div className="m-auto flex w-full max-w-md flex-col justify-center gap-2">
-          <div>
-            <button
-              onClick={() => {
-                open();
-              }}
-              className={`flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] ${
-                connectionStatus?.worldId
-                  ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
-                  : 'border-[#CBD5E0] bg-gray-50 text-gray-700'
-              } px-4 py-2 font-semibold`}
-              disabled={!!connectionStatus?.worldId}
-            >
-              <WorldIdIcon />
-              Connect with WorldID
-              {connectionStatus?.worldId && <CheckIcon />}
-            </button>
-            {connectionStatus?.worldId && (
-              <div className="flex w-full items-center justify-center">
-                <p className="text-center text-sm font-medium text-[#079455]">
-                  Your voting power increased. You earned a new Badge.
-                </p>
-              </div>
-            )}
-          </div>
-          <div>
-            <button
-              onClick={onConnectFarcaster}
-              className={`flex w-full items-center ${
-                connectionStatus?.farcaster
-                  ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
-                  : 'border-[#CBD5E0] bg-gray-100 text-gray-700'
-              } justify-center gap-2 rounded-lg border px-4 py-2 font-semibold`}
-              disabled={!!connectionStatus?.farcaster}
-            >
-              <WarpcastIcon />
-              Connect with Farcaster
-              {connectionStatus?.farcaster && <CheckIcon />}
-            </button>
-            {connectionStatus?.farcaster && (
-              <div className="flex w-full items-center justify-center">
-                <p className="text-center text-sm font-medium text-[#079455]">
-                  <span className="font-semibold">
-                    {delegates?.toYou?.uniqueDelegators
-                      ? delegates?.toYou?.uniqueDelegators <= 1
-                        ? 'someone delegated to you'
-                        : `${delegates?.toYou?.uniqueDelegators} people delegated to you`
-                      : 'You have no delegations'}
-                  </span>
-                </p>
-              </div>
-            )}
-          </div>
-          {(connectionStatus?.farcaster && connectionStatus?.worldId)
-            ? (
-                <button
-                  onClick={() => {
-                    router.push('/allocation');
-                  }}
-                  className="m-auto w-3/5 rounded-md bg-primary px-4 py-2 text-white hover:bg-red-600"
-                >
-                  Continue →
-                </button>
-              )
-            : (
-                <button
-                  onClick={() => {
-                    router.push('/allocation');
-                  }}
-                  className="w-full justify-center px-1 text-xs text-gray-600 underline"
-                >
-                  <p>I&#39;ll do it later</p>
-                </button>
-              )}
+          <button
+            onClick={() => {
+              open();
+            }}
+            className={`flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] ${
+              connectionStatus?.worldId
+                ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
+                : 'border-[#CBD5E0] bg-gray-50 text-gray-700'
+            } px-4 py-2 font-semibold`}
+            disabled={!!connectionStatus?.worldId}
+          >
+            <WorldIdIcon />
+            Connect with WorldID
+            {connectionStatus?.worldId && <CheckIcon />}
+          </button>
+          {connectionStatus?.worldId && (
+            <div className="flex w-full items-center justify-center">
+              <p className="text-center text-sm font-medium text-[#079455]">
+                Your voting power increased. You earned a new Badge.
+              </p>
+            </div>
+          )}
+          <button
+            onClick={onConnectFarcaster}
+            className={`flex w-full items-center ${
+              connectionStatus?.farcaster
+                ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
+                : 'border-[#CBD5E0] bg-gray-100 text-gray-700'
+            } justify-center gap-2 rounded-lg border px-4 py-2 font-semibold`}
+            disabled={!!connectionStatus?.farcaster}
+          >
+            <WarpcastIcon />
+            Connect with Farcaster
+            {connectionStatus?.farcaster && <CheckIcon />}
+          </button>
+          {connectionStatus?.farcaster && (
+            <div className="flex w-full items-center justify-center">
+              <p className="text-center text-sm font-medium text-[#079455]">
+                <span className="font-semibold">
+                  {delegates?.toYou?.uniqueDelegators
+                    ? delegates?.toYou?.uniqueDelegators <= 1
+                      ? 'someone delegated to you'
+                      : `${delegates?.toYou?.uniqueDelegators} people delegated to you`
+                    : 'You have no delegations'}
+                </span>
+              </p>
+            </div>
+          )}
+          <button
+            onClick={handleCloseModal}
+            className="w-full justify-center px-1 text-xs text-gray-600 underline"
+          >
+            I&apos;ll do it later
+          </button>
         </div>
       </div>
     </div>

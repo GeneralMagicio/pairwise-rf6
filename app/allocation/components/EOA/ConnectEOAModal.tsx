@@ -44,7 +44,7 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setStep }) => {
       setLoading(false);
       setStep(Step.SUCCESS);
     }
-    catch (err) {
+ catch (err) {
       wallet.disconnect();
       setError('This email is already connected to another wallet');
       setLoading(false);

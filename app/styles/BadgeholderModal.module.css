@@ -1,0 +1,96 @@
+.badgeholder-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 480px;
+    height: 562px;
+    padding: 40px 24px;
+    background: #fbfcfe;
+    box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08),
+      0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+    border-radius: 12px;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    text-align: center;
+  }
+  
+  .modal-illustration {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    margin-bottom: 16px;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  
+  .modal-text {
+    font-size: 1rem;
+    color: #667085;
+    margin-bottom: 8px;
+  }
+  
+  .modal-highlight {
+    font-weight: bold;
+    color: #111827;
+  }
+  
+  .modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+  
+  .modal-button-primary {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .modal-button-secondary {
+    background-color: transparent;
+    color: #6b7280;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .badgeholder-modal {
+    display: flex; /* Or block */
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content {
+    overflow: visible; /* Ensure children are not clipped */
+    position: relative; /* Avoid stacking issues */
+    z-index: 10; /* Ensure visibility */
+  }
+
+  .modalIllustration {
+    width: 200px; /* Adjust dimensions as needed */
+    height: auto;
+    display: block;
+    max-width: 100%;
+    margin: 0 auto; /* Center the illustration in the modal */
+  }
+  .modalIllustration {
+    display: block; /* Ensure it’s visible */
+    width: 200px;
+    height: auto;
+  }

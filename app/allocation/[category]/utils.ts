@@ -87,7 +87,7 @@ export const pinFileToIPFS = async (list: object) => {
     });
     return res.data;
   }
-  catch (error) {
+ catch (error) {
     console.log(error);
   }
 };

@@ -109,7 +109,7 @@ export default function Home() {
       setProgress(data.progress);
       setBypassPrevProgress(false);
     }
-    else {
+ else {
       setProgress(getBiggerNumber(prevProgress, data?.progress));
     }
   }, [data]);
@@ -159,13 +159,13 @@ export default function Home() {
     // observe if first rated project is rated good >= 4
     if (
       (rating1
-      && rating1 >= 4
-      && rating2 === initialRating2
-      && rating1 !== initialRating1)
+        && rating1 >= 4
+        && rating2 === initialRating2
+        && rating1 !== initialRating1)
       || (rating2
-      && rating2 >= 4
-      && rating1 === initialRating1
-      && rating2 !== initialRating2)
+        && rating2 >= 4
+        && rating1 === initialRating1
+        && rating2 !== initialRating2)
     ) {
       setShowGoodRatingModal(!getGetStarted().goodRating);
     }
@@ -192,7 +192,7 @@ export default function Home() {
     if (data?.votedPairs) {
       markAsVisited();
     }
-    else {
+ else {
       checkFirstTimeVisit();
       // show the post rating modal if the user has already rated the projects
       if (getGetStarted().postRating) {
@@ -235,7 +235,7 @@ export default function Home() {
       setProject1(pair.pairs[0].find(project => project.id !== id2)!);
       setRating1(pair.pairs[0].find(project => project.id !== id2)!.rating);
     }
-    catch (e) {
+ catch (e) {
       queryClient.refetchQueries({
         queryKey: ['pairwise-pairs', cid],
       });
@@ -260,7 +260,7 @@ export default function Home() {
       setProject2(pair.pairs[0].find(project => project.id !== id1)!);
       setRating2(pair.pairs[0].find(project => project.id !== id1)!.rating);
     }
-    catch (e) {
+ catch (e) {
       queryClient.refetchQueries({
         queryKey: ['pairwise-pairs', cid],
       });
@@ -324,7 +324,7 @@ export default function Home() {
         updateGetStarted({ postRating: true });
       }
     }
-    catch (e) {
+ catch (e) {
       setCoiLoading1(false);
       setCoiLoading2(false);
     }
