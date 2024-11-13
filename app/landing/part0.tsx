@@ -14,14 +14,12 @@ export const LandingPart0 = () => {
       </div>
       <div className="flex flex-row items-center justify-center gap-14">
         <div className="flex w-full flex-col items-center justify-center gap-4">
-          <div>
-            <TextBlock
-              mainText="Vote on"
-              highlightText="Retro Funding 6"
-              description=""
-            />
-          </div>
-          <div className="max-w-screen-md text-wrap text-center text-2xl text-dark-500">
+          <p className="w-full text-center text-3xl font-bold text-dark-500 xl:text-4xl xl:leading-[3rem]">
+            Vote on
+            {' '}
+            <span className="text-primary">Retro Funding 6</span>
+          </p>
+          <div className="max-w-screen-md text-wrap text-center text-2xl font-normal text-dark-500">
             Use Pairwise to vote on
             {' '}
             <span className="font-bold">Retro Funding 6</span>
@@ -30,14 +28,12 @@ export const LandingPart0 = () => {
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-4">
-          <div>
-            <TextBlock
-              mainText="Participate in"
-              highlightText="Liquid Democracy"
-              description=""
-            />
-          </div>
-          <div className="max-w-screen-md text-wrap text-center text-2xl text-dark-500">
+          <p className="w-full text-center text-3xl font-bold text-dark-500 xl:text-4xl xl:leading-[3rem]">
+            Participate in
+            {' '}
+            <span className="text-primary">Liquid Democracy</span>
+          </p>
+          <div className="max-w-screen-md text-wrap text-center text-2xl font-normal text-dark-500">
             Use Pairwise to participate in our
             {' '}
             <span className="font-bold">Liquid Democracy</span>

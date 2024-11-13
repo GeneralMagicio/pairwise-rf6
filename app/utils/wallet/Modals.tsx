@@ -64,19 +64,23 @@ export default function Modals() {
 
     <>
 
-      <WorldIdSignInSuccessModal
-        isOpen={isWorldIdSignSuccessModal}
-        onClose={() => {
-          setIsWorldIdSignSuccessModal(false);
-        }}
-      />
-      <WorldIdSignInSuccessModal
-        isOpen={isWorldIdSignErrorModal}
-        onClose={() => {
-          setIsWorldIdSignErrorModal(false);
-        }}
-        isError
-      />
+      {isWorldIdSignSuccessModal && (
+        <WorldIdSignInSuccessModal
+          isOpen={isWorldIdSignSuccessModal}
+          onClose={() => {
+            setIsWorldIdSignSuccessModal(false);
+          }}
+        />
+      )}
+      {isWorldIdSignErrorModal && (
+        <WorldIdSignInSuccessModal
+          isOpen={isWorldIdSignErrorModal}
+          onClose={() => {
+            setIsWorldIdSignErrorModal(false);
+          }}
+          isError
+        />
+      )}
       <IDKitWidget
         app_id={appId}
         action={actionId}
@@ -113,12 +117,14 @@ export default function Modals() {
           </>
         )}
       </IDKitWidget>
-      <FarcasterModal
-        isOpen={isOpenFarcasterModal}
-        onClose={() => {
-          setIsOpenFarcasterModal(false);
-        }}
-      />
+      {isOpenFarcasterModal && (
+        <FarcasterModal
+          isOpen={isOpenFarcasterModal}
+          onClose={() => {
+            setIsOpenFarcasterModal(false);
+          }}
+        />
+      )}
       <Modal
         isOpen={
           loginAddress.value !== address || loginAddress.confirmed === false
