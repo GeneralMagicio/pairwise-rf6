@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useActiveWallet } from 'thirdweb/react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAccount } from 'wagmi';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import Modal from '../utils/Modal';
 import EmailLoginModal from './components/EOA/EmailLoginModal';
@@ -20,6 +21,7 @@ import { CustomizedSlider } from './components/Slider';
 import {
   categoryIdSlugMap,
   categorySlugIdMap,
+  convertCategoryToLabel,
   formatBudget,
 } from '../comparison/utils/helpers';
 import { useCategories } from '../comparison/utils/data-fetching/categories';
@@ -46,6 +48,8 @@ import AttestationError from './[category]/attestation/AttestationError';
 import AttestationLoading from './[category]/attestation/AttestationLoading';
 import AttestationSuccessModal from './[category]/attestation/AttestationSuccessModal';
 import { useSigner } from './[category]/utils';
+import BadgeholderModal from './components/BadgeholderModal';
+import StorageLabel from '../lib/localStorage';
 import { UpdateBallotButton } from './[category]/components/UpdateBallotButton';
 import AskDelegations from '../delegation/farcaster/AskDelegations';
 
@@ -68,6 +72,7 @@ const AllocationPage = () => {
   const wallet = useActiveWallet();
   const router = useRouter();
   const signer = useSigner();
+  const { chainId, address } = useAccount();
   const { isBadgeholder, category } = getJWTData();
 
   const { data: categories, isLoading: categoriesLoading } = useCategories();
@@ -101,6 +106,8 @@ const AllocationPage = () => {
     = useState<CollectionProgressStatusEnum>(
       CollectionProgressStatusEnum.Pending
     );
+
+  const [showBHGuideModal, setShowBHGuideModal] = useState(false);
 
   const [delegationState, setDelegationState] = useState(
     DelegationState.Initial
@@ -308,6 +315,30 @@ const AllocationPage = () => {
     }
   }, [categoryRankings]);
 
+  useEffect(() => {
+    if (!address || !chainId || !isBadgeholder || isBGCategoryVoted()) return;
+
+    const currentUserKey = `${chainId}_${address}`;
+
+    const storedData = JSON.parse(
+      localStorage.getItem(StorageLabel.BADGEHOLDER_GUIDE_MODAL) || '{}'
+    );
+
+    const isAlreadyShown = storedData[currentUserKey];
+
+    if (isAlreadyShown) return;
+
+    setShowBHGuideModal(true);
+
+    localStorage.setItem(
+      StorageLabel.BADGEHOLDER_GUIDE_MODAL,
+      JSON.stringify({
+        ...storedData,
+        [currentUserKey]: true,
+      })
+    );
+  }, [chainId, address]);
+
   return (
     <div>
       <Modal
@@ -383,6 +414,22 @@ const AllocationPage = () => {
         <EmailLoginModal
           closeModal={() => setShowLoginModal(false)}
           selectedCategoryId={selectedCategoryId}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={showBHGuideModal}
+        onClose={() => {
+          setShowBHGuideModal(false);
+        }}
+        showCloseButton
+      >
+        <BadgeholderModal
+          categoryName={category ? convertCategoryToLabel(category) : ''}
+          categorySlug={category}
+          onClose={() => {
+            setShowBHGuideModal(false);
+          }}
         />
       </Modal>
       <HeaderRF6 />

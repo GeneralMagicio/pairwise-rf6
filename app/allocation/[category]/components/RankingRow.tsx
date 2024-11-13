@@ -50,7 +50,7 @@ const RankingRow: FC<IRankingRowProps> = ({
           disabled={coi}
         />
       </td>
-      <td className="flex flex-row flex-grow pb-8 pl-1 pt-4 lg:pl-4">
+      <td className="flex grow flex-row pb-8 pl-1 pt-4 lg:pl-4">
         <Image
           src={project.project.image || '/assets/images/placeholder.png'}
           alt={project.project.name}
