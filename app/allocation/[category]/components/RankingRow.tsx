@@ -50,7 +50,7 @@ const RankingRow: FC<IRankingRowProps> = ({
           disabled={coi}
         />
       </td>
-      <td className="flex flex-row pb-8 pl-1 pt-4 lg:pl-4">
+      <td className="flex flex-row flex-grow pb-8 pl-1 pt-4 lg:pl-4">
         <Image
           src={project.project.image || '/assets/images/placeholder.png'}
           alt={project.project.name}
@@ -58,7 +58,7 @@ const RankingRow: FC<IRankingRowProps> = ({
           height={50}
           unoptimized
         />
-        <div className="m-auto w-fit pl-4">
+        <div className="my-auto w-fit pl-4">
           <p className={`font-medium text-gray-700 ${styles.oneLineClamp}`}>
             {project.project.name}
           </p>
