@@ -58,6 +58,8 @@ import AttestationError from './[category]/attestation/AttestationError';
 import AttestationLoading from './[category]/attestation/AttestationLoading';
 import AttestationSuccessModal from './[category]/attestation/AttestationSuccessModal';
 import { useSigner } from './[category]/utils';
+import BadgeholderModal from './components/BadgeholderModal';
+import StorageLabel from '../lib/localStorage';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -87,7 +89,7 @@ const AllocationPage = () => {
   const wallet = useActiveWallet();
   const router = useRouter();
   const signer = useSigner();
-  const { address } = useAccount();
+  const { chainId, address } = useAccount();
   const { loggedToAgora } = useAuth();
   const { isBadgeholder, category } = getJWTData();
 
@@ -125,6 +127,8 @@ const AllocationPage = () => {
     = useState<CollectionProgressStatusEnum>(
       CollectionProgressStatusEnum.Pending
     );
+
+  const [showBHGuideModal, setShowBHGuideModal] = useState(false);
 
   const [delegationState, setDelegationState] = useState(
     DelegationState.Initial
@@ -358,6 +362,31 @@ const AllocationPage = () => {
     }
   }, [categoryRankings]);
 
+  useEffect(() => {
+    if (!address || !chainId || !isBadgeholder || isBGCategoryVoted()) return;
+
+    const currentUserKey = `${chainId}_${address}`;
+
+
+    const storedData = JSON.parse(
+      localStorage.getItem(StorageLabel.BADGEHOLDER_GUIDE_MODAL) || '{}'
+    );
+
+    const isAlreadyShown = storedData[currentUserKey];
+
+    if (isAlreadyShown) return;
+
+    setShowBHGuideModal(true);
+
+    localStorage.setItem(
+      StorageLabel.BADGEHOLDER_GUIDE_MODAL,
+      JSON.stringify({
+        ...storedData,
+        [currentUserKey]: true,
+      })
+    );
+  }, [chainId, address]);
+
   return (
     <div>
       <Modal
@@ -450,6 +479,22 @@ const AllocationPage = () => {
         <EmailLoginModal
           closeModal={() => setShowLoginModal(false)}
           selectedCategoryId={selectedCategoryId}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={showBHGuideModal}
+        onClose={() => {
+          setShowBHGuideModal(false);
+        }}
+        showCloseButton
+      >
+        <BadgeholderModal
+          categoryName={convertCategoryToLabel(category)}
+          categorySlug={category}
+          onClose={() => {
+            setShowBHGuideModal(false);
+          }}
         />
       </Modal>
       <HeaderRF6 />
