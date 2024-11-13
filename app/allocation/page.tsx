@@ -175,7 +175,6 @@ const AllocationPage = () => {
   };
 
   const handleVoteBudget = () => {
-    console.log('wallet?', wallet);
     if (!wallet) {
       setShowLoginModal(true);
       return;

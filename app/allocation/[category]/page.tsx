@@ -90,6 +90,8 @@ const RankingPage = () => {
   const handleBulkSelection = () => {
     if (!nonCoIProjects) return;
 
+    setTotalShareError(null);
+
     if (checkedItems.length === nonCoIProjects.length) {
       setCheckedItems([]);
     }
@@ -377,6 +379,8 @@ const RankingPage = () => {
   useEffect(() => {
     if (!nonCoIProjects) return;
 
+    if (!nonCoIProjects?.length) return;
+
     if (lockedItems.length > nonCoIProjects?.length - 2) {
       setTotalShareError('At least two projects must be unlocked');
       window.scrollTo(0, document.body.scrollHeight);
@@ -399,9 +403,12 @@ const RankingPage = () => {
       <Modal
         isOpen={attestationState !== AttestationState.Initial}
         onClose={handleAttestationModalClose}
-        showCloseButton={attestationState !== AttestationState.FarcasterDelegate}
+        showCloseButton={
+          attestationState !== AttestationState.FarcasterDelegate
+        }
       >
-        {attestationState === AttestationState.FarcasterDelegate && attestationLink && (
+        {attestationState === AttestationState.FarcasterDelegate
+        && attestationLink && (
           <AskDelegations
             categoryName={params?.category as string}
             link={attestationLink}
