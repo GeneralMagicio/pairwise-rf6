@@ -21,7 +21,6 @@ import {
   useProjectsRankingByCategoryId,
   useUpdateProjectRanking,
   useCategoryRankings,
-  IProjectRankingObj,
 } from '@/app/comparison/utils/data-fetching/ranking';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 import { IProjectRanking } from '@/app/comparison/utils/types';
@@ -34,6 +33,10 @@ import AttestationLoading from './attestation/AttestationLoading';
 import AttestationError from './attestation/AttestationError';
 import { attest, AttestationState } from './attestation';
 import { useSigner } from './utils';
+import {
+  useMarkCoi,
+  useUnmarkCoi,
+} from '@/app/comparison/utils/data-fetching/coi';
 
 enum VotingStatus {
   VOTED,
@@ -64,30 +67,30 @@ const RankingPage = () => {
   const [attestationLink, setAttestationLink] = useState<string>();
   const [checkedItems, setCheckedItems] = useState<number[]>([]);
   const [projects, setProjects] = useState<IProjectRanking[] | null>(null);
-  const [rankingArray, setRankingArray] = useState<IProjectRankingObj[]>([]);
   const [totalShareError, setTotalShareError] = useState<string | null>(null);
   const [lockedItems, setLockedItems] = useState<number[]>([]);
   const [isLocked, setIsLocked] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [allocationBudget, setAllocationBudget] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [nonCoIProjects, setNonCoIProjects] = useState<IProjectRanking[]>([]);
 
   const { data: categoryRankings, isLoading: rankingLoading }
     = useCategoryRankings();
   const { data: ranking, isLoading } = useProjectsRankingByCategoryId(category);
-  const { mutateAsync: updateProjectRanking } = useUpdateProjectRanking({
-    cid: category,
-    ranking: rankingArray,
-  });
+  const { mutateAsync: updateProjectRanking }
+    = useUpdateProjectRanking(category);
+  const { mutateAsync: markProjectCoI } = useMarkCoi();
+  const { mutateAsync: unmarkProjectCoI } = useUnmarkCoi();
 
   const handleBulkSelection = () => {
-    if (!projects) return;
+    if (!nonCoIProjects) return;
 
-    if (checkedItems.length === projects.length) {
+    if (checkedItems.length === nonCoIProjects.length) {
       setCheckedItems([]);
     }
     else {
-      setCheckedItems(projects.map(project => project.projectId));
+      setCheckedItems(nonCoIProjects.map(project => project.projectId));
     }
   };
 
@@ -95,10 +98,10 @@ const RankingPage = () => {
     debounce((id: number, share: number) => {
       setTotalShareError(null);
 
-      if (!projects) return;
+      if (!nonCoIProjects || !projects) return;
 
       try {
-        const values: RankItem[] = projects.map(project => ({
+        const values: RankItem[] = nonCoIProjects.map(project => ({
           id: project.projectId,
           percentage: project.share * 100,
           locked: lockedItems.includes(project.projectId),
@@ -156,11 +159,13 @@ const RankingPage = () => {
   );
 
   const handleLocck = (id: number) => {
+    if (!nonCoIProjects) return;
+
     if (lockedItems.includes(id)) {
       setLockedItems(lockedItems.filter(lockedId => lockedId !== id));
     }
     else {
-      if (projects && lockedItems.length >= projects?.length - 2) {
+      if (lockedItems.length >= nonCoIProjects?.length - 2) {
         setTotalShareError('At least two projects must be unlocked');
         window.scrollTo(0, document.body.scrollHeight);
         return;
@@ -169,22 +174,71 @@ const RankingPage = () => {
     }
   };
 
-  const handleCOI = (id: number) => {
-    if (projects) {
-      setProjects(projects.map(project =>
-        project.projectId === id
-          ? { ...project, coi: !project.coi }
-          : project
-      ));
+  const markCOI = async (id: number) => {
+    if (!projects) return;
+
+    const unmarkedProjects = projects.filter(
+      project => project.projectId !== id && !project.coi
+    );
+
+    const currentProject = projects.find(project => project.projectId === id);
+
+    if (!currentProject) return;
+
+    const distributedShare = currentProject.share / unmarkedProjects.length;
+
+    const newProjects = projects.map(project =>
+      project.projectId === id
+        ? { ...project, coi: true, share: 0 }
+        : {
+            ...project,
+            share: project.coi
+              ? project.share
+              : project.share + distributedShare,
+          }
+    );
+
+    if (checkedItems.includes(id)) {
+      setCheckedItems(checkedItems.filter(checkedId => checkedId !== id));
     }
+
+    if (lockedItems.includes(id)) {
+      setLockedItems(lockedItems.filter(lockedId => lockedId !== id));
+    }
+
+    await markProjectCoI({ data: { pid: id } });
+
+    const rankingArray = newProjects.map(project => ({
+      id: project.projectId,
+      share: project.share,
+    }));
+
+    await updateProjectRanking({
+      cid: category,
+      ranking: rankingArray,
+    });
+
+    setProjects(newProjects);
+  };
+
+  const unmarkCOI = async (id: number) => {
+    if (!projects) return;
+
+    await unmarkProjectCoI({ data: { pid: id } });
+
+    setProjects(
+      projects.map(project =>
+        project.projectId === id ? { ...project, coi: false } : project
+      )
+    );
   };
 
   const lockSelection = () => {
-    if (!projects) return;
+    if (!nonCoIProjects) return;
 
     if (
-      checkedItems.length > projects?.length - 2
-      || lockedItems.length >= projects?.length - 2
+      checkedItems.length > nonCoIProjects?.length - 2
+      || lockedItems.length >= nonCoIProjects?.length - 2
     ) {
       setTotalShareError('At least two projects must be unlocked');
       window.scrollTo(0, document.body.scrollHeight);
@@ -231,9 +285,10 @@ const RankingPage = () => {
       share: project.share,
     }));
 
-    setRankingArray(rankingArray);
-
-    await updateProjectRanking();
+    await updateProjectRanking({
+      cid: category,
+      ranking: rankingArray,
+    });
 
     if (!wallet || !ranking || !signer) {
       console.error('Requirements not met for attestations');
@@ -316,9 +371,9 @@ const RankingPage = () => {
   }, [ranking]);
 
   useEffect(() => {
-    if (!projects) return;
+    if (!nonCoIProjects) return;
 
-    if (lockedItems.length > projects?.length - 2) {
+    if (lockedItems.length > nonCoIProjects?.length - 2) {
       setTotalShareError('At least two projects must be unlocked');
       window.scrollTo(0, document.body.scrollHeight);
     }
@@ -326,6 +381,12 @@ const RankingPage = () => {
       setTotalShareError(null);
     }
   }, [lockedItems]);
+
+  useEffect(() => {
+    if (!projects || !projects.length) return;
+
+    setNonCoIProjects(projects.filter(project => !project.coi));
+  }, [projects]);
 
   if (!category) return <NotFoundComponent />;
 
@@ -386,8 +447,8 @@ const RankingPage = () => {
                 <Checkbox
                   onChange={() => handleBulkSelection()}
                   checked={
-                    checkedItems.length === projects?.length
-                    && !!projects?.length
+                    !!nonCoIProjects?.length
+                    && checkedItems.length === nonCoIProjects?.length
                   }
                 />
                 <p className="text-sm text-gray-600">Select all</p>
@@ -444,7 +505,8 @@ const RankingPage = () => {
                   <div className="w-full overflow-x-auto">
                     <table className="w-full min-w-full">
                       <tbody className="flex flex-col gap-6">
-                        {projects.filter(project => (!project.coi))
+                        {projects
+                          .filter(project => !project.coi)
                           .map((project, index) => (
                             <RankingRow
                               key={project.projectId}
@@ -457,16 +519,18 @@ const RankingPage = () => {
                               onSelect={selectItem}
                               onVote={handleVote}
                               coi={project.coi}
-                              onToggleCOI={handleCOI}
+                              onToggleCOI={markCOI}
                             />
                           ))}
-                        {projects.some(project => project.coi)
-                        && (
+                        {projects.some(project => project.coi) && (
                           <>
                             <tr>
-                              <th className="text-lg font-bold">Conflict Of Interest</th>
+                              <th className="text-lg font-bold">
+                                Conflict Of Interest
+                              </th>
                             </tr>
-                            {projects.filter(project => (project.coi))
+                            {projects
+                              .filter(project => project.coi)
                               .map((project, index) => (
                                 <RankingRow
                                   key={project.projectId}
@@ -479,7 +543,7 @@ const RankingPage = () => {
                                   onSelect={selectItem}
                                   onVote={handleVote}
                                   coi={project.coi}
-                                  onToggleCOI={handleCOI}
+                                  onToggleCOI={unmarkCOI}
                                 />
                               ))}
                           </>
