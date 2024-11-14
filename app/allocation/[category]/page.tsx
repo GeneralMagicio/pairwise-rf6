@@ -436,6 +436,7 @@ const RankingPage = () => {
               }
               else {
                 handleAttestationModalClose();
+                setAttestationState(AttestationState.Initial);
               }
             }}
             isBadgeHolder={isBadgeholder}
