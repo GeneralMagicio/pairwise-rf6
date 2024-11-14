@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useActiveWallet } from 'thirdweb/react';
 import { Step } from './EmailLoginModal';
 import { axiosInstance } from '@/app/utils/axiosInstance';
+import StorageLabel from '@/app/lib/localStorage';
 
 type TConnectEOAModalProps = {
   email: string
@@ -46,6 +47,7 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setStep }) => {
     }
     catch (err) {
       wallet.disconnect();
+      localStorage.removeItem(StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID);
       setError('This email is already connected to another wallet');
       setLoading(false);
     }
@@ -86,7 +88,9 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setStep }) => {
         <button
           className={`my-4 w-full rounded-lg border px-4 py-2 font-semibold transition duration-300
             ${
-    error ? 'cursor-not-allowed bg-gray-300 text-gray-600' : 'bg-primary text-white'
+    error
+      ? 'cursor-not-allowed bg-gray-300 text-gray-600'
+      : 'bg-primary text-white'
     }
           `}
           disabled={loading || !!error}
