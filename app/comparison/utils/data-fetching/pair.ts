@@ -12,12 +12,14 @@ export interface IPairwisePairsResponse {
 }
 
 export const getPairwisePairs = async (
-  cid: number,
+  cid: number | undefined
 ): Promise<IPairwisePairsResponse> => {
+  if (!cid) return Promise.reject('No collection id provided');
+
   return (await axiosInstance.get(`flow/pairs?cid=${cid}`)).data;
 };
 
-export const useGetPairwisePairs = (cid: number) => {
+export const useGetPairwisePairs = (cid: number | undefined) => {
   return useQuery({
     queryKey: ['pairwise-pairs', cid],
     queryFn: () => getPairwisePairs(cid),
@@ -42,10 +44,14 @@ export const useGetPairwisePairs = (cid: number) => {
 // }
 
 export const getPairwisePairsForProject = async (
-  cid: number,
+  cid: number | undefined,
   pid: number
 ): Promise<IPairwisePairsResponse> => {
-  return (await axiosInstance.get(`flow/pairs-for-project?cid=${cid}&pid=${pid}`)).data;
+  if (!cid) return Promise.reject('No collection id provided');
+
+  return (
+    await axiosInstance.get(`flow/pairs-for-project?cid=${cid}&pid=${pid}`)
+  ).data;
 };
 
 // export const useGetPairwisePairsForProject = (cid: number) => {
