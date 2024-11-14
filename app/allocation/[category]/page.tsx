@@ -81,6 +81,7 @@ const RankingPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [nonCoIProjects, setNonCoIProjects] = useState<IProjectRanking[]>([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [closingDesibled, setClosingDesibled] = useState(false);
 
   const { data: categoryRankings, isLoading: rankingLoading }
     = useCategoryRankings();
@@ -457,10 +458,11 @@ const RankingPage = () => {
       <Modal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
-        showCloseButton={true}
+        showCloseButton={!closingDesibled}
       >
         <EmailLoginModal
           closeModal={() => setShowLoginModal(false)}
+          setCloseModalDisabled={setClosingDesibled}
           selectedCategoryId={category}
         />
       </Modal>

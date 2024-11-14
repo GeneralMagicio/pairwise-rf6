@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { preAuthenticate } from 'thirdweb/wallets/in-app';
 import { ExternalLinkIcon } from '@/public/assets/icon-components/ExternalLink';
 import { brandColor } from '@/app/lib/constants';
@@ -43,10 +43,15 @@ export type TOAuthData = {
 
 type TEmailLoginModalProps = {
   closeModal: () => void
+  setCloseModalDisabled: (value: boolean) => void
   selectedCategoryId: number | null
 };
 
-const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalProps) => {
+const EmailLoginModal = ({
+  closeModal,
+  selectedCategoryId,
+  setCloseModalDisabled,
+}: TEmailLoginModalProps) => {
   const [otpData, setOtpData] = useState<TOTPData>({
     email: '',
     emailError: '',
@@ -98,6 +103,10 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
       });
     }
   };
+
+  useEffect(() => {
+    setCloseModalDisabled?.(false);
+  }, []);
 
   if ([Step.EMAIL, Step.OTP].includes(step)) {
     return (
@@ -201,12 +210,18 @@ const EmailLoginModal = ({ closeModal, selectedCategoryId }: TEmailLoginModalPro
       <ConnectEOAModal
         email={otpData.email}
         setStep={setStep}
+        setCloseModalDisabled={setCloseModalDisabled}
       />
     );
   }
 
   if (step === Step.SUCCESS) {
-    return <SuccessModal closeModal={closeModal} selectedCategoryId={selectedCategoryId} />;
+    return (
+      <SuccessModal
+        closeModal={closeModal}
+        selectedCategoryId={selectedCategoryId}
+      />
+    );
   }
 };
 
