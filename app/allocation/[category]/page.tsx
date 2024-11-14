@@ -184,7 +184,7 @@ const RankingPage = () => {
     if (!projects) return;
 
     const unmarkedProjects = projects.filter(
-      project => project.projectId !== id && !project.coi
+      project => project.projectId !== id && !project.coi && !lockedItems.includes(project.projectId)
     );
 
     const currentProject = projects.find(project => project.projectId === id);
@@ -198,7 +198,7 @@ const RankingPage = () => {
         ? { ...project, coi: true, share: 0 }
         : {
             ...project,
-            share: project.coi
+            share: project.coi || lockedItems.includes(project.projectId)
               ? project.share
               : project.share + distributedShare,
           }
