@@ -237,14 +237,23 @@ const AllocationPage = () => {
   };
 
   const handleScoreProjects = (id: RankItem['id']) => () => {
-    setSelectedCategoryId(id);
-
     if (!wallet) {
       setShowLoginModal(true);
       return;
     }
 
+    setSelectedCategoryId(id);
     router.push(`/comparison/${categoryIdSlugMap.get(id)}`);
+  };
+
+  const handleEdit = (id: RankItem['id']) => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    setSelectedCategoryId(id);
+    router.push(`/allocation/${categoryIdSlugMap.get(id)}`);
   };
 
   const getColNumOfDelegations = (id: number) => {
@@ -542,6 +551,7 @@ const AllocationPage = () => {
                             setDelegationState(DelegationState.DelegationMethod);
                           }}
                           onScore={handleVoteBudget}
+                          onEdit={handleVoteBudget}
                           username={budgetDelegateFromYou?.metadata?.username}
                         />
                       )}
@@ -569,6 +579,7 @@ const AllocationPage = () => {
                             }}
                             onLockClick={handleLock(cat.id)}
                             onScore={handleScoreProjects(cat.id)}
+                            onEdit={() => handleEdit(cat.id)}
                             onPercentageChange={handleNewValue(cat.id)}
                             username={
                               colDelegationFromYou?.find(
