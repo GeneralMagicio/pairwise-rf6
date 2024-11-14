@@ -539,7 +539,7 @@ export default function Home() {
                         coiLoading={coiLoading2}
                         coi={coi2}
                         summaryData={project2.aiSummary}
-                        onCoICancel={() => setCoi1(false)}
+                        onCoICancel={() => setCoi2(false)}
                         onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
                         project={{ ...project2.metadata, ...project2 } as any}
                       />
@@ -558,7 +558,7 @@ export default function Home() {
                         key2={project1.RF6Id}
                         coiLoading={coiLoading2}
                         coi={coi2}
-                        onCoICancel={() => setCoi1(false)}
+                        onCoICancel={() => setCoi2(false)}
                         onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
                         project={{ ...project2.metadata, ...project2 } as any}
                       />
