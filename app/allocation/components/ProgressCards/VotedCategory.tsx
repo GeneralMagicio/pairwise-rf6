@@ -1,35 +1,22 @@
-import { useRouter } from 'next/navigation';
-import { categoryIdSlugMap } from '@/app/comparison/utils/helpers';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 
 type TVotedCategoryProps = {
   id: number
   isAutoConnecting: boolean
-  budgetEditHandle?: () => void
+  budgetEditHandle: () => void
   attestationLink?: string | null
 };
 
 const VotedCategory = ({
-  id,
   isAutoConnecting,
   attestationLink,
   budgetEditHandle,
 }: TVotedCategoryProps) => {
-  const router = useRouter();
-
-  const handleEdit = () => {
-    if (budgetEditHandle) {
-      budgetEditHandle();
-      return;
-    }
-    else router.push(`/allocation/${categoryIdSlugMap.get(id)}`);
-  };
-
   return (
     <div className="flex w-full flex-col items-center justify-center gap-4">
       <button
         className="flex w-full items-center justify-center gap-2 rounded-md border py-3 font-semibold"
-        onClick={handleEdit}
+        onClick={budgetEditHandle}
       >
         Edit
       </button>
