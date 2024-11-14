@@ -9,27 +9,29 @@ type ProjectVoteData = {
     project1Stars: number | null
     pickedId: number | null
   }
-}
-
-export const updateProjectVote = async ({ data }: ProjectVoteData) => {
-  return (await axiosInstance.post('flow/projects/vote', data));
 };
 
-export const updateProjectUndo = (cid: Number) => {
+export const updateProjectVote = async ({ data }: ProjectVoteData) => {
+  return await axiosInstance.post('flow/projects/vote', data);
+};
+
+export const updateProjectUndo = (cid: Number | undefined) => {
+  if (!cid) return Promise.reject('No collection id provided');
+
   return axiosInstance.post('flow/pairs/back', { collectionId: cid });
 };
 
 export const useUpdateProjectVote = ({
   categoryId,
 }: {
-  categoryId: number
+  categoryId: number | undefined
 }) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateProjectVote,
-    onSuccess: ({ data }) => {
-      console.log('OnSuccess', data);
+    onSuccess: () => {
+      if (!categoryId) return;
       queryClient.refetchQueries({
         queryKey: ['pairwise-pairs', categoryId],
       });
@@ -41,7 +43,7 @@ export const useUpdateProjectUndo = ({
   categoryId,
   onSuccess,
 }: {
-  categoryId: number
+  categoryId: number | undefined
   onSuccess: () => void
 }) => {
   const queryClient = useQueryClient();
@@ -49,7 +51,6 @@ export const useUpdateProjectUndo = ({
   return useMutation({
     mutationFn: () => updateProjectUndo(categoryId),
     onSuccess: () => {
-      // console.log('OnSuccess', data)
       queryClient.refetchQueries({
         queryKey: ['pairwise-pairs', categoryId],
       });
