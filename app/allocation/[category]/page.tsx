@@ -418,6 +418,7 @@ const RankingPage = () => {
               }
               else {
                 setAttestationState(AttestationState.Initial);
+                handleAttestationModalClose();
               }
             }}
             isBadgeHolder={isBadgeholder}
@@ -426,7 +427,10 @@ const RankingPage = () => {
         {attestationState === AttestationState.Success && attestationLink && (
           <AttestationSuccessModal
             link={attestationLink}
-            onClose={() => setAttestationState(AttestationState.Initial)}
+            onClose={() => {
+              setAttestationState(AttestationState.Initial);
+              handleAttestationModalClose();
+            }}
           />
         )}
         {attestationState === AttestationState.Loading && (
