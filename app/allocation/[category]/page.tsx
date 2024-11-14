@@ -321,7 +321,7 @@ const RankingPage = () => {
   };
 
   const handleAttestationModalClose = () => {
-    if (attestationState === AttestationState.Success) {
+    if (attestationState === AttestationState.Success || attestationState == AttestationState.FarcasterDelegate) {
       router.push('/allocation');
     }
     else if (attestationState === AttestationState.Error) {
@@ -417,6 +417,7 @@ const RankingPage = () => {
                 setAttestationState(AttestationState.Success);
               }
               else {
+                handleAttestationModalClose();
                 setAttestationState(AttestationState.Initial);
               }
             }}
@@ -426,7 +427,10 @@ const RankingPage = () => {
         {attestationState === AttestationState.Success && attestationLink && (
           <AttestationSuccessModal
             link={attestationLink}
-            onClose={() => setAttestationState(AttestationState.Initial)}
+            onClose={() => {
+              setAttestationState(AttestationState.Initial);
+              handleAttestationModalClose();
+            }}
           />
         )}
         {attestationState === AttestationState.Loading && (
