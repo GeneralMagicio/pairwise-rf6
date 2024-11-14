@@ -85,6 +85,7 @@ export default function Home() {
   const [aiMode1, setAiMode1] = useState(false);
   const [aiMode2, setAiMode2] = useState(false);
   const [isInitialVisit, setIsInitialVisit] = useState(true);
+  const [closingDesibled, setClosingDesibled] = useState(false);
 
   const cid = categorySlugIdMap.get((category as string) || '');
   const { data, isLoading } = useGetPairwisePairs(cid);
@@ -468,10 +469,11 @@ export default function Home() {
       <Modal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
-        showCloseButton={true}
+        showCloseButton={!closingDesibled}
       >
         <EmailLoginModal
           closeModal={() => setShowLoginModal(false)}
+          setCloseModalDisabled={setClosingDesibled}
           selectedCategoryId={cid}
         />
       </Modal>
