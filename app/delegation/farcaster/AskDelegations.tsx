@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { toast } from 'react-toastify';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 
 interface Props {
@@ -19,37 +20,47 @@ const AskDelegations: React.FC<Props> = ({
   link,
   onClose,
 }) => {
-  console.log(isBadgeHolder);
   const text = isBadgeHolder
     ? `I voted in @pairwise Liquid Democracy Experiment, ranking the ${categoryName} category of @optimism RF6.\n\nDelegate to me here:\nhttps://app.pairwise.vote/`
     : `I voted in @pairwise Liquid Democracy Experiment, ranking the ${categoryName} category of @optimism RF6.`;
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(text);
+      toast.success('Copied Successfully!', {
+        position: 'top-center',
+        autoClose: 200,
+        hideProgressBar: true,
+        closeButton: false,
+      });
     }
     catch (err) {
       console.error('Failed to copy: ', err);
+      toast.error('Failed to copy', {
+        position: 'top-center',
+        autoClose: 200,
+        hideProgressBar: true,
+        closeButton: false,
+      });
     }
   };
   return (
     <div className="mx-auto flex max-w-lg flex-col items-center gap-6 rounded-lg bg-white px-6 py-10 shadow-lg">
       <Image src="/assets/images/finish-celebration.png" width={300} height={150} alt="celebrate" />
 
-      <p className="mb-4 text-center text-lg font-semibold">
+      <p className="text-center text-lg font-semibold">
         Successfully voted in&nbsp;
         <span className="text-primary">{categoryName}</span>
       </p>
-      <div className="mb-2 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <h2 className="text-center text-base text-gray-400">
-          Its time to celebrate!! Your votes have been attested successfully.
+          <div>Its time to celebrate!! Your votes have been attested successfully.</div>
           <br />
-          <br />
-          Would you like to receive more delegations in our Liquid Democracy experiment?
+          <div>Would you like to receive more delegations in our Liquid Democracy experiment?</div>
         </h2>
       </div>
 
       <div className="flex flex-col items-center gap-4">
-        <div className={`relative rounded-lg border-2 border-op-neutral-300 p-3 ${isBadgeHolder ? 'pb-[14px]' : 'pb-14'}`}>
+        <div className={`relative rounded-lg border-2 border-op-neutral-300 p-3 ${isBadgeHolder ? 'pb-[14px]' : 'pb-6'}`}>
           <p className="inline text-gray-400">
             I voted in
             <span className="mx-1 inline text-primary">@pairwise</span>
@@ -74,7 +85,7 @@ const AskDelegations: React.FC<Props> = ({
               </>
             )}
           </p>
-          <button onClick={handleCopy} className="absolute bottom-2.5 right-2.5 m-0 p-0">
+          <button onClick={handleCopy} className="absolute bottom-2.5 right-2.5 m-0 p-1 hover:bg-purple-50">
             <Image src="/assets/images/copy-icon.svg" width={20} height={20} alt="copy" />
           </button>
         </div>
