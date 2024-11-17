@@ -89,6 +89,7 @@ const AllocationPage = () => {
 
   const [attestationState, setAttestationState] = useState(AttestationState.Initial);
   const [attestationLink, setAttestationLink] = useState<string>();
+  const [closingDesibled, setClosingDesibled] = useState(false);
 
   const [totalValue, setTotalValue] = useState(categoryRankings?.budget || 0);
   const [percentageError, setPercentageError] = useState<string>();
@@ -417,10 +418,11 @@ const AllocationPage = () => {
       <Modal
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
-        showCloseButton={true}
+        showCloseButton={!closingDesibled}
       >
         <EmailLoginModal
           closeModal={() => setShowLoginModal(false)}
+          setCloseModalDisabled={setClosingDesibled}
           selectedCategoryId={selectedCategoryId}
         />
       </Modal>
