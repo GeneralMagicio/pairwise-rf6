@@ -88,17 +88,11 @@ export const updateProjectRanking = async ({
   ).data;
 };
 
-export const useUpdateProjectRanking = ({
-  cid,
-  ranking,
-}: {
-  cid: number | undefined
-  ranking: IProjectRankingObj[]
-}) => {
+export const useUpdateProjectRanking = (cid: number | undefined) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => updateProjectRanking({ cid, ranking }),
+    mutationFn: updateProjectRanking,
     onSuccess: () => {
       queryClient.refetchQueries({
         queryKey: ['projects-ranking', cid],

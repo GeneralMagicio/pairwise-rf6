@@ -25,6 +25,7 @@ interface IBudgetAllocationProps extends BudgetCategory {
   isBHCategoryAtessted: boolean
   attestationLink: string | null
   categorySlug: string
+  onEdit: () => void
   onDelegate: () => void
   onScore: () => void
 }
@@ -44,6 +45,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
   bhCategory,
   categorySlug,
   onScore,
+  onEdit,
   onDelegate,
 }) => {
   const { isAutoConnecting } = useAuth();
@@ -53,7 +55,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
       case CollectionProgressStatusEnum.Attested:
         return (
           <VotedCategory
-            budgetEditHandle={onScore}
+            budgetEditHandle={onEdit}
             id={id}
             isAutoConnecting={isAutoConnecting}
             attestationLink={attestationLink || ''}

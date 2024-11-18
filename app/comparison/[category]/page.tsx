@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { redirect, useParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useActiveWallet } from 'thirdweb/react';
 import { useAccount } from 'wagmi';
 import { JWTPayload } from '@/app/utils/wallet/types';
 import { AutoScrollAction, ProjectCard } from '../card/ProjectCard';
@@ -16,10 +17,7 @@ import {
   getPairwisePairsForProject,
   useGetPairwisePairs,
 } from '../utils/data-fetching/pair';
-import {
-  convertCategoryNameToId,
-  convertCategoryToLabel,
-} from '../utils/helpers';
+import { categorySlugIdMap, convertCategoryToLabel } from '../utils/helpers';
 import {
   useUpdateProjectUndo,
   useUpdateProjectVote,
@@ -39,11 +37,13 @@ import StorageLabel from '@/app/lib/localStorage';
 import { ProjectCardAI } from '../card/ProjectCardAI';
 import EmailLoginModal from '@/app/allocation/components/EOA/EmailLoginModal';
 import PostVotingModal from '../ballot/modals/PostVotingModal';
+import NotFoundComponent from '@/app/components/404';
 
 export default function Home() {
   const { category } = useParams() ?? {};
   const queryClient = useQueryClient();
   const { address, chainId } = useAccount();
+  const wallet = useActiveWallet();
 
   const [rating1, setRating1] = useState<number | null>(null);
   const [rating2, setRating2] = useState<number | null>(null);
@@ -85,8 +85,9 @@ export default function Home() {
   const [aiMode1, setAiMode1] = useState(false);
   const [aiMode2, setAiMode2] = useState(false);
   const [isInitialVisit, setIsInitialVisit] = useState(true);
+  const [closingDesibled, setClosingDesibled] = useState(false);
 
-  const cid = convertCategoryNameToId(category as JWTPayload['category']);
+  const cid = categorySlugIdMap.get((category as string) || '');
   const { data, isLoading } = useGetPairwisePairs(cid);
   const prevProgress = usePrevious(progress);
 
@@ -243,11 +244,11 @@ export default function Home() {
     setCoiLoading1(false);
   };
 
-  const cancelCoI1 = () => {
-    setCoi1(false);
-  };
-
   const showCoI1 = () => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
     setCoi1(true);
   };
 
@@ -268,15 +269,20 @@ export default function Home() {
     setCoiLoading2(false);
   };
 
-  const cancelCoI2 = () => {
-    setCoi2(false);
-  };
-
   const showCoI2 = () => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
     setCoi2(true);
   };
 
   const setUserAsVisited = () => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+
     if (address && chainId) {
       const hasVisitedKey = `has_visited_${chainId}_${address}`;
       localStorage.setItem(hasVisitedKey, 'true');
@@ -307,6 +313,11 @@ export default function Home() {
   };
 
   const handleVote = async (chosenId: number) => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+
     setCoiLoading1(true);
     setCoiLoading2(true);
     try {
@@ -331,6 +342,11 @@ export default function Home() {
   };
 
   const handleUndo = async () => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+
     if (data?.votedPairs === 0) return;
     setRevertingBack(true);
     setCoi1(false);
@@ -383,16 +399,6 @@ export default function Home() {
     return storedData[`${chainId}_${address}`] || {};
   }
 
-  const handleCloseLoginModal = () => {
-    const personalWalletId = localStorage.getItem(
-      StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
-    );
-
-    if (!personalWalletId) return;
-
-    setShowLoginModal(false);
-  };
-
   useEffect(() => {
     const personalWalletId = localStorage.getItem(
       StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID
@@ -404,6 +410,8 @@ export default function Home() {
   }, [cid]);
 
   if (isLoading) return <Spinner />;
+
+  if (!cid) return <NotFoundComponent />;
 
   if (!address || !chainId) return redirect('/');
 
@@ -460,11 +468,12 @@ export default function Home() {
 
       <Modal
         isOpen={showLoginModal}
-        onClose={handleCloseLoginModal}
-        showCloseButton={true}
+        onClose={() => setShowLoginModal(false)}
+        showCloseButton={!closingDesibled}
       >
         <EmailLoginModal
           closeModal={() => setShowLoginModal(false)}
+          setCloseModalDisabled={setClosingDesibled}
           selectedCategoryId={cid}
         />
       </Modal>
@@ -496,7 +505,7 @@ export default function Home() {
                         summaryData={project1.aiSummary}
                         coi={coi1}
                         project={{ ...project1.metadata, ...project1 } as any}
-                        onCoICancel={cancelCoI1}
+                        onCoICancel={() => setCoi1(false)}
                         onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
                       />
                     )
@@ -515,7 +524,7 @@ export default function Home() {
                         coiLoading={coiLoading2}
                         coi={coi1}
                         project={{ ...project1.metadata, ...project1 } as any}
-                        onCoICancel={cancelCoI1}
+                        onCoICancel={() => setCoi1(false)}
                         onCoIConfirm={() => confirmCoI1(project1.id, project2.id)}
                       />
                     )}
@@ -532,7 +541,7 @@ export default function Home() {
                         coiLoading={coiLoading2}
                         coi={coi2}
                         summaryData={project2.aiSummary}
-                        onCoICancel={cancelCoI2}
+                        onCoICancel={() => setCoi2(false)}
                         onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
                         project={{ ...project2.metadata, ...project2 } as any}
                       />
@@ -551,7 +560,7 @@ export default function Home() {
                         key2={project1.RF6Id}
                         coiLoading={coiLoading2}
                         coi={coi2}
-                        onCoICancel={cancelCoI2}
+                        onCoICancel={() => setCoi2(false)}
                         onCoIConfirm={() => confirmCoI2(project1.id, project2.id)}
                         project={{ ...project2.metadata, ...project2 } as any}
                       />
@@ -565,7 +574,9 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center gap-4 lg:flex-row xl:gap-8">
             <Rating
               value={rating1 || 0}
-              onChange={setRating1}
+              onChange={(value) => {
+                !wallet ? setShowLoginModal(true) : setRating1(value);
+              }}
               disabled={coiLoading1 || isAnyModalOpen()}
             />
             <VoteButton
@@ -588,7 +599,9 @@ export default function Home() {
           <div className="flex flex-col items-center justify-center gap-4 lg:flex-row xl:gap-8">
             <Rating
               value={rating2 || 0}
-              onChange={setRating2}
+              onChange={(value) => {
+                !wallet ? setShowLoginModal(true) : setRating2(value);
+              }}
               disabled={coiLoading2 || isAnyModalOpen()}
             />
             <VoteButton

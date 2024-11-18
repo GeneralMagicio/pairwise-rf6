@@ -40,6 +40,7 @@ interface CategoryAllocationProps extends TCategory {
   categorySlug: string
   onDelegate: () => void
   onScore: () => void
+  onEdit: () => void
   onLockClick: () => void
   onPercentageChange: (value: number) => void
 }
@@ -64,6 +65,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
   isBHCategoryAtessted,
   onDelegate,
   onScore,
+  onEdit,
   onLockClick,
   onPercentageChange,
 }) => {
@@ -110,6 +112,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
             id={id}
             isAutoConnecting={isAutoConnecting}
             attestationLink={attestationLink || ''}
+            budgetEditHandle={onEdit}
           />
         );
       case CollectionProgressStatusEnum.Finished:

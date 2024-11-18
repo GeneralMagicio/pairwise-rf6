@@ -1,15 +1,17 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useActiveWallet } from 'thirdweb/react';
 import { Step } from './EmailLoginModal';
 import { axiosInstance } from '@/app/utils/axiosInstance';
+import StorageLabel from '@/app/lib/localStorage';
 
 type TConnectEOAModalProps = {
   email: string
+  setCloseModalDisabled: (value: boolean) => void
   setStep: (step: number) => void
 };
 
-const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setStep }) => {
+const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setCloseModalDisabled, setStep }) => {
   const wallet = useActiveWallet();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,10 +48,20 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setStep }) => {
     }
     catch (err) {
       wallet.disconnect();
+      setCloseModalDisabled(false);
+      localStorage.removeItem(StorageLabel.LAST_CONNECT_PERSONAL_WALLET_ID);
       setError('This email is already connected to another wallet');
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setCloseModalDisabled(true);
+
+    return () => {
+      setCloseModalDisabled(false);
+    };
+  }, []);
 
   return (
     <div className="mx-auto w-[460px] rounded-lg bg-rating-illustration bg-no-repeat p-6 shadow-lg">
@@ -86,7 +98,9 @@ const ConnectEOAModal: FC<TConnectEOAModalProps> = ({ email, setStep }) => {
         <button
           className={`my-4 w-full rounded-lg border px-4 py-2 font-semibold transition duration-300
             ${
-    error ? 'cursor-not-allowed bg-gray-300 text-gray-600' : 'bg-primary text-white'
+    error
+      ? 'cursor-not-allowed bg-gray-300 text-gray-600'
+      : 'bg-primary text-white'
     }
           `}
           disabled={loading || !!error}
