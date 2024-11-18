@@ -265,7 +265,7 @@ export const attest = async ({ ranking, signer, wallet, setAttestationState, set
     });
 
     setAttestationLink(attestationLink);
-    if(isBudget == true) {
+    if (isBudget == true) {
       setAttestationState(AttestationState.Success);
       return;
     }
