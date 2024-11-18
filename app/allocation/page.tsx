@@ -359,7 +359,7 @@ const AllocationPage = () => {
       >
         {attestationState === AttestationState.FarcasterDelegate && attestationLink && (
           <AskDelegations
-            categoryName="Budget"
+            categoryName={category}
             link={attestationLink}
             onClose={() => {
               if (isBadgeholder) {
