@@ -338,6 +338,7 @@ const RankingPage = () => {
   const handleAttestationModalClose = () => {
     if (attestationState === AttestationState.Success || attestationState == AttestationState.FarcasterDelegate) {
       router.push('/allocation');
+      setAttestationState(AttestationState.Initial);
     }
     else if (attestationState === AttestationState.Error) {
       setAttestationState(AttestationState.Initial);
@@ -433,7 +434,6 @@ const RankingPage = () => {
               }
               else {
                 handleAttestationModalClose();
-                setAttestationState(AttestationState.Initial);
               }
             }}
             isBadgeHolder={isBadgeholder}
@@ -443,7 +443,6 @@ const RankingPage = () => {
           <AttestationSuccessModal
             link={attestationLink}
             onClose={() => {
-              setAttestationState(AttestationState.Initial);
               handleAttestationModalClose();
             }}
           />
