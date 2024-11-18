@@ -27,8 +27,8 @@ const LoadedModalContent: React.FC<LoadedModalContentProps> = (
   return (
     <div>
       {(numDelegates == 0) && (
-        <div className="flex w-full flex-col items-center justify-center gap-6 px-4 py-10">
-          <Image src="assets/images/world-star-success.svg" width={100} height={100} alt="" />
+        <div className="flex w-full max-w-md flex-col items-center justify-center gap-6 px-4 py-10">
+          <Image src="assets/images/star-old.svg" width={100} height={100} alt="" />
           <div className="flex flex-col items-center gap-4">
             <div className="py-2 text-sm text-[#232634]">
               <div>
