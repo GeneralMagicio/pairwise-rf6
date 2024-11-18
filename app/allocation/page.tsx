@@ -137,7 +137,7 @@ const AllocationPage = () => {
     }
 
     await attest({ ranking: { id: -1, name: 'Budget', ranking: categoriesRanking.map(el => ({ RF6Id: el.RF6Id, share: el.percentage / 100 })) },
-      setAttestationLink, setAttestationState, signer, wallet });
+      setAttestationLink, setAttestationState, signer, wallet, isBudget: true });
 
     queryClient.refetchQueries({
       queryKey: ['category-ranking'],
@@ -359,7 +359,7 @@ const AllocationPage = () => {
       >
         {attestationState === AttestationState.FarcasterDelegate && attestationLink && (
           <AskDelegations
-            categoryName={category}
+            categoryName={"Budget"}
             link={attestationLink}
             onClose={() => {
               if (isBadgeholder) {
@@ -375,7 +375,10 @@ const AllocationPage = () => {
         {attestationState === AttestationState.Success && attestationLink && (
           <AttestationSuccessModal
             link={attestationLink}
-            onClose={() => setAttestationState(AttestationState.Initial)}
+            onClose={() => {
+              setAttestationState(AttestationState.Initial);
+              setAllocatingBudget(false);
+            }}
           />
         )}
         {attestationState === AttestationState.Loading && <AttestationLoading />}

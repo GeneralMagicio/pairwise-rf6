@@ -23,9 +23,10 @@ type AttestFunc = {
   wallet: Wallet
   setAttestationState: (state: AttestationState) => void
   setAttestationLink: (link: string) => void
+  isBudget?: boolean
 }
 
-export const attest = async ({ ranking, signer, wallet, setAttestationState, setAttestationLink }: AttestFunc) => {
+export const attest = async ({ ranking, signer, wallet, setAttestationState, setAttestationLink, isBudget }: AttestFunc) => {
   // const localStorageTag = process.env.NEXT_PUBLIC_LOCAL_STORAGE_TAG!;
   // const identityString = localStorage.getItem(localStorageTag);
 
@@ -263,8 +264,12 @@ export const attest = async ({ ranking, signer, wallet, setAttestationState, set
       attestationId: attestationLink,
     });
 
-    setAttestationState(AttestationState.FarcasterDelegate);
     setAttestationLink(attestationLink);
+    if(isBudget == true) {
+      setAttestationState(AttestationState.Success);
+      return;
+    }
+    setAttestationState(AttestationState.FarcasterDelegate);
   }
   catch (e) {
     console.error('error on sending tx:', e);
