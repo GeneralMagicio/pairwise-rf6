@@ -3,6 +3,7 @@
 import { useWeb3Modal } from '@web3modal/wagmi/react';
 import React from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
+import { usePostHog } from 'posthog-js/react';
 import { CoinbaseIcon } from '@/public/assets/icon-components/CoinbaseIcon';
 import { MetaMaskIcon } from '@/public/assets/icon-components/MetaMaskIcon';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
@@ -17,6 +18,7 @@ export const ConnectButton = () => {
   const { isConnected } = useAccount();
   const { disconnectAsync } = useDisconnect();
   const { signOut, loginAddress } = useAuth();
+  const posthog = usePostHog();
 
   const logout = async () => {
     await disconnectAsync();
@@ -25,6 +27,7 @@ export const ConnectButton = () => {
   // const { signMessageAsync } = useSignMessage()
 
   function handleOpen() {
+    posthog.capture('Connect');
     try {
       open();
     }

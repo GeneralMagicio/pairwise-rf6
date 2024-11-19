@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import debounce from 'lodash.debounce';
 import { useActiveWallet } from 'thirdweb/react';
+import { usePostHog } from 'posthog-js/react';
 import RankingRow from './components/RankingRow';
 import HeaderRF6 from '../../comparison/card/Header-RF6';
 import Spinner from '@/app/components/Spinner';
@@ -61,6 +62,7 @@ const votingStatusMap = {
 const RankingPage = () => {
   const params = useParams();
   const router = useRouter();
+  const posthog = usePostHog();
 
   const wallet = useActiveWallet();
   const signer = useSigner();
@@ -264,6 +266,7 @@ const RankingPage = () => {
     const lockedProjects = checkedItems.filter(
       checkedId => !lockedItems.includes(checkedId)
     );
+    posthog.capture('Lock selection');
 
     setLockedItems([...lockedItems, ...lockedProjects]);
     setCheckedItems([]);
@@ -643,7 +646,10 @@ const RankingPage = () => {
           <div className="flex justify-between">
             <button
               className="flex items-center justify-center gap-3 rounded-lg border bg-gray-50 px-4 py-2 font-semibold text-gray-700"
-              onClick={() => router.push('/allocation')}
+              onClick={() => {
+                posthog.capture('Back to categories');
+                router.push('/allocation');
+              }}
             >
               <ArrowLeft2Icon />
               Back to Categories

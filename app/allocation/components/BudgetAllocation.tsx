@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import Image from 'next/image';
+import { usePostHog } from 'posthog-js/react';
 import { useAuth } from '@/app/utils/wallet/AuthProvider';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRightIcon';
 import { CollectionProgressStatusEnum } from '@/app/comparison/utils/types';
@@ -49,6 +50,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
   onDelegate,
 }) => {
   const { isAutoConnecting } = useAuth();
+  const posthog = usePostHog();
 
   const renderProgressState = useMemo(() => {
     switch (progress) {
@@ -75,8 +77,18 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
       default:
         return (
           <PendingCategory
-            onScore={onScore}
-            onDelegate={onDelegate}
+            onScore={() => {
+              posthog.capture('Start Voting', {
+                category: name,
+              });
+              onScore();
+            }}
+            onDelegate={() => {
+              posthog.capture('Start Voting', {
+                category: name,
+              });
+              onDelegate();
+            }}
             progress={progress}
             delegations={delegations}
             isAutoConnecting={isAutoConnecting}
@@ -123,20 +135,28 @@ const ProjectInfo: React.FC<{
   description: string
   isDelegated?: boolean
   onScore?: () => void
-}> = ({ name, description, isDelegated, onScore }) => (
-  <div
-    className={`flex max-w-[70%] flex-col gap-2 ${isDelegated && 'opacity-40'}`}
-  >
-    <button
-      className="flex items-center gap-2 font-medium"
-      onClick={onScore}
-      disabled={isDelegated}
+}> = ({ name, description, isDelegated, onScore }) => {
+  const posthog = usePostHog();
+  return (
+
+    <div
+      className={`flex max-w-[70%] flex-col gap-2 ${isDelegated && 'opacity-40'}`}
     >
-      {name}
-      <ArrowRightIcon color="#05060B" size={24} />
-    </button>
-    <p className="text-sm text-gray-400">{description}</p>
-  </div>
-);
+      <button
+        className="flex items-center gap-2 font-medium"
+        onClick={() => {
+          posthog.capture('Explore project', { category: name });
+          if (onScore)
+            onScore();
+        }}
+        disabled={isDelegated}
+      >
+        {name}
+        <ArrowRightIcon color="#05060B" size={24} />
+      </button>
+      <p className="text-sm text-gray-400">{description}</p>
+    </div>
+  );
+};
 
 export default BudgetAllocation;

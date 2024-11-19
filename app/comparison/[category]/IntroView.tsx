@@ -1,10 +1,12 @@
 import { Dispatch, FC } from 'react';
 import Image from 'next/image';
+import { usePostHog } from 'posthog-js/react';
 import TextBlock from '../../components/TextBlock';
 
 const IntroView: FC<{ setUserAsVisited: Dispatch<void> }> = ({
   setUserAsVisited,
 }) => {
+  const posthog = usePostHog();
   return (
     <div className="relative flex h-[86vh] w-full flex-col-reverse items-center
     justify-end gap-8 px-8 py-2 lg:flex-row lg:gap-0 lg:p-0"
@@ -38,7 +40,13 @@ const IntroView: FC<{ setUserAsVisited: Dispatch<void> }> = ({
               scale: 2.4,
             }}
           />
-          <ActionButton onClick={() => setUserAsVisited()} text="Let's do it!" />
+          <ActionButton
+            onClick={() => {
+              posthog.capture('Let\'s do it');
+              setUserAsVisited();
+            }}
+            text="Let's do it!"
+          />
         </div>
       </div>
 

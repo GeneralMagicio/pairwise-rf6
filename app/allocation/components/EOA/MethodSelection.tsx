@@ -1,6 +1,7 @@
 import React, { FC, FormEvent } from 'react';
 import Image from 'next/image';
 import { useConnect } from 'thirdweb/react';
+import { usePostHog } from 'posthog-js/react';
 import {
   createSmartWalletFromEOA,
   createSocialEoa,
@@ -34,6 +35,7 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
   closeModal,
 }) => {
   const { connect } = useConnect();
+  const posthog = usePostHog();
 
   const getUserSmartWallet = async () => {
     const userSmartWallet = await axiosInstance.get('auth/thirdweb/sa-address');
@@ -42,6 +44,7 @@ export const MethodSelection: FC<IMethodSelectionProps> = ({
 
   const handleOAuthConnect = (strategy: Strategy) => async () => {
     try {
+      posthog.capture('Continue with Gmail');
       setPickedMethod(strategy);
       setOAuthData({ ...oAuthData, loading: true });
       const socialEoa = await createSocialEoa(strategy);
