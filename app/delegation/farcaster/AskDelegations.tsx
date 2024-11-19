@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
+import { usePostHog } from 'posthog-js/react';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 
 interface Props {
@@ -20,6 +21,7 @@ const AskDelegations: React.FC<Props> = ({
   link,
   onClose,
 }) => {
+  const posthog = usePostHog();
   const text = isBadgeHolder
     ? `I voted in @pairwise Liquid Democracy Experiment, ranking the ${categoryName} category of @optimism RF6.\n\nDelegate to me here:\nhttps://app.pairwise.vote/`
     : `I voted in @pairwise Liquid Democracy Experiment, ranking the ${categoryName} category of @optimism RF6.`;
@@ -90,7 +92,14 @@ const AskDelegations: React.FC<Props> = ({
           </button>
         </div>
 
-        <a className="w-full" target="_blank" href={createWarpcastIntention(encodeURIComponent(text))}>
+        <a
+          className="w-full"
+          target="_blank"
+          href={createWarpcastIntention(encodeURIComponent(text))}
+          onClick={() => {
+            posthog.capture('Post of Farcaster');
+          }}
+        >
           <button className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-op-neutral-300 bg-white py-2 transition-colors duration-200 hover:bg-purple-50">
             <WarpcastIcon />
             Post on Farcaster

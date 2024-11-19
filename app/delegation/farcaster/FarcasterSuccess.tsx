@@ -88,10 +88,7 @@ const DelegationConfirmation: React.FC<Props> = ({
         target="_blank"
         href={createWarpcastIntention(categoryName, username)}
         onClick={() => {
-          posthog.capture('Post of Farcaster', {
-            category: categoryName,
-            user: username,
-          });
+          posthog.capture('Post of Farcaster');
         }}
       >
         <button className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-op-neutral-300 bg-white py-2 transition-colors duration-200 hover:bg-purple-50">
