@@ -57,6 +57,7 @@ const BudgetAllocation: React.FC<IBudgetAllocationProps> = ({
           <VotedCategory
             budgetEditHandle={onEdit}
             id={id}
+            delegations={delegations}
             isAutoConnecting={isAutoConnecting}
             attestationLink={attestationLink || ''}
           />
