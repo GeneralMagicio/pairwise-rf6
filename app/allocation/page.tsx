@@ -43,7 +43,7 @@ import {
   useUpdateCategoriesRanking,
 } from '@/app/comparison/utils/data-fetching/ranking';
 import { getJWTData } from '../utils/wallet/agora-login';
-import { attest, AttestationState } from './[category]/attestation';
+import { attest, AttestationState, VotingHasEnded } from './[category]/attestation';
 import AttestationError from './[category]/attestation/AttestationError';
 import AttestationLoading from './[category]/attestation/AttestationLoading';
 import AttestationSuccessModal from './[category]/attestation/AttestationSuccessModal';
@@ -136,8 +136,10 @@ const AllocationPage = () => {
       return;
     }
 
-    await attest({ ranking: { id: -1, name: 'Budget', ranking: categoriesRanking.map(el => ({ RF6Id: el.RF6Id, share: el.percentage / 100 })) },
-      setAttestationLink, setAttestationState, signer, wallet, isBudget: true });
+    if (!VotingHasEnded) {
+      await attest({ ranking: { id: -1, name: 'Budget', ranking: categoriesRanking.map(el => ({ RF6Id: el.RF6Id, share: el.percentage / 100 })) },
+        setAttestationLink, setAttestationState, signer, wallet, isBudget: true });
+    }
 
     queryClient.refetchQueries({
       queryKey: ['category-ranking'],

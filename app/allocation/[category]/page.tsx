@@ -34,7 +34,7 @@ import Modal from '@/app/utils/Modal';
 import AttestationSuccessModal from './attestation/AttestationSuccessModal';
 import AttestationLoading from './attestation/AttestationLoading';
 import AttestationError from './attestation/AttestationError';
-import { attest, AttestationState } from './attestation';
+import { attest, AttestationState, VotingHasEnded } from './attestation';
 import { useSigner } from './utils';
 import {
   useMarkCoi,
@@ -317,20 +317,22 @@ const RankingPage = () => {
       return;
     }
 
-    await attest({
-      ranking: {
-        id: ranking.id,
-        name: ranking.name,
-        ranking: projects.map(el => ({
-          RF6Id: el.project.RF6Id,
-          share: el.share,
-        })),
-      },
-      setAttestationLink,
-      setAttestationState,
-      signer,
-      wallet,
-    });
+    if (!VotingHasEnded) {
+      await attest({
+        ranking: {
+          id: ranking.id,
+          name: ranking.name,
+          ranking: projects.map(el => ({
+            RF6Id: el.project.RF6Id,
+            share: el.share,
+          })),
+        },
+        setAttestationLink,
+        setAttestationState,
+        signer,
+        wallet,
+      });
+    }
 
     setIsSubmitting(false);
   };
