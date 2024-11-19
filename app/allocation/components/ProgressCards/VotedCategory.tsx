@@ -5,11 +5,13 @@ type TVotedCategoryProps = {
   isAutoConnecting: boolean
   budgetEditHandle: () => void
   attestationLink?: string | null
+  delegations: number
 };
 
 const VotedCategory = ({
   isAutoConnecting,
   attestationLink,
+  delegations,
   budgetEditHandle,
 }: TVotedCategoryProps) => {
   return (
@@ -21,10 +23,24 @@ const VotedCategory = ({
         Edit
       </button>
       {attestationLink != null && (
-        <div className="flex w-full justify-center gap-2 rounded-xl border border-[#17B26A] bg-[#ECFDF3] py-1">
-          <p className="text-xs font-medium text-[#17B26A]">Voted</p>
-          <CheckIcon size={15} />
-        </div>
+        delegations
+          ? (
+              <div className="flex w-full justify-center gap-2 rounded-xl border border-[#17B26A] bg-[#ECFDF3] py-1">
+                <p className="text-xs font-medium text-[#17B26A]">
+                  Voted on behalf of
+                  {delegations}
+                  {' '}
+                  {(delegations <= 1) ? 'person' : 'people'}
+                </p>
+                <CheckIcon size={15} />
+              </div>
+            )
+          : (
+              <div className="flex w-full justify-center gap-2 rounded-xl border border-[#17B26A] bg-[#ECFDF3] py-1">
+                <p className="text-xs font-medium text-[#17B26A]">Voted</p>
+                <CheckIcon size={15} />
+              </div>
+            )
       )}
       {attestationLink && (
         <button

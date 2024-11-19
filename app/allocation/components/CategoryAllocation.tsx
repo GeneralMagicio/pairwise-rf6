@@ -112,6 +112,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
             id={id}
             isAutoConnecting={isAutoConnecting}
             attestationLink={attestationLink || ''}
+            delegations={delegations}
             budgetEditHandle={onEdit}
           />
         );
