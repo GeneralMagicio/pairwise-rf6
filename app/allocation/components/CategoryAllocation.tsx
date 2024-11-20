@@ -3,6 +3,7 @@ import debounce from 'lodash.debounce';
 import Link from 'next/link';
 import Image from 'next/image';
 import { NumericFormat } from 'react-number-format';
+import { usePostHog } from 'posthog-js/react';
 import { roundFractions } from '../utils';
 import { useAuth } from '@/app/utils/wallet/AuthProvider';
 import { CollectionProgressStatusEnum } from '@/app/comparison/utils/types';
@@ -222,30 +223,44 @@ const ProjectInfo: FC<{
   projectCount?: number
   hrefLink: string
   isDelegated?: boolean
-}> = ({ name, description, projectCount, hrefLink, isDelegated }) => (
-  <div
-    className={`flex max-w-[70%] flex-col gap-2 ${isDelegated && 'opacity-40'}`}
-  >
-    {isDelegated
-      ? (
-          <p className="flex items-center gap-2 font-medium">
-            {name}
-            <ArrowRightIcon color="#05060B" size={24} />
-          </p>
-        )
-      : (
-          <Link className="flex items-center gap-2 font-medium" href={hrefLink}>
-            {name}
-            <ArrowRightIcon color="#05060B" size={24} />
-          </Link>
-        )}
-    <p className="text-sm text-gray-400">{description}</p>
-    {projectCount && (
-      <p className="mt-2 w-fit rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700">
-        {`${projectCount} project${projectCount > 1 ? 's' : ''}`}
-      </p>
-    )}
-  </div>
-);
+}> = ({ name, description, projectCount, hrefLink, isDelegated }) => {
+  const posthog = usePostHog();
+  return (
+    <div
+      className={`flex max-w-[70%] flex-col gap-2 ${isDelegated && 'opacity-40'}`}
+    >
+      {isDelegated
+        ? (
+            <p
+              className="flex items-center gap-2 font-medium"
+              onClick={() => {
+                posthog.capture('Explore project', { category: name });
+              }}
+            >
+              {name}
+              <ArrowRightIcon color="#05060B" size={24} />
+            </p>
+          )
+        : (
+            <Link
+              className="flex items-center gap-2 font-medium"
+              href={hrefLink}
+              onClick={() => {
+                posthog.capture('Explore project', { category: name });
+              }}
+            >
+              {name}
+              <ArrowRightIcon color="#05060B" size={24} />
+            </Link>
+          )}
+      <p className="text-sm text-gray-400">{description}</p>
+      {projectCount && (
+        <p className="mt-2 w-fit rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700">
+          {`${projectCount} project${projectCount > 1 ? 's' : ''}`}
+        </p>
+      )}
+    </div>
+  );
+};
 
 export default CategoryAllocation;

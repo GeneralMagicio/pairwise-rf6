@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { preAuthenticate } from 'thirdweb/wallets/in-app';
+import { usePostHog } from 'posthog-js/react';
 import { ExternalLinkIcon } from '@/public/assets/icon-components/ExternalLink';
 import { brandColor } from '@/app/lib/constants';
 import { Strategy } from '@/app/lib/third-web/methods';
@@ -60,6 +61,7 @@ const EmailLoginModal = ({
     otpStatus: OtpStatus.SENT,
     sentAt: 0,
   });
+  const posthog = usePostHog();
   const [oAuthData, setOAuthData] = useState<TOAuthData>({
     email: '',
     loading: false,
@@ -180,7 +182,10 @@ const EmailLoginModal = ({
                     setOtpData={setOtpData}
                     setPickedMethod={setPickedMethod}
                     setOAuthData={setOAuthData}
-                    sendOTP={sendOTP}
+                    sendOTP={() => {
+                      posthog.capture('Continue with e-mail');
+                      sendOTP();
+                    }}
                     setStep={setStep}
                     closeModal={closeModal}
                   />

@@ -5,6 +5,7 @@ import { redirect, useParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { useActiveWallet } from 'thirdweb/react';
 import { useAccount } from 'wagmi';
+import { usePostHog } from 'posthog-js/react';
 import { JWTPayload } from '@/app/utils/wallet/types';
 import { AutoScrollAction, ProjectCard } from '../card/ProjectCard';
 import ConflictButton from '../card/CoIButton';
@@ -86,6 +87,7 @@ export default function Home() {
   const [aiMode2, setAiMode2] = useState(false);
   const [isInitialVisit, setIsInitialVisit] = useState(true);
   const [closingDesibled, setClosingDesibled] = useState(false);
+  const posthog = usePostHog();
 
   const cid = categorySlugIdMap.get((category as string) || '');
   const { data, isLoading } = useGetPairwisePairs(cid);
@@ -207,6 +209,12 @@ export default function Home() {
   }, [address, chainId, data?.votedPairs]);
 
   const toggleAiMode = () => {
+    if (!aiMode1) {
+      posthog.capture('AI Summary', {
+        project1: project1?.name,
+        project2: project2?.name,
+      });
+    }
     setAiMode1(!aiMode1);
     setAiMode2(!aiMode2);
     setLastAction(undefined);

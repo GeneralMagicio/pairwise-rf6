@@ -5,6 +5,7 @@ import AppKitProvider from './utils/wallet/provider';
 import FarcasterProvider from '@/app/utils/FarcasterProvider';
 import ShowMobileMessage from './utils/wallet/ShowMobileMessage';
 import { TimeIcon } from '@/public/assets/icon-components/Time';
+import { PHProvider } from './utils/PHProvider';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -54,9 +55,11 @@ export default function RootLayout({
         </noscript>
         <ShowMobileMessage>
           <AppKitProvider>
-            <FarcasterProvider>
-              {children}
-            </FarcasterProvider>
+            <PHProvider>
+              <FarcasterProvider>
+                {children}
+              </FarcasterProvider>
+            </PHProvider>
           </AppKitProvider>
         </ShowMobileMessage>
         <div id="modal-root"></div>

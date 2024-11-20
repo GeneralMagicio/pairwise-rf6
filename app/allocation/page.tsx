@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useActiveWallet } from 'thirdweb/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
+import { usePostHog } from 'posthog-js/react';
 import HeaderRF6 from '../comparison/card/Header-RF6';
 import Modal from '../utils/Modal';
 import EmailLoginModal from './components/EOA/EmailLoginModal';
@@ -74,6 +75,7 @@ const AllocationPage = () => {
   const signer = useSigner();
   const { chainId, address } = useAccount();
   const { isBadgeholder, category } = getJWTData();
+  const posthog = usePostHog();
 
   const { data: categories, isLoading: categoriesLoading } = useCategories();
   const { data: delegations, isLoading: delegationsLoading }
@@ -149,6 +151,7 @@ const AllocationPage = () => {
   const handleDelegate = async (username: string, target: TargetDelegate) => {
     if (!categoryToDelegate) return;
 
+    posthog.capture('Delegating vote power');
     await axiosInstance.post('flow/delegate/farcaster', {
       collectionId: categoryToDelegate.id,
       targetUsername: username,
@@ -240,6 +243,9 @@ const AllocationPage = () => {
   };
 
   const handleScoreProjects = (id: RankItem['id']) => () => {
+    posthog.capture('Start voting', {
+      category: categoryIdSlugMap.get(id),
+    });
     if (!wallet) {
       setShowLoginModal(true);
       return;
@@ -397,6 +403,9 @@ const AllocationPage = () => {
           <DelegateModal
             categoryName={categoryToDelegate!.name}
             onFindDelegatesFarcaster={() => {
+              posthog.capture('Find delegate on Farcaster', {
+                category: categoryToDelegate!.name,
+              });
               setDelegationState(DelegationState.Lookup);
             }}
             onFindDelegatesTwitter={() => {}}
@@ -581,6 +590,9 @@ const AllocationPage = () => {
                             isBHCategoryAtessted={isBHCategoryAtessted()}
                             categorySlug={categoryIdSlugMap.get(cat.id)!}
                             onDelegate={() => {
+                              posthog.capture('Start delegating', {
+                                category: cat.name,
+                              });
                               setCategoryToDelegate(cat);
                               setDelegationState(DelegationState.DelegationMethod);
                             }}
@@ -609,14 +621,20 @@ const AllocationPage = () => {
                   <div className="flex justify-between">
                     <button
                       className="flex items-center justify-center gap-3 rounded-lg border bg-gray-50 px-4 py-2 font-semibold text-gray-700"
-                      onClick={() => setAllocatingBudget(false)}
+                      onClick={() => {
+                        posthog.capture('Back to categories');
+                        setAllocatingBudget(false);
+                      }}
                     >
                       <ArrowLeft2Icon />
                       Back to Categories
                     </button>
                     <button
                       className="flex items-center justify-center gap-3 rounded-lg bg-primary px-10 py-2 font-semibold text-white"
-                      onClick={handleSubmitVote}
+                      onClick={() => {
+                        posthog.capture('Submit votes');
+                        handleSubmitVote();
+                      }}
                     >
                       Submit Vote
                       <ArrowRightIcon size={20} />

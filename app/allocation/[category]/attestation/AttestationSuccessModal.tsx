@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { usePostHog } from 'posthog-js/react';
 import { UpdateBallotButton } from '../components/UpdateBallotButton';
 interface Props {
   link: string
@@ -8,6 +9,12 @@ interface Props {
 
 const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
   const [hideAttestation, setHideAttestation] = useState(false);
+  const posthog = usePostHog();
+
+  useEffect(() => {
+    posthog.capture('View transaction after vote');
+  }, []);
+
   return (
     <div className={`${hideAttestation ? 'hidden' : 'mx-auto flex max-w-md flex-col items-center gap-6 overflow-hidden rounded-lg bg-white bg-ballot bg-no-repeat p-6 py-10 text-center shadow-lg'}`}>
       <Image

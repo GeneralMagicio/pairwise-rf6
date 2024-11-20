@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { usePostHog } from 'posthog-js/react';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 
 interface Props {
@@ -21,6 +22,7 @@ const DelegationConfirmation: React.FC<Props> = ({
   categoryName,
   onClose,
 }) => {
+  const posthog = usePostHog();
   return (
     <div className="mx-auto flex max-w-md flex-col items-center rounded-lg bg-white px-6 py-8 shadow-lg">
       <div className="mb-2 flex items-center justify-between">
@@ -81,7 +83,14 @@ const DelegationConfirmation: React.FC<Props> = ({
         </p>
       </div>
 
-      <a className="w-full" target="_blank" href={createWarpcastIntention(categoryName, username)}>
+      <a
+        className="w-full"
+        target="_blank"
+        href={createWarpcastIntention(categoryName, username)}
+        onClick={() => {
+          posthog.capture('Post of Farcaster');
+        }}
+      >
         <button className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-op-neutral-300 bg-white py-2 transition-colors duration-200 hover:bg-purple-50">
           <WarpcastIcon />
           Post on Farcaster

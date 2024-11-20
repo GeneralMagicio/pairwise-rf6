@@ -12,6 +12,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { WalletId, createWallet } from 'thirdweb/wallets';
 import { useActiveWallet, useConnect, useDisconnect as useThirdwebDisconnect } from 'thirdweb/react';
 import { AxiosError } from 'axios';
+import { usePostHog } from 'posthog-js/react';
 import {
   isLoggedIn,
   loginToPwBackend,
@@ -122,6 +123,7 @@ export const useAuth = () => {
   const { connect } = useConnect();
   const wallet = useActiveWallet();
   const { disconnect } = useThirdwebDisconnect();
+  const posthog = usePostHog();
 
   const clearLocalStorage = () => {
     localStorage.removeItem(StorageLabel.AUTH);
@@ -214,6 +216,7 @@ export const useAuth = () => {
         signature = val2;
         console.log('loggin to agora');
         setLoginInProgress(true);
+        posthog.identify(address);
         const res = await loginToAgora(message, signature);
         setLoggedToAgora(res);
       }

@@ -2,6 +2,7 @@ import React, { useMemo, useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { usePostHog } from 'posthog-js/react';
 import { shortenWalletAddress } from '@/app/comparison/utils/helpers';
 import { BadgeData, getBadgeAmount, getBadgeMedal, useGetPublicBadges } from '../../getBadges';
 import BadgeCard, { BadgeCardEntryType } from '../../BadgeCard';
@@ -24,6 +25,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
 
   const [showModal, setShowModal] = useState(false);
   const [shouldRedirect, setShouldRedirect] = useState(false);
+  const posthog = usePostHog();
 
   // Check localStorage to determine if the modal should be shown
   useEffect(() => {
@@ -119,6 +121,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
           <div>
             <button
               onClick={() => {
+                posthog.capture('Welcome - Connect with WorldID', { address: address });
                 open();
               }}
               className={`flex w-full items-center justify-center gap-2 rounded-md border border-[#CBD5E0] ${
@@ -142,7 +145,10 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
           </div>
           <div>
             <button
-              onClick={onConnectFarcaster}
+              onClick={() => {
+                posthog.capture('Welcome - Connect with Farcaster', { address: address });
+                onConnectFarcaster();
+              }}
               className={`flex w-full items-center ${
                 connectionStatus?.farcaster
                   ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
@@ -182,6 +188,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
             : (
                 <button
                   onClick={() => {
+                    posthog.capture('Welcome - I\'ll do it later', { address: address });
                     router.push('/allocation');
                   }}
                   className="w-full justify-center px-1 text-xs text-gray-600 underline"

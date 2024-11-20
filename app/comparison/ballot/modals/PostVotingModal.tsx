@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePostHog } from 'posthog-js/react';
 
 type TPostVotingProps = {
   categorySlug: string | string[]
@@ -8,6 +9,7 @@ type TPostVotingProps = {
 };
 
 const PostVoting: FC<TPostVotingProps> = ({ categorySlug, categoryLabel }) => {
+  const posthog = usePostHog();
   return (
     <div className="mx-auto flex w-[300px] flex-col items-center justify-center gap-6 rounded-lg bg-white bg-ballot bg-no-repeat px-6 py-10 shadow-lg md:w-[500px]">
       <Image
@@ -33,6 +35,11 @@ const PostVoting: FC<TPostVotingProps> = ({ categorySlug, categoryLabel }) => {
       <Link
         href={`/allocation/${categorySlug}`}
         className="w-full rounded-md bg-primary py-2 text-center text-white"
+        onClick={() => {
+          posthog.capture('Show my results', {
+            category: categorySlug,
+          });
+        }}
       >
         Show my results
       </Link>
