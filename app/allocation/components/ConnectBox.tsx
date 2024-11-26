@@ -25,9 +25,12 @@ interface ConnectBoxProps {
 const ConnectBox: React.FC<ConnectBoxProps> = ({
   onConnectWorldID,
   onConnectFarcaster,
+  onConnectTwitter,
 }) => {
   const { data: badges } = useGetPublicBadges();
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isFarcasterRefreshing, setIsFarcasterRefreshing] = useState(false);
+
+  const [isTwitterRefreshing, setIsTwitterRefreshing] = useState(false);
 
   const activeBadges = useMemo(() => {
     if (!badges) return [];
@@ -65,15 +68,15 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   const queryClient = useQueryClient();
   const refresh = useCallback(() => {
     queryClient.refetchQueries({ queryKey: ['connect-status'] });
-    setIsRefreshing(true);
+    setIsFarcasterRefreshing(true);
     setTimeout(() => {
-      setIsRefreshing(false);
+      setIsFarcasterRefreshing(false);
     }, 500);
   }, []);
 
   const { mutateAsync: worldIdSignIn } = useWorldSignIn();
   const { data: connectionStatus } = useGetConnectionStatus();
-  const { isLoading, data: delegates } = useGetDelegationStatus();
+  const { isLoading: isFarcasterLoading, data: delegates } = useGetDelegationStatus();
 
   const handleVerify = async (proof: ISuccessResult) => {
     return (await worldIdSignIn(proof));
@@ -154,6 +157,58 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
             ? 'Connect your Farcaster account to find out if someone delegated their voting power to you.'
             : 'Some people have delegated their voting power to you. With great power comes great responsibility. Use it wisely.'}
         </p>
+        {connectionStatus?.twitter
+          ? (
+              <div className="flex w-full justify-between">
+                <div className="relative">
+                  <Image
+                    src="/assets/images/x.svg"
+                    alt="X Icon"
+                    className="left-0 top-0"
+                    width={32}
+                    height={32}
+                  />
+                </div>
+                <div className="flex flex-col items-end justify-center gap-2">
+                  <div className="flex items-center justify-center gap-2 rounded-full border border-[#079455] bg-[#17B26A] px-4 py-1 sl:px-2">
+                    <p className="text-sm text-gray-50 sl:text-xs">
+                      <span className="font-semibold">
+                        {delegates?.toYou?.uniqueDelegators
+                          ? `${(delegates?.toYou?.uniqueDelegators <= 1)
+                            ? 'someone delegated to you'
+                            : `${delegates?.toYou?.uniqueDelegators} people delegated to you`}`
+                          : 'You have no delegations'}
+                      </span>
+                    </p>
+                  </div>
+                  <button onClick={refresh} className="px-1 text-xs text-gray-600">
+                    {(isFarcasterLoading || isTwitterRefreshing)
+                      ? (
+                          <span>
+                            Refreshing ...
+                            {' '}
+                            <Image className="inline" src="/assets/images/refresh.svg" width={16} height={16} alt=".." />
+                          </span>
+                        )
+                      : <span className="underline">Refresh</span>}
+                  </button>
+                </div>
+              </div>
+            )
+          : (
+              <button
+                onClick={onConnectTwitter}
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-[##CBD5E0] bg-gray-100 px-4 py-2 font-semibold text-gray-800"
+              >
+                <Image
+                  src="/assets/images/x.svg"
+                  alt="X Icon"
+                  width={20}
+                  height={20}
+                />
+                Connect with X (Twitter)
+              </button>
+            )}
         {connectionStatus?.farcaster
           ? (
               <div className="flex w-full justify-between">
@@ -179,7 +234,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                     </p>
                   </div>
                   <button onClick={refresh} className="px-1 text-xs text-gray-600">
-                    {(isLoading || isRefreshing)
+                    {(isFarcasterLoading || isFarcasterRefreshing)
                       ? (
                           <span>
                             Refreshing ...
@@ -206,7 +261,9 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                 Connect with Farcaster
               </button>
             )}
+
       </div>
+
     </div>
   );
 };
