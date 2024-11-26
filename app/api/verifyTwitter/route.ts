@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+const puppeteer = require('puppeteer');
 
 interface IRequestBody {
   url: string
@@ -40,39 +41,12 @@ export async function POST(req: NextRequest) {
   }
 
   const userhandle = paramsArray[1];
-  let html: string;
-  const response = await fetch(url.toString(), { method: 'GET', redirect: 'manual' });
+  const browser = await puppeteer.launch({ headless: true });
 
-  if (response.status === 301 || response.status === 302) {
-    const location = response.headers.get('Location');
-    if (location) {
-      url = new URL(location);
-    }
-    else {
-      return NextResponse.json(
-        { error: 'Redirection failed, no Location header.' },
-        { status: 500 }
-      );
-    }
-  }
-
-  const finalResponse = await fetch(url.toString());
-  if (!finalResponse.ok) {
-    return NextResponse.json(
-      { error: 'Failed to fetch the redirected URL content.' },
-      { status: 500 }
-    );
-  }
-  html = await finalResponse.text();
-  const titleMatch = html.match(/<title>(.*?)<\/title>/i);
-  if (!titleMatch) {
-    return NextResponse.json(
-      { error: 'Could not extract the title from the page.' },
-      { status: 500 }
-    );
-  }
-
-  const title = titleMatch[1].trim();
+  const page = await browser.newPage();
+  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36');
+  await page.goto(url.toString(), { waitUntil: 'networkidle2' });
+  const title = await page.title();
   const compTitle = body.text.replace(/\n/g, ' ').replace('https://app.pairvise.vote', '').replace('  ', ' ').trim();
   if (!title.includes(compTitle)) {
     return NextResponse.json(
@@ -80,8 +54,6 @@ export async function POST(req: NextRequest) {
         error: 'Verification Failed as tweet doesn\'t contain the text',
         compTitle,
         title,
-        html,
-        url: url.toString(),
       },
       {
         status: 400,
@@ -89,6 +61,7 @@ export async function POST(req: NextRequest) {
     );
   }
   const username = title.replace(/ on X: ".*?" \/ X/, '');
+  await browser.close();
 
   return NextResponse.json(
     {
