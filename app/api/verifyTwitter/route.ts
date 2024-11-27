@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import puppeteer from "puppeteer"
+import puppeteer from 'puppeteer';
 
 interface IRequestBody {
   url: string
