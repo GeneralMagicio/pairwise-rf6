@@ -66,11 +66,19 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
     return activeBadgesArray;
   }, [badges]);
   const queryClient = useQueryClient();
-  const refresh = useCallback(() => {
+  const refreshFarcaster = useCallback(() => {
     queryClient.refetchQueries({ queryKey: ['connect-status'] });
     setIsFarcasterRefreshing(true);
     setTimeout(() => {
       setIsFarcasterRefreshing(false);
+    }, 500);
+  }, []);
+
+  const refreshTwitter = useCallback(() => {
+    queryClient.refetchQueries({ queryKey: ['connect-status'] });
+    setIsTwitterRefreshing(true);
+    setTimeout(() => {
+      setIsTwitterRefreshing(false);
     }, 500);
   }, []);
 
@@ -181,7 +189,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                       </span>
                     </p>
                   </div>
-                  <button onClick={refresh} className="px-1 text-xs text-gray-600">
+                  <button onClick={refreshTwitter} className="px-1 text-xs text-gray-600">
                     {(isFarcasterLoading || isTwitterRefreshing)
                       ? (
                           <span>
@@ -233,7 +241,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                       </span>
                     </p>
                   </div>
-                  <button onClick={refresh} className="px-1 text-xs text-gray-600">
+                  <button onClick={refreshFarcaster} className="px-1 text-xs text-gray-600">
                     {(isFarcasterLoading || isFarcasterRefreshing)
                       ? (
                           <span>
