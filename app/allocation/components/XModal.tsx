@@ -96,7 +96,7 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
                       placeholder="Paste URL of your verification Tweet"
                     />
                     {error && (
-                      <div className="absolute pt-1.5 left-0 top-full text-xs text-primary">
+                      <div className="absolute left-0 top-full pt-1.5 text-xs text-primary">
                         Please enter a valid Tweet link
                       </div>
                     )}

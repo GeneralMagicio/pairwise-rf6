@@ -20,7 +20,7 @@ const config: Config = {
           },
           red: {
             100: '#FFF0F1',
-          }
+          },
         },
         'gray': {
           50: '#FBFCFE',
