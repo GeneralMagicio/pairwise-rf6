@@ -51,7 +51,14 @@ export async function POST(req: NextRequest) {
   else {
     browser = await puppeteerCore.launch({
       headless: chromium.headless,
-      args: chromium.args,
+      args: [
+        ...chromium.args,
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--single-process',
+        '--disable-gpu',
+      ],
       defaultViewport: chromium.defaultViewport,
       executablePath: await chromium.executablePath(),
     });
