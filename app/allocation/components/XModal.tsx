@@ -77,34 +77,36 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
                       )}
                 </div>
                 <div className="h-12 w-10">
-                  <div className={`mx-auto h-full w-0 border ${(tweetState === TweetStatus.NotTweeted) ? "border-gray-200":"border-primary"}`} />
+                  <div className={`mx-auto h-full w-0 border ${(tweetState === TweetStatus.NotTweeted) ? 'border-gray-200' : 'border-primary'}`} />
                 </div>
                 <div className="m-auto flex h-auto w-full flex-row justify-start gap-4">
                   <div className={`p-auto size-10 rounded-full ${(tweetState === TweetStatus.NotTweeted) ? 'bg-op-neutral-300' : 'bg-primary'} flex items-center justify-center`}>
                     {(tweetState === TweetStatus.NotTweeted) ? 2 : <CheckIcon size={20} color="#ffffff" />}
                   </div>
-                  <div className='flex relative grow'><input
-                    value={url}
-                    onChange={(event) => {
-                      setUrl(event.target.value);
-                      if (error) {
-                        setError(false);
-                      }
-                    }}
-                    className={`flex grow items-center rounded-md border border-op-neutral-300 ${(error)?"bg-status-border-error":"bg-gray-50"} px-3.5 py-2.5 text-base text-dark-600 placeholder-[#9195A6]`}
-                    placeholder="Paste URL of your verification Tweet"
-                  />
-                  {error && (<div className='absolute top-full left-0 text-primary text-xs'>
-                    Please enter a valid Tweet link
-                  </div>)
-                  }
+                  <div className="relative flex grow">
+                    <input
+                      value={url}
+                      onChange={(event) => {
+                        setUrl(event.target.value);
+                        if (error) {
+                          setError(false);
+                        }
+                      }}
+                      className={`flex grow items-center rounded-md border border-op-neutral-300 ${(error) ? 'bg-status-border-error' : 'bg-gray-50'} px-3.5 py-2.5 text-base text-dark-600 placeholder-[#9195A6]`}
+                      placeholder="Paste URL of your verification Tweet"
+                    />
+                    {error && (
+                      <div className="absolute left-0 top-full text-xs text-primary">
+                        Please enter a valid Tweet link
+                      </div>
+                    )}
                   </div>
                   <button
                     className={`py-auto box-shadow: 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A; rounded-lg border px-4 ${(url !== '') ? 'border-primary bg-primary text-white' : 'border-gray-border bg-white px-4 text-gray-500'}`}
                     onClick={verifyTweet}
                     disabled={url === ''}
                   >
-                    {(tweetState === TweetStatus.NotTweeted)?"Verify":"Verified"}
+                    {(tweetState === TweetStatus.NotTweeted) ? 'Verify' : 'Verified'}
                   </button>
                 </div>
               </div>
