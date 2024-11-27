@@ -8,7 +8,7 @@ const nextConfig = {
         ],
       },
       experimental: {
-        serverComponentsExternalPackages: ['@sparticuz/chromium-min'],
+        serverComponentsExternalPackages: ['@sparticuz/chromium'],
       },
 };
 
