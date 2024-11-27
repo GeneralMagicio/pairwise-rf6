@@ -14,7 +14,6 @@ interface XModalProps {
 enum TweetStatus {
   NotTweeted,
   Tweeted,
-  Verified,
 }
 
 const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
@@ -62,7 +61,7 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
                   </div>
                   {(tweetState === TweetStatus.NotTweeted)
                     ? (
-                        <a onClick={() => setTweetState(TweetStatus.Tweeted)} href={`https://x.com/intent/post?text=${encodeURIComponent(text)}`} target="_blank">
+                        <a href={`https://x.com/intent/post?text=${encodeURIComponent(text)}`} target="_blank">
                           <button className="py-auto h-full rounded-lg bg-primary px-4 text-gray-50">
                             Tweet
                           </button>
@@ -81,20 +80,24 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
                   <div className="mx-auto h-full w-0 border border-gray-200" />
                 </div>
                 <div className="m-auto flex h-auto w-full flex-row justify-start gap-4">
-                  <div className="p-auto flex size-10 items-center justify-center rounded-full bg-op-neutral-300">
-                    2
+                <div className={`p-auto size-10 rounded-full ${(tweetState === TweetStatus.NotTweeted) ? 'bg-op-neutral-300' : 'bg-primary'} flex items-center justify-center`}>
+                    {(tweetState === TweetStatus.NotTweeted) ? 2 : <CheckIcon size={20} color="#ffffff" />}
                   </div>
                   <input
                     value={url}
                     onChange={(event) => {
                       setUrl(event.target.value);
+                      if(error) {
+                        setError(false);
+                      }
                     }}
                     className="flex grow items-center rounded-md border border-op-neutral-300 bg-gray-50 px-3.5 py-2.5 text-base text-dark-600 placeholder-[#9195A6]"
                     placeholder="Paste URL of your verification Tweet"
                   />
                   <button
-                    className="py-auto box-shadow: 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A; rounded-lg border border-gray-border bg-white px-4 text-gray-500"
+                    className={`py-auto px-4 box-shadow: 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A; rounded-lg border ${(url!=="")?"bg-primary text-white border-primary":"border-gray-border bg-white px-4 text-gray-500"}`}
                     onClick={verifyTweet}
+                    disabled={url===""}
                   >
                     Verify
                   </button>

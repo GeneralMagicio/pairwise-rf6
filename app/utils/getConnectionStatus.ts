@@ -56,7 +56,8 @@ const updateTwitter = async ({ url, text }: IUpdateTwitterProps): Promise<IRetur
       const errorData = await response.json();
       throw new Error(errorData.error);
     }
-    return await response.json();
+    const result = await response.json();
+    return result.data;
   }
   catch (error: any) {
     if (error.response) {
