@@ -1921,10 +1921,10 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.2.tgz#821f8442f4175d8f0467b9daf26e3a18e2d02af2"
   integrity sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==
 
-"@sparticuz/chromium-min@^131.0.1":
+"@sparticuz/chromium@^131.0.1":
   version "131.0.1"
-  resolved "https://registry.yarnpkg.com/@sparticuz/chromium-min/-/chromium-min-131.0.1.tgz#2aa2e176d120f6b37a02edce589d2ec4552d46cd"
-  integrity sha512-kQqKflJtjcBb8aA1b6L4dhU/8UbCJHcjb3au8cjBhKAG7nzqh//92rHCB6ULkgV0CMEQmfp3LDBQ/W8Wg2k+Yg==
+  resolved "https://registry.yarnpkg.com/@sparticuz/chromium/-/chromium-131.0.1.tgz#311e196f970b11dbb42b1d1abda101d151327818"
+  integrity sha512-VfmHkQmb/Px0zjwdSQwjRMwFw63Qfj+g4Giumz4jiAGEpXHgIZk6xEwlUz6yiUHVDveK2TEgMR2MR6I3okOE7w==
   dependencies:
     follow-redirects "^1.15.9"
     tar-fs "^3.0.6"
