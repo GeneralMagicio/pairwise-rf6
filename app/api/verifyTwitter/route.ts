@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import puppeteer from 'puppeteer';
+import puppeteerCore from 'puppeteer-core';
 import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer';
 
 interface IRequestBody {
   url: string
@@ -42,12 +43,19 @@ export async function POST(req: NextRequest) {
   }
 
   const userhandle = paramsArray[1];
-  const browser = await puppeteer.launch({
-    headless: chromium.headless,
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(),
-  });
+  console.log(process.env.NODE_ENV);
+  let browser = null;
+  if (process.env.NODE_ENV === 'development') {
+    browser = await puppeteer.launch({ headless: true });
+  }
+  else {
+    browser = await puppeteerCore.launch({
+      headless: chromium.headless,
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath(),
+    });
+  }
 
   const page = await browser.newPage();
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36');
