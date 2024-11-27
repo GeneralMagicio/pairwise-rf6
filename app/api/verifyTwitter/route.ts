@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-const puppeteer = require('puppeteer');
+import puppeteer from "puppeteer"
 
 interface IRequestBody {
   url: string
