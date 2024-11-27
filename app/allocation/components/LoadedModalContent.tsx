@@ -41,7 +41,7 @@ const LoadedModalContent: React.FC<LoadedModalContentProps> = (
 
             </div>
             <div className="align-center flex flex-row justify-center">
-              <div className='m-auto'>
+              <div className="m-auto">
                 {isFarcaster
                   ? <Image src="/assets/images/farcaster.svg" width={32} height={32} alt="World ID Icon" />
                   : <Image src="/assets/images/x.svg" width={32} height={32} alt="X Icon" />}

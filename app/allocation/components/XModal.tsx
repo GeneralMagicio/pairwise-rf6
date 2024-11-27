@@ -80,14 +80,14 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
                   <div className="mx-auto h-full w-0 border border-gray-200" />
                 </div>
                 <div className="m-auto flex h-auto w-full flex-row justify-start gap-4">
-                <div className={`p-auto size-10 rounded-full ${(tweetState === TweetStatus.NotTweeted) ? 'bg-op-neutral-300' : 'bg-primary'} flex items-center justify-center`}>
+                  <div className={`p-auto size-10 rounded-full ${(tweetState === TweetStatus.NotTweeted) ? 'bg-op-neutral-300' : 'bg-primary'} flex items-center justify-center`}>
                     {(tweetState === TweetStatus.NotTweeted) ? 2 : <CheckIcon size={20} color="#ffffff" />}
                   </div>
                   <input
                     value={url}
                     onChange={(event) => {
                       setUrl(event.target.value);
-                      if(error) {
+                      if (error) {
                         setError(false);
                       }
                     }}
@@ -95,9 +95,9 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
                     placeholder="Paste URL of your verification Tweet"
                   />
                   <button
-                    className={`py-auto px-4 box-shadow: 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A; rounded-lg border ${(url!=="")?"bg-primary text-white border-primary":"border-gray-border bg-white px-4 text-gray-500"}`}
+                    className={`py-auto box-shadow: 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A; rounded-lg border px-4 ${(url !== '') ? 'border-primary bg-primary text-white' : 'border-gray-border bg-white px-4 text-gray-500'}`}
                     onClick={verifyTweet}
-                    disabled={url===""}
+                    disabled={url === ''}
                   >
                     Verify
                   </button>
