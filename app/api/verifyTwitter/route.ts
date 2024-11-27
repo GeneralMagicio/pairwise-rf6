@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
   }
 
   const userhandle = paramsArray[1];
-  console.log(process.env.NODE_ENV,chromium.executablePath());
+  console.log(process.env.NODE_ENV, chromium.executablePath());
   let browser = null;
   if (process.env.NODE_ENV === 'development') {
     browser = await puppeteer.launch({ headless: true });
