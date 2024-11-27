@@ -92,11 +92,11 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
                           setError(false);
                         }
                       }}
-                      className={`flex grow items-center rounded-md border border-op-neutral-300 ${(error) ? 'bg-status-border-error' : 'bg-gray-50'} px-3.5 py-2.5 text-base text-dark-600 placeholder-[#9195A6]`}
+                      className={`flex grow items-center rounded-md border ${(error) ? 'border-status-border-error bg-op-red-100' : 'border-op-neutral-300 bg-gray-50'} px-3.5 py-2.5 text-base text-dark-600 placeholder-[#9195A6]`}
                       placeholder="Paste URL of your verification Tweet"
                     />
                     {error && (
-                      <div className="absolute left-0 top-full text-xs text-primary">
+                      <div className="absolute pt-1.5 left-0 top-full text-xs text-primary">
                         Please enter a valid Tweet link
                       </div>
                     )}

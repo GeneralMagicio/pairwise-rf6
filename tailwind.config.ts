@@ -18,6 +18,9 @@ const config: Config = {
           neutral: {
             300: '#CBD5E0',
           },
+          red: {
+            100: '#FFF0F1',
+          }
         },
         'gray': {
           50: '#FBFCFE',
