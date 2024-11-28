@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import debounce from 'lodash.debounce';
 import Modal from '@/app/utils/Modal';
 import LoadingModalContent from './LoadingModalContent';
 import LoadedModalContent from './LoadedModalContent';
@@ -20,10 +21,11 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
   const [tweetState, setTweetState] = useState<TweetStatus>(TweetStatus.NotTweeted);
   const { username, displayName, checkSignInVerificationTweet } = useTwitter();
   const { isLoading, data: delegates } = useGetDelegationStatus();
+  const [isVerified, setIsVerified] = useState(false);
 
   const [error, setError] = useState<boolean>(false);
   const [url, setUrl] = useState<string | undefined>();
-  const verifyTweet = async () => {
+  const verifyTweet = debounce(async () => {
     if (url) {
       try {
         await checkSignInVerificationTweet({
@@ -32,6 +34,9 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
         });
         setError(false);
         setTweetState(TweetStatus.Tweeted);
+        setTimeout(() => {
+          setIsVerified(true);
+        }, 5000);
       }
       catch (error) {
         setError(true);
@@ -40,11 +45,11 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
     else {
       setError(true);
     }
-  };
+  }, 1000);
   const text = 'I\'m using @Pairwisevote to participate in the #LiquidDemocracy experiment.\n\nYou can try it out too!\n\nhttps://app.pairvise.vote';
   return (
     <Modal isOpen={isOpen} onClose={onClose} showCloseButton>
-      {(!username || !displayName)
+      {(!username || !displayName || !isVerified)
         ? (
             <div className="flex flex-col items-center gap-6 bg-gray-50 px-6 py-10">
               <div className="flex flex-col items-center gap-4">
@@ -102,11 +107,18 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
                     )}
                   </div>
                   <button
-                    className={`py-auto box-shadow: 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A; rounded-lg border px-4 ${(url !== '') ? 'border-primary bg-primary text-white' : 'border-gray-border bg-white px-4 text-gray-500'}`}
+                    className={`py-auto box-shadow: 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A; rounded-lg border px-4 ${(url !== '' && (tweetState === TweetStatus.NotTweeted)) ? 'border-primary bg-primary text-white' : 'border-gray-border bg-white px-4 text-gray-500'}`}
                     onClick={verifyTweet}
                     disabled={url === ''}
                   >
-                    {(tweetState === TweetStatus.NotTweeted) ? 'Verify' : 'Verified'}
+                    {(tweetState === TweetStatus.NotTweeted)
+                      ? 'Verify'
+                      : (
+                          <div className="flex flex-row items-center gap-1.5">
+                            <div>Verified</div>
+                            <CheckIcon size={20} color="#98A2B3" />
+                          </div>
+                        )}
                   </button>
                 </div>
               </div>
