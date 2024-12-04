@@ -69,20 +69,16 @@ export async function POST(req: NextRequest) {
   console.log(title);
   const username = title.replace(/ on X: ".*?" \/ X/, '');
   const html = await page.content();
-  
-  const doesntExist = html.includes("This account doesn\’t exist");
 
-  
+  const doesntExist = html.includes('This account doesn’t exist');
 
-  if(doesntExist) {
-
+  if (doesntExist) {
     await browser.close();
     return NextResponse.json(
-        { error: 'Account doesn\'t exists' },
-        { status: 400 }
-      );
+      { error: 'Account doesn\'t exists' },
+      { status: 400 }
+    );
   }
-  
 
   return NextResponse.json(
     {

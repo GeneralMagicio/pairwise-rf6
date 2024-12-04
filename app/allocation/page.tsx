@@ -154,7 +154,7 @@ const AllocationPage = () => {
     if (!categoryToDelegate) return;
 
     posthog.capture('Delegating vote power');
-    if(!isX){
+    if (!isX) {
       await axiosInstance.post('flow/delegate/farcaster', {
         collectionId: categoryToDelegate.id,
         targetUsername: username,
@@ -171,9 +171,10 @@ const AllocationPage = () => {
       queryKey: ['categories'],
     });
     setTargetDelegate(target);
-    if(isX) {
+    if (isX) {
       setDelegationState(DelegationState.XSuccess);
-    } else {
+    }
+    else {
       setDelegationState(DelegationState.WarpcastSuccess);
     }
   };

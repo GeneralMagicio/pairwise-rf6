@@ -38,19 +38,24 @@ const DelegationConfirmation: React.FC<Props> = ({
 
       <div className="mb-4 flex items-center">
         <div className="relative mr-3 size-10 rounded-full">
-          {isX?<Image
-            src="/assets/images/x.svg"
-            alt="X Icon"
-            fill
-            unoptimized
-            />
-          :<Image
-            src={profilePicture!}
-            alt={displayName}
-            fill
-            unoptimized
-            className="rounded-full"
-          />}
+          {isX
+            ? (
+                <Image
+                  src="/assets/images/x.svg"
+                  alt="X Icon"
+                  fill
+                  unoptimized
+                />
+              )
+            : (
+                <Image
+                  src={profilePicture!}
+                  alt={displayName}
+                  fill
+                  unoptimized
+                  className="rounded-full"
+                />
+              )}
         </div>
         <div>
           <h3 className="font-medium">{displayName}</h3>
@@ -69,7 +74,9 @@ const DelegationConfirmation: React.FC<Props> = ({
         <p className="text-gray-400">
           I just delegated on
           <span className="mx-1 text-primary">@pairwise</span>
-          {' '}for Retro funding 6 [Category Name] to{' '}
+          {' '}
+          for Retro funding 6 [Category Name] to
+          {' '}
           <span className="ml-1 text-primary">
             @
             {username}
@@ -80,14 +87,14 @@ const DelegationConfirmation: React.FC<Props> = ({
       <a
         className="w-full"
         target="_blank"
-        href={isX?createXIntention(categoryName,username):createWarpcastIntention(categoryName, username)}
+        href={isX ? createXIntention(categoryName, username) : createWarpcastIntention(categoryName, username)}
         onClick={() => {
           posthog.capture('Post of Farcaster');
         }}
       >
         <button className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-op-neutral-300 bg-white py-2 transition-colors duration-200 hover:bg-purple-50">
-          {isX?<XIcon/>:<WarpcastIcon />}
-          {isX?"Post on Twitter":"Post on Farcaster"}
+          {isX ? <XIcon /> : <WarpcastIcon />}
+          {isX ? 'Post on Twitter' : 'Post on Farcaster'}
         </button>
       </a>
 
