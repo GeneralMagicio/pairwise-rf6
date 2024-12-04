@@ -2,12 +2,14 @@ import React from 'react';
 import Image from 'next/image';
 import { usePostHog } from 'posthog-js/react';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
+import { XIcon } from '@/public/assets/icon-components/XIcon';
 
 interface Props {
-  profilePicture: string
+  profilePicture?: string
   username: string
   displayName: string
   categoryName: string
+  isX?: boolean
   onClose: () => void
 }
 
@@ -15,11 +17,16 @@ const createWarpcastIntention = (categoryName: string, username: string) => {
   return `https://warpcast.com/~/compose?text=I just delegated on @pairwise for Retro funding 6 ${categoryName} to @${username}. `;
 };
 
+const createXIntention = (categoryName: string, username: string) => {
+  return `https://x.com/intent/post?text=I just delegated on @pairwise for Retro funding 6 ${categoryName} to @${username}. `;
+};
+
 const DelegationConfirmation: React.FC<Props> = ({
   profilePicture,
   username,
   displayName,
   categoryName,
+  isX,
   onClose,
 }) => {
   const posthog = usePostHog();
@@ -31,13 +38,19 @@ const DelegationConfirmation: React.FC<Props> = ({
 
       <div className="mb-4 flex items-center">
         <div className="relative mr-3 size-10 rounded-full">
-          <Image
-            src={profilePicture}
+          {isX?<Image
+            src="/assets/images/x.svg"
+            alt="X Icon"
+            fill
+            unoptimized
+            />
+          :<Image
+            src={profilePicture!}
             alt={displayName}
             fill
             unoptimized
             className="rounded-full"
-          />
+          />}
         </div>
         <div>
           <h3 className="font-medium">{displayName}</h3>
@@ -56,44 +69,25 @@ const DelegationConfirmation: React.FC<Props> = ({
         <p className="text-gray-400">
           I just delegated on
           <span className="mx-1 text-primary">@pairwise</span>
-          's Liquid Democracy Experiment.
-          <br />
-          <br />
-          I chose
-          {' '}
+          {' '}for Retro funding 6 [Category Name] to{' '}
           <span className="ml-1 text-primary">
             @
             {username}
           </span>
-          {' '}
-          to vote (or delegate) for me in the
-          <span className="mx-1">
-            {categoryName}
-          </span>
-          category of
-          {' '}
-          <span className="mx-1 text-primary">@optimism</span>
-          's RF6.
-          <br />
-          <br />
-          You can try it out too!
-          <br />
-          <br />
-          https://app.pairwise.vote/
         </p>
       </div>
 
       <a
         className="w-full"
         target="_blank"
-        href={createWarpcastIntention(categoryName, username)}
+        href={isX?createXIntention(categoryName,username):createWarpcastIntention(categoryName, username)}
         onClick={() => {
           posthog.capture('Post of Farcaster');
         }}
       >
         <button className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-op-neutral-300 bg-white py-2 transition-colors duration-200 hover:bg-purple-50">
-          <WarpcastIcon />
-          Post on Farcaster
+          {isX?<XIcon/>:<WarpcastIcon />}
+          {isX?"Post on Twitter":"Post on Farcaster"}
         </button>
       </a>
 

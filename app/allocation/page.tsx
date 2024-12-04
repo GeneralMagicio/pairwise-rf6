@@ -29,7 +29,7 @@ import { useCategories } from '../comparison/utils/data-fetching/categories';
 import WorldIdSignInSuccessModal from './components/WorldIdSignInSuccessModal';
 import FarcasterModal from './components/FarcasterModal';
 import DelegateModal from '../delegation/DelegationModal';
-import { FarcasterLookup } from '../delegation/farcaster/FarcasterLookup';
+import { SocialLookup } from '../delegation/farcaster/FarcasterLookup';
 import FarcasterSuccess from '../delegation/farcaster/FarcasterSuccess';
 import { axiosInstance } from '../utils/axiosInstance';
 import { TargetDelegate } from '../delegation/farcaster/types';
@@ -65,8 +65,10 @@ const budgetCategory: BudgetCategory = {
 enum DelegationState {
   Initial,
   DelegationMethod,
-  Lookup,
-  Success,
+  FarcasterLookup,
+  XLookup,
+  WarpcastSuccess,
+  XSuccess,
 }
 
 const AllocationPage = () => {
@@ -148,14 +150,16 @@ const AllocationPage = () => {
     });
   };
 
-  const handleDelegate = async (username: string, target: TargetDelegate) => {
+  const handleDelegate = async (username: string, target: TargetDelegate, isX?: boolean) => {
     if (!categoryToDelegate) return;
 
     posthog.capture('Delegating vote power');
-    await axiosInstance.post('flow/delegate/farcaster', {
-      collectionId: categoryToDelegate.id,
-      targetUsername: username,
-    });
+    if(!isX){
+      await axiosInstance.post('flow/delegate/farcaster', {
+        collectionId: categoryToDelegate.id,
+        targetUsername: username,
+      });
+    }
 
     queryClient.refetchQueries({
       queryKey: ['fetch-delegates'],
@@ -167,7 +171,11 @@ const AllocationPage = () => {
       queryKey: ['categories'],
     });
     setTargetDelegate(target);
-    setDelegationState(DelegationState.Success);
+    if(isX) {
+      setDelegationState(DelegationState.XSuccess);
+    } else {
+      setDelegationState(DelegationState.WarpcastSuccess);
+    }
   };
 
   const handleAttestationModalClose = () => {
@@ -406,25 +414,47 @@ const AllocationPage = () => {
               posthog.capture('Find delegate on Farcaster', {
                 category: categoryToDelegate!.name,
               });
-              setDelegationState(DelegationState.Lookup);
+              setDelegationState(DelegationState.FarcasterLookup);
             }}
-            onFindDelegatesTwitter={() => {}}
+            onFindDelegatesTwitter={() => {
+              posthog.capture('Find delegate on Farcaster', {
+                category: categoryToDelegate!.name,
+              });
+              setDelegationState(DelegationState.XLookup);
+            }}
           />
         )}
 
-        {delegationState === DelegationState.Lookup && (
-          <FarcasterLookup
+        {delegationState === DelegationState.FarcasterLookup && (
+          <SocialLookup
             handleDelegate={handleDelegate}
             categoryName={categoryToDelegate!.name}
           />
         )}
-        {delegationState === DelegationState.Success && targetDelegate && (
+
+        {delegationState === DelegationState.XLookup && (
+          <SocialLookup
+            handleDelegate={handleDelegate}
+            categoryName={categoryToDelegate!.name}
+            isX
+          />
+        )}
+        {delegationState === DelegationState.WarpcastSuccess && targetDelegate && (
           <FarcasterSuccess
             categoryName={categoryToDelegate!.name}
             displayName={targetDelegate.displayName}
             username={targetDelegate.username}
-            profilePicture={targetDelegate.profilePicture}
+            profilePicture={targetDelegate.profilePicture!}
             onClose={resetDelegateState}
+          />
+        )}
+        {delegationState === DelegationState.XSuccess && targetDelegate && (
+          <FarcasterSuccess
+            categoryName={categoryToDelegate!.name}
+            displayName={targetDelegate.displayName}
+            username={targetDelegate.username}
+            onClose={resetDelegateState}
+            isX
           />
         )}
       </Modal>

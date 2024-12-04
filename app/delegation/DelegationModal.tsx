@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
+import { XIcon } from '@/public/assets/icon-components/XIcon';
 
 interface Props {
   categoryName: string
@@ -11,6 +12,7 @@ interface Props {
 const DelegateModal: React.FC<Props> = ({
   categoryName,
   onFindDelegatesFarcaster,
+  onFindDelegatesTwitter,
 }) => {
   return (
     <div className="mx-auto max-w-[500px] rounded-lg bg-white px-6 py-8 shadow-lg">
@@ -45,7 +47,16 @@ const DelegateModal: React.FC<Props> = ({
         heard by delegating your voting power to a delegate.
       </p>
 
-      <div className="space-y-4">
+      <div className="mt-4">
+        <button
+          onClick={onFindDelegatesTwitter}
+          className="flex w-full items-center justify-center space-x-2 rounded-lg border-2  py-3 text-white hover:bg-gray-100"
+        >
+          <XIcon />
+          <span className="text-black">Find delegates on Farcaster</span>
+        </button>
+      </div>
+      <div className="mt-4">
         <button
           onClick={onFindDelegatesFarcaster}
           className="flex w-full items-center justify-center space-x-2 rounded-lg border-2  py-3 text-white hover:bg-gray-100"
