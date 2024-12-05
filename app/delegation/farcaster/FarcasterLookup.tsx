@@ -131,9 +131,9 @@ export const SocialLookup: React.FC<Props> = ({ categoryName, handleDelegate, is
           ? (isValid.username === connectionStatus?.farcaster?.metadata['username'])
               ? <span className="text-primary"> You can&#39;t delegate to yourself.</span>
               : (
-                  <div className="flex size-full items-center text-teal-600">
+                  (<div className="flex size-full items-center text-teal-600">
                     <span>{`@${isValid.username}`}</span>
-                    <div className={`relative ${isX ? 'mx-1' : 'size-25'}`}>
+                    <div className={`relative ${!isX && 'size-25'} ${isX && 'mr-1'}`}>
                       {!('pfp' in isValid)
                         ? <></>
                         : (
@@ -147,9 +147,8 @@ export const SocialLookup: React.FC<Props> = ({ categoryName, handleDelegate, is
                           )}
                     </div>
                     {isX ? 'available on X' : 'on Farcaster'}
-                  </div>
+                  </div>)
                 )
-
           : isValid === false ? <span className="text-primary"> No user found with this username  </span> : null}
       </div>
       <button
