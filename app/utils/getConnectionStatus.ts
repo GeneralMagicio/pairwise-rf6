@@ -33,6 +33,44 @@ const updateFarcaster = async ({ message, signature, custody }: IUpdateFarcaster
     }
   }
 };
+export interface IUpdateTwitterProps {
+  url: string
+  text: string
+}
+
+export interface IReturnTwitterDetails {
+  username: string
+  displayName: string
+}
+
+const updateTwitter = async ({ url, text }: IUpdateTwitterProps): Promise<IReturnTwitterDetails> => {
+  try {
+    const response = await fetch('api/verifyTwitter', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url, text }),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+    const result = await response.json();
+    return result.data;
+  }
+  catch (error: any) {
+    if (error.response) {
+      if (error.response.data?.message) {
+        throw new Error(error.response.data.message);
+      }
+      throw new Error(error.response.message);
+    }
+    else {
+      throw new Error('No response received from the server');
+    }
+  }
+};
 interface IDelegateMetadata {
   username: string
   profileUrl: string
@@ -93,6 +131,7 @@ interface ISocialNetwork {
 export interface IConnectionStatus {
   farcaster: ISocialNetwork | null
   worldId: ISocialNetwork | null
+  twitter: ISocialNetwork | null
 }
 const getConnectionStatus = async () => {
   const { data } = await axiosInstance.get<IConnectionStatus>('/flow/connect/status');
@@ -101,6 +140,24 @@ const getConnectionStatus = async () => {
 const getDelegationStatus = async () => {
   const { data } = await axiosInstance.get<ISocialDelegateResponse>('/flow/delegate/status');
   return data;
+};
+
+export const useTwitterSignIn = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateTwitter,
+    onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: ['publicBadges'],
+      });
+      queryClient.refetchQueries({
+        queryKey: ['connect-status'],
+      });
+      queryClient.refetchQueries({
+        queryKey: ['fetch-delegates'],
+      });
+    },
+  });
 };
 
 export const useFarcasterSignIn = () => {

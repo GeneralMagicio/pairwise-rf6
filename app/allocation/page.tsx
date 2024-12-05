@@ -53,6 +53,7 @@ import BadgeholderModal from './components/BadgeholderModal';
 import StorageLabel from '../lib/localStorage';
 import { UpdateBallotButton } from './[category]/components/UpdateBallotButton';
 import AskDelegations from '../delegation/farcaster/AskDelegations';
+import XModal from './components/XModal';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -98,6 +99,7 @@ const AllocationPage = () => {
   const [totalValue, setTotalValue] = useState(categoryRankings?.budget || 0);
   const [percentageError, setPercentageError] = useState<string>();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
+  const [isOpenXModal, setIsOpenXModal] = useState(false);
   const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal]
     = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -507,6 +509,13 @@ const AllocationPage = () => {
           setIsOpenFarcasterModal(false);
         }}
       />
+
+      <XModal
+        isOpen={isOpenXModal}
+        onClose={() => {
+          setIsOpenXModal(false);
+        }}
+      />
       <div className="flex flex-col gap-6 p-16">
         {!allocatingBudget && (
           <div className="flex max-w-[72%] flex-col gap-3">
@@ -681,7 +690,9 @@ const AllocationPage = () => {
                 onConnectFarcaster={() => {
                   setIsOpenFarcasterModal(true);
                 }}
-                onConnectTwitter={() => {}}
+                onConnectTwitter={() => {
+                  setIsOpenXModal(true);
+                }}
                 onConnectWorldID={(isError?: boolean) => {
                   if (isError) {
                     setIsWorldIdSignErrorModal(true);
