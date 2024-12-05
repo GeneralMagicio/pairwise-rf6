@@ -53,7 +53,7 @@ const DelegateModal: React.FC<Props> = ({
           className="flex w-full items-center justify-center space-x-2 rounded-lg border-2  py-3 text-white hover:bg-gray-100"
         >
           <XIcon />
-          <span className="text-black">Find delegates on Farcaster</span>
+          <span className="text-black">Find delegates on Twitter</span>
         </button>
       </div>
       <div className="mt-4">

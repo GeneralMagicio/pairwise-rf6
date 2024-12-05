@@ -7,7 +7,7 @@ import { XIcon } from '@/public/assets/icon-components/XIcon';
 interface Props {
   profilePicture?: string
   username: string
-  displayName: string
+  displayName?: string
   categoryName: string
   isX?: boolean
   onClose: () => void
@@ -37,20 +37,21 @@ const DelegationConfirmation: React.FC<Props> = ({
       </div>
 
       <div className="mb-4 flex items-center">
-        <div className="relative mr-3 size-10 rounded-full">
+        <div className={`relative ${isX ? 'mr-0' : 'mr-3 size-10'} rounded-full`}>
           {isX
             ? (
                 <Image
                   src="/assets/images/x.svg"
                   alt="X Icon"
-                  fill
+                  width="32"
+                  height="32"
                   unoptimized
                 />
               )
             : (
                 <Image
                   src={profilePicture!}
-                  alt={displayName}
+                  alt={displayName!}
                   fill
                   unoptimized
                   className="rounded-full"
@@ -58,8 +59,8 @@ const DelegationConfirmation: React.FC<Props> = ({
               )}
         </div>
         <div>
-          <h3 className="font-medium">{displayName}</h3>
-          <p className="text-gray-500">
+          {displayName && (<h3 className="font-medium">{displayName}</h3>)}
+          <p className={isX ? 'my-auto font-semibold text-[#344054]' : 'text-gray-500'}>
             @
             {username}
           </p>

@@ -19,14 +19,12 @@ interface ITwitterResponse {
 function extractFarcasterUsername(input: string, isX?: boolean) {
   // Remove leading and trailing whitespace
   const trimmedInput = input.trim();
-
   if (trimmedInput.includes('@')) {
     return trimmedInput.split('@')[1];
   }
   else if (trimmedInput.includes((isX ? 'x.com/' : 'warpcast.com/'))) {
-    return trimmedInput.split('warpcast.com/')[1];
+    return trimmedInput.split((isX ? 'x.com/' : 'warpcast.com/'))[1];
   }
-
   return trimmedInput;
 }
 
@@ -45,7 +43,6 @@ export const SocialLookup: React.FC<Props> = ({ categoryName, handleDelegate, is
   const checkUsernameValidity = useCallback(debounce(async (username: string) => {
     try {
       if (isX) {
-        console.log('x');
         const response = await fetch('api/checkTwitterUser', {
           method: 'POST',
           headers: {
@@ -91,7 +88,7 @@ export const SocialLookup: React.FC<Props> = ({ categoryName, handleDelegate, is
         {isX
           ? (
               <Image
-                src="/assets/images/x.svg"
+                src="/assets/images/x2.svg"
                 alt="Twitter Icon"
                 width={35}
                 height={15}
@@ -107,7 +104,7 @@ export const SocialLookup: React.FC<Props> = ({ categoryName, handleDelegate, is
             )}
         <h2 className="my-2 text-xl font-medium">
           Delegate on
-          {isX ? 'X (Twitter)' : 'Farcaster'}
+          {isX ? ' X (Twitter)' : ' Farcaster'}
         </h2>
       </div>
       <p className="mb-4 text-center text-gray-600">
@@ -120,12 +117,12 @@ export const SocialLookup: React.FC<Props> = ({ categoryName, handleDelegate, is
         <span className="text-lg font-bold">decision to someone you trust</span>
       </p>
       <p className="mb-4 text-center text-gray-400">
-        Enter username or past profile link to delegate voting power to someone on Farcaster
+        {isX ? 'Paste the X (Twitter) profile link of the user you want to delegate voting power to.' : 'Enter username or past profile link to delegate voting power to someone on Farcaster'}
       </p>
       <input
         type="text"
         className="w-full rounded-md border p-2"
-        placeholder="Enter username or paste profile link here"
+        placeholder={isX ? 'https://x.com/VitalikButerin' : 'Enter username or paste profile link here'}
         value={username}
         onChange={handleUsernameChange}
       />

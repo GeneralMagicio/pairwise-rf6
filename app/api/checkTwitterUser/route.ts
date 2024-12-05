@@ -65,9 +65,6 @@ export async function POST(req: NextRequest) {
   const page = await browser.newPage();
   await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36');
   await page.goto(url.toString(), { waitUntil: 'networkidle2' });
-  const title = await page.title();
-  console.log(title);
-  const username = title.replace(/ on X: ".*?" \/ X/, '');
   const html = await page.content();
 
   const doesntExist = html.includes('This account doesn’t exist');
@@ -84,7 +81,6 @@ export async function POST(req: NextRequest) {
     {
       data: {
         username: userhandle,
-        displayName: username,
       },
     },
     { status: 200 }

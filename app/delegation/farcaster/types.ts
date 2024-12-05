@@ -40,7 +40,7 @@ export type FarcasterUserByFid = {
 };
 
 export type TargetDelegate = {
-  displayName: string
+  displayName?: string
   username: string
   profilePicture?: string
 }

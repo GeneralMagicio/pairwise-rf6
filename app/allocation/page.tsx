@@ -443,7 +443,7 @@ const AllocationPage = () => {
         {delegationState === DelegationState.WarpcastSuccess && targetDelegate && (
           <FarcasterSuccess
             categoryName={categoryToDelegate!.name}
-            displayName={targetDelegate.displayName}
+            displayName={targetDelegate.displayName!}
             username={targetDelegate.username}
             profilePicture={targetDelegate.profilePicture!}
             onClose={resetDelegateState}
@@ -452,7 +452,6 @@ const AllocationPage = () => {
         {delegationState === DelegationState.XSuccess && targetDelegate && (
           <FarcasterSuccess
             categoryName={categoryToDelegate!.name}
-            displayName={targetDelegate.displayName}
             username={targetDelegate.username}
             onClose={resetDelegateState}
             isX
