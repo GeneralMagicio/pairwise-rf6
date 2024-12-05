@@ -17,6 +17,7 @@ const LoadingModalContent: React.FC<ModalProps> = ({ isFarcaster }) => {
         />
         <div className="text-lg text-dark-900">
           Looking for Voting Power on
+          {' '}
           {socialConnectionName}
         </div>
         <div className="text-wrap text-center text-sm font-normal text-[#636779]">

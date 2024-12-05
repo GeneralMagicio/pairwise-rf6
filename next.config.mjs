@@ -7,6 +7,9 @@ const nextConfig = {
           "cdn.charmverse.io",
         ],
       },
+      experimental: {
+        serverComponentsExternalPackages: ['@sparticuz/chromium'],
+      },
 };
 
 export default nextConfig;

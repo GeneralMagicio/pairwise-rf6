@@ -1,0 +1,7 @@
+{
+    "functions": {
+      "app/api/verifyTwitter/route.js": {
+        "includeFiles": "node_modules/@sparticuz/chromium/**"
+      }
+    }
+  }
