@@ -1,13 +1,9 @@
 import Image from 'next/image';
 import React from 'react';
-import { ExternalLinkIcon } from '@/public/assets/icon-components/ExternalLink';
 
 interface Props {
   onClick: () => void
 }
-
-const AttestationReportUrl
-  = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=bug&projects=&template=error-submit-vote.md&title=%5BError+submit+vote%5D+';
 
 const AttestationError: React.FC<Props> = ({ onClick }) => {
   return (
@@ -32,14 +28,6 @@ const AttestationError: React.FC<Props> = ({ onClick }) => {
           py-3 font-semibold text-slate-900"
         >
           Try again
-        </button>
-        <button
-          onClick={() => window.open(AttestationReportUrl, '_blank')}
-          className="mt-4 flex w-full items-center justify-center space-x-2 rounded-lg border border-slate-400 px-4
-          py-3 font-semibold text-slate-900"
-        >
-          <span> Report an issue </span>
-          <ExternalLinkIcon />
         </button>
       </div>
     </div>

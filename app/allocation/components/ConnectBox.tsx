@@ -15,6 +15,7 @@ import ActiveBadges, {
   IActiveBadge,
 } from '@/app/comparison/card/ActiveBadges';
 import { useGetPublicBadges } from '@/app/utils/getBadges';
+import { ThinExternalLinkIcon } from '@/public/assets/icon-components/ThinExternalLink';
 
 interface ConnectBoxProps {
   onConnectWorldID: (isError?: boolean) => void
@@ -31,6 +32,11 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   const [isFarcasterRefreshing, setIsFarcasterRefreshing] = useState(false);
 
   const [isTwitterRefreshing, setIsTwitterRefreshing] = useState(false);
+  const AttestationReportUrl
+  = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=bug&projects=&template=error-submit-vote.md&title=%5BError+submit+vote%5D+';
+  const PAIRWISE_REPORT_URL
+  = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
+
 
   const activeBadges = useMemo(() => {
     if (!badges) return [];
@@ -271,7 +277,26 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
             )}
 
       </div>
-
+      <div>
+        <button
+          onClick={() => window.open(AttestationReportUrl, '_blank')}
+          className="mt-6 flex w-full items-center justify-center space-x-1.5 rounded-lg border border-op-neutral-300 px-4
+          py-2.5 font-semibold text-dark-400 shadow-box-shadow"
+        >
+          <span> Report an issue </span>
+          <ThinExternalLinkIcon />
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() => window.open(PAIRWISE_REPORT_URL, '_blank')}
+          className="mt-6 flex w-full items-center justify-center space-x-1.5 rounded-lg border border-op-neutral-300 px-4
+          py-2.5 font-semibold text-dark-400 shadow-box-shadow"
+        >
+          <span> Send Feedback </span>
+          <ThinExternalLinkIcon/>
+        </button>
+      </div>
     </div>
   );
 };

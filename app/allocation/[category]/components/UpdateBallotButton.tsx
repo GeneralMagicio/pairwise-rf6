@@ -99,7 +99,7 @@ export const UpdateBallotButton: FC<IProps> = ({ isBadgeHolderAndNotVoted = fals
         )}
       </Modal>
       <button
-        className={`flex w-fit flex-row items-center justify-center gap-2.5 self-end rounded-lg px-4 py-3 ${
+        className={`flex w-fit h-full flex-row items-center justify-center gap-2.5 self-end rounded-lg px-4 py-3 ${
           ballotState === BallotState.Loading
           || (isBadgeHolderAndNotVoted)
             ? 'bg-gray-300 text-gray-500'

@@ -96,6 +96,7 @@ const config: Config = {
       },
       boxShadow: {
         'custom-shadow': '0px -4px 4px 0px #00000029',
+        'box-shadow': '0px 1px 2px 0px #1018280F,0px 1px 3px 0px #1018281A',
       },
 
       screens: {
