@@ -111,7 +111,7 @@ export const UpdateBallotButton: FC<IProps> = ({ isBadgeHolderAndNotVoted = fals
           || (isBadgeHolderAndNotVoted)
         }
       >
-        <p>Update Ballot on Optimism</p>
+        <p className="whitespace-nowrap">Update Ballot on Optimism</p>
         <span className="m-auto"><ExternalLinkIcon size={24} /></span>
       </button>
     </>

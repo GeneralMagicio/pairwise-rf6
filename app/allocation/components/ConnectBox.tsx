@@ -81,7 +81,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   return (
     <div className="max-w-md rounded-xl border bg-white p-6">
       <h2 className="mb-4 w-full border-b pb-2 text-2xl font-semibold text-gray-700">
-        Your voting power
+        My voting power
       </h2>
 
       <div className="mb-2">

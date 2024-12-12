@@ -41,6 +41,12 @@ const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
           <UpdateBallotButton closeAttestationModal={() => onClose()} />
         </div>
       </div>
+      <button
+        className="bg-primary text-white"
+        onClick={onClose}
+      >
+        Ok
+      </button>
       <a href={link} className="w-full" target="_blank">
         <button
           className="text-primary underline"
@@ -49,12 +55,6 @@ const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
         </button>
       </a>
 
-      <button
-        className="text-gray-600"
-        onClick={onClose}
-      >
-        Close
-      </button>
     </div>
   );
 };

@@ -35,8 +35,12 @@ const config: Config = {
           foreground: '#3374DB',
           background: '#D6E4FF',
           link: '#3374DB',
+          light: '#E0F2FE',
+          dark: '#026AA2',
         },
         'dark': {
+          300: '#D0D5DD',
+          400: '#344054',
           500: '#05060B',
           600: '#101828',
           900: '#050608',
@@ -86,6 +90,9 @@ const config: Config = {
       },
       backgroundSize: {
         'river-left-right': '50% auto',
+      },
+      boxShadow: {
+        'custom-shadow': '0px -4px 4px 0px #00000029',
       },
 
       screens: {
