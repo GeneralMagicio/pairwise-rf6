@@ -5,7 +5,7 @@ interface SkipButtonProps {
   onClick: () => void
 }
 
-const SkipButton: React.FC<SkipButtonProps> = ({onClick }) => {
+const SkipButton: React.FC<SkipButtonProps> = ({ onClick }) => {
   return (
     <button
       onClick={onClick}
