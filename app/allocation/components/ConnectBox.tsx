@@ -37,7 +37,6 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
   const PAIRWISE_REPORT_URL
   = 'https://github.com/GeneralMagicio/pairwise-rf6/issues/new?assignees=MoeNick&labels=&projects=&template=report-an-issue.md&title=%5BFeedback%5D+';
 
-
   const activeBadges = useMemo(() => {
     if (!badges) return [];
     const {
@@ -294,7 +293,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
           py-2.5 font-semibold text-dark-400 shadow-box-shadow"
         >
           <span> Send Feedback </span>
-          <ThinExternalLinkIcon/>
+          <ThinExternalLinkIcon />
         </button>
       </div>
     </div>
