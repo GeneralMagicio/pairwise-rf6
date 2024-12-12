@@ -6,6 +6,7 @@ import FarcasterProvider from '@/app/utils/FarcasterProvider';
 import ShowMobileMessage from './utils/wallet/ShowMobileMessage';
 import { TimeIcon } from '@/public/assets/icon-components/Time';
 import { PHProvider } from './utils/PHProvider';
+import { TwitterProvider } from './utils/TwitterProvider';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -57,7 +58,9 @@ export default function RootLayout({
           <AppKitProvider>
             <PHProvider>
               <FarcasterProvider>
-                {children}
+                <TwitterProvider>
+                  {children}
+                </TwitterProvider>
               </FarcasterProvider>
             </PHProvider>
           </AppKitProvider>
