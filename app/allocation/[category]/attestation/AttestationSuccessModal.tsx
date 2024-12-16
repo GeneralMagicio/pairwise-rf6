@@ -32,13 +32,22 @@ const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
         <p className="text-gray-400">
           It&#39;s time to celebrate! Your votes have been attested successfully.
         </p>
-        <p className="text-gray-400">
-          You can update your ballot on Optimism.
-        </p>
       </div>
       <div>
         <div onClick={() => setHideAttestation(true)}>
           <UpdateBallotButton closeAttestationModal={() => onClose()} />
+        </div>
+      </div>
+      <div>
+        <div>
+          <div className="flex justify-center">
+            <button
+              className="hover:bg-primary-dark w-[270px] rounded-lg bg-primary px-4 py-3 font-medium text-white shadow-md transition-all duration-200"
+              onClick={onClose}
+            >
+              Ok
+            </button>
+          </div>
         </div>
       </div>
       <a href={link} className="w-full" target="_blank">
@@ -49,12 +58,6 @@ const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
         </button>
       </a>
 
-      <button
-        className="text-gray-600"
-        onClick={onClose}
-      >
-        Close
-      </button>
     </div>
   );
 };
