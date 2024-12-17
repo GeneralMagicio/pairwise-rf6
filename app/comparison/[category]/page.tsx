@@ -32,13 +32,14 @@ import IntroView from './IntroView';
 import Spinner from '../../components/Spinner';
 import LowRateModal from '../card/modals/LowRateModal';
 import PostRatingModal from '../card/modals/PostRatingModal';
-import GoodRatingModal from '../card/modals/GoodRatingModal';
+// import GoodRatingModal from '../card/modals/GoodRatingModal';
 import RevertLoadingModal from '../card/modals/RevertLoadingModal';
 import StorageLabel from '@/app/lib/localStorage';
 import { ProjectCardAI } from '../card/ProjectCardAI';
 import EmailLoginModal from '@/app/allocation/components/EOA/EmailLoginModal';
 import PostVotingModal from '../ballot/modals/PostVotingModal';
 import NotFoundComponent from '@/app/components/404';
+import SkipButton from '../card/SkipButton';
 
 export default function Home() {
   const { category } = useParams() ?? {};
@@ -59,7 +60,6 @@ export default function Home() {
   const [revertingBack, setRevertingBack] = useState(false);
   const [showLowRateModal, setShowLowRateModal] = useState(false);
   const [showPostRatingModal, setShowPostRatingModal] = useState(false);
-  const [showGoodRatingModal, setShowGoodRatingModal] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null
   );
@@ -158,20 +158,6 @@ export default function Home() {
     if (rating1 !== initialRating1 && rating2 !== initialRating2) {
       setShowPostRatingModal(!getGetStarted().postRating);
     }
-
-    // observe if first rated project is rated good >= 4
-    if (
-      (rating1
-      && rating1 >= 4
-      && rating2 === initialRating2
-      && rating1 !== initialRating1)
-      || (rating2
-      && rating2 >= 4
-      && rating1 === initialRating1
-      && rating2 !== initialRating2)
-    ) {
-      setShowGoodRatingModal(!getGetStarted().goodRating);
-    }
   }, [rating1, rating2]);
 
   useEffect(() => {
@@ -201,10 +187,6 @@ export default function Home() {
       if (getGetStarted().postRating) {
         setShowPostRatingModal(false);
       }
-      // show the good rating modal if the user has already rated the projects
-      if (getGetStarted().goodRating) {
-        setShowGoodRatingModal(false);
-      }
     }
   }, [address, chainId, data?.votedPairs]);
 
@@ -223,8 +205,7 @@ export default function Home() {
   const isAnyModalOpen = () =>
     showLowRateModal
     || revertingBack
-    || showPostRatingModal
-    || showGoodRatingModal;
+    || showPostRatingModal;
 
   const dispatchAction
     = (initiator: AutoScrollAction['initiator']) =>
@@ -349,6 +330,31 @@ export default function Home() {
     }
   };
 
+  const handleSkip = async () => {
+    if (!wallet) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    setCoiLoading1(true);
+    setCoiLoading2(true);
+    try {
+      await vote({
+        data: {
+          project1Id: project1!.id,
+          project2Id: project2!.id,
+          project1Stars: null,
+          project2Stars: null,
+          pickedId: null,
+        },
+      });
+    }
+    catch (e) {
+      setCoiLoading1(false);
+      setCoiLoading2(false);
+    }
+  };
+
   const handleUndo = async () => {
     if (!wallet) {
       setShowLoginModal(true);
@@ -433,7 +439,6 @@ export default function Home() {
           showLowRateModal
           || revertingBack
           || showPostRatingModal
-          || showGoodRatingModal
           || showFinishModal
         }
         onClose={() => {}}
@@ -453,14 +458,6 @@ export default function Home() {
             confirm={() => {
               updateGetStarted({ postRating: true });
               setShowPostRatingModal(false);
-            }}
-          />
-        )}
-        {showGoodRatingModal && (
-          <GoodRatingModal
-            confirm={() => {
-              updateGetStarted({ goodRating: true });
-              setShowGoodRatingModal(false);
             }}
           />
         )}
@@ -579,7 +576,11 @@ export default function Home() {
 
       {!isInitialVisit && (
         <footer className="sticky bottom-0 z-50 flex w-full items-center justify-around gap-4 bg-white py-8 shadow-inner">
-          <div className="flex flex-col items-center justify-center gap-4 lg:flex-row xl:gap-8">
+          <div className="flex flex-col items-center justify-center gap-4 px-4 xl:flex-row xl:gap-8">
+            <ConflictButton
+              onClick={showCoI1}
+              disabled={coiLoading1 || isAnyModalOpen()}
+            />
             <Rating
               value={rating1 || 0}
               onChange={(value) => {
@@ -593,29 +594,28 @@ export default function Home() {
                 && handleVote(project1.id)}
               disabled={coiLoading1 || isAnyModalOpen()}
             />
-            <ConflictButton
-              onClick={showCoI1}
-              disabled={coiLoading1 || isAnyModalOpen()}
-            />
           </div>
-          <div className="absolute z-[1]">
+          <div className="flex flex-row gap-4">
             <UndoButton
               disabled={data?.votedPairs === 0 || isAnyModalOpen()}
               onClick={handleUndo}
             />
+            <SkipButton
+              onClick={handleSkip}
+            />
           </div>
-          <div className="flex flex-col items-center justify-center gap-4 lg:flex-row xl:gap-8">
+          <div className="flex flex-col-reverse items-center justify-around gap-4 px-14 xl:flex-row xl:gap-8 sl:px-6">
+            <VoteButton
+              onClick={() =>
+                !checkLowRatedProjectSelected(project2.id)
+                && handleVote(project2.id)}
+              disabled={coiLoading2 || isAnyModalOpen()}
+            />
             <Rating
               value={rating2 || 0}
               onChange={(value) => {
                 !wallet ? setShowLoginModal(true) : setRating2(value);
               }}
-              disabled={coiLoading2 || isAnyModalOpen()}
-            />
-            <VoteButton
-              onClick={() =>
-                !checkLowRatedProjectSelected(project2.id)
-                && handleVote(project2.id)}
               disabled={coiLoading2 || isAnyModalOpen()}
             />
             <ConflictButton
