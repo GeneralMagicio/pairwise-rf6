@@ -576,7 +576,11 @@ export default function Home() {
 
       {!isInitialVisit && (
         <footer className="sticky bottom-0 z-50 flex w-full items-center justify-around gap-4 bg-white py-8 shadow-inner">
-          <div className="flex flex-col items-center justify-center gap-4 lg:flex-row xl:gap-8">
+          <div className="flex flex-col items-center justify-center gap-4 px-4 xl:flex-row xl:gap-8">
+            <ConflictButton
+              onClick={showCoI1}
+              disabled={coiLoading1 || isAnyModalOpen()}
+            />
             <Rating
               value={rating1 || 0}
               onChange={(value) => {
@@ -590,12 +594,8 @@ export default function Home() {
                 && handleVote(project1.id)}
               disabled={coiLoading1 || isAnyModalOpen()}
             />
-            <ConflictButton
-              onClick={showCoI1}
-              disabled={coiLoading1 || isAnyModalOpen()}
-            />
           </div>
-          <div className="absolute z-[1] flex flex-row gap-4">
+          <div className="flex flex-row gap-4">
             <UndoButton
               disabled={data?.votedPairs === 0 || isAnyModalOpen()}
               onClick={handleUndo}
@@ -604,18 +604,18 @@ export default function Home() {
               onClick={handleSkip}
             />
           </div>
-          <div className="flex flex-col items-center justify-center gap-4 lg:flex-row xl:gap-8">
+          <div className="flex flex-col-reverse items-center justify-around gap-4 px-14 xl:flex-row xl:gap-8 sl:px-6">
+            <VoteButton
+              onClick={() =>
+                !checkLowRatedProjectSelected(project2.id)
+                && handleVote(project2.id)}
+              disabled={coiLoading2 || isAnyModalOpen()}
+            />
             <Rating
               value={rating2 || 0}
               onChange={(value) => {
                 !wallet ? setShowLoginModal(true) : setRating2(value);
               }}
-              disabled={coiLoading2 || isAnyModalOpen()}
-            />
-            <VoteButton
-              onClick={() =>
-                !checkLowRatedProjectSelected(project2.id)
-                && handleVote(project2.id)}
               disabled={coiLoading2 || isAnyModalOpen()}
             />
             <ConflictButton
