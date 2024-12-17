@@ -10,7 +10,7 @@ interface Props {
   showCloseButton?: boolean
 }
 
-const AttestationSuccessModal: React.FC<Props> = ({ link, onClose, showCloseButton = false }) => {
+const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
   const [hideAttestation, setHideAttestation] = useState(false);
   const posthog = usePostHog();
 
