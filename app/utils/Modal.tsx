@@ -14,7 +14,7 @@ const Modal: FC<ModalProps> = ({
   isOpen,
   onClose,
   children,
-  showCloseButton,
+  // showCloseButton,
 }) => {
   const [modalNode, setModalNode] = useState<HTMLElement | null>(null);
 
