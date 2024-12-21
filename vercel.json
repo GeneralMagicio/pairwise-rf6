@@ -1,5 +1,8 @@
 {
     "functions": {
+      "app/api/checkTwitterUser/route.js": {
+        "includeFiles": "node_modules/@sparticuz/chromium/**"
+      },
       "app/api/verifyTwitter/route.js": {
         "includeFiles": "node_modules/@sparticuz/chromium/**"
       }
