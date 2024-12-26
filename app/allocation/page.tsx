@@ -657,8 +657,8 @@ const AllocationPage = () => {
                   //     You can make changes and resubmit until Nov 11 at 12:00 AM UTC.
                   //     To do so, simply edit and submit again.
                   //   </div>
-                  //   <div className="h-full grow"> 
-                      <UpdateBallotButton isBadgeHolderAndNotVoted={(isBadgeholder && !isBGCategoryVoted())} />
+                  //   <div className="h-full grow">
+                  <UpdateBallotButton isBadgeHolderAndNotVoted={(isBadgeholder && !isBGCategoryVoted())} />
                   //   </div>
                   // </div>
                 )}
