@@ -651,16 +651,16 @@ const AllocationPage = () => {
                   </div>
                 )
               : (
-                  <div className="flex flex-row gap-4">
-                    {/* <div className="border-blue-light bg-blue-light px-4 py-3 text-sm text-blue-dark">
-                      Your budget and ballot were submitted on Oct 31 at 6:16 PM.
-                      You can make changes and resubmit until Nov 11 at 12:00 AM UTC.
-                      To do so, simply edit and submit again.
-                    </div> */}
-                    <div className="h-full grow">
+                  // <div className="flex flex-row gap-4">
+                  //   <div className="border-blue-light bg-blue-light px-4 py-3 text-sm text-blue-dark">
+                  //     Your budget and ballot were submitted on Oct 31 at 6:16 PM.
+                  //     You can make changes and resubmit until Nov 11 at 12:00 AM UTC.
+                  //     To do so, simply edit and submit again.
+                  //   </div>
+                  //   <div className="h-full grow"> 
                       <UpdateBallotButton isBadgeHolderAndNotVoted={(isBadgeholder && !isBGCategoryVoted())} />
-                    </div>
-                  </div>
+                  //   </div>
+                  // </div>
                 )}
           </div>
           {!allocatingBudget && (
