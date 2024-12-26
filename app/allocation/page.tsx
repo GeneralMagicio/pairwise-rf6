@@ -489,16 +489,16 @@ const AllocationPage = () => {
       <div className="flex flex-col gap-6 p-16">
         {!allocatingBudget && (
           <div className="flex max-w-[72%] flex-col gap-3">
-            <h2 className="text-3xl font-bold"> Round 6: Governance</h2>
+            <h2 className="text-3xl font-bold"> Round 7: Governance</h2>
             <p className="text-gray-400">
-              Retro Funding 6 will reward contributions to Optimism Governance,
+              Retro Funding 7 will reward contributions to Optimism Governance,
               including governance infrastructure & tooling, governance
               analytics, and governance leadership.
             </p>
-            <p className="mt-4 rounded-xl bg-[#FFFAEB] p-4 text-dark-500">
+            <p className="mt-4 rounded-xl bg-[#FEF0C7] p-4 text-dark-500">
               Decide on the budget for this round, and score projects in each
               category using the Pairwise ranking. You can also choose to
-              delegate your decision to someone on Farcaster.
+              delegate your decision to someone on X (Twitter) or Farcaster.
             </p>
           </div>
         )}
@@ -651,7 +651,16 @@ const AllocationPage = () => {
                   </div>
                 )
               : (
+                  // <div className="flex flex-row gap-4">
+                  //   <div className="border-blue-light bg-blue-light px-4 py-3 text-sm text-blue-dark">
+                  //     Your budget and ballot were submitted on Oct 31 at 6:16 PM.
+                  //     You can make changes and resubmit until Nov 11 at 12:00 AM UTC.
+                  //     To do so, simply edit and submit again.
+                  //   </div>
+                  //   <div className="h-full grow">
                   <UpdateBallotButton isBadgeHolderAndNotVoted={(isBadgeholder && !isBGCategoryVoted())} />
+                  //   </div>
+                  // </div>
                 )}
           </div>
           {!allocatingBudget && (

@@ -1,17 +1,16 @@
-export const UndoIcon = ({ color }: { color: string }) => {
+export const UndoIcon = () => {
   return (
     <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
+      width="21"
+      height="20"
+      viewBox="0 0 21 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M2 10C2 10 4.00498 7.26822 5.63384 5.63824C7.26269 4.00827 9.5136 3 12 3C16.9706 3 21
-        7.02944 21 12C21 16.9706 16.9706 21 12 21C7.89691 21 4.43511 18.2543 3.35177 14.5M2 10V4M2 10H8"
-        stroke={color || '#DC6803'}
-        strokeWidth="2"
+        d="M7.83332 11.6667L3.66665 7.50004M3.66665 7.50004L7.83332 3.33337M3.66665 7.50004H8.99998C11.8002 7.50004 13.2004 7.50004 14.2699 8.04501C15.2107 8.52437 15.9756 9.28928 16.455 10.2301C17 11.2996 17 12.6998 17 15.5V16.6667"
+        stroke="#344054"
+        strokeWidth="1.66667"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
