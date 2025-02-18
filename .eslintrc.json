@@ -22,6 +22,7 @@
 		],
 		"@stylistic/semi": "off",
 		"no-unused-vars": "off",
+		"no-irregular-whitespace": "off",
 		"react/no-unescaped-entities": "warn",
 		"import/order": [
 			"error",
