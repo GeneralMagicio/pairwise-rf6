@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import debounce from 'lodash.debounce';
 import { useActiveWallet } from 'thirdweb/react';
-import { usePostHog } from 'posthog-js/react';
+import Link from 'next/link';
 import RankingRow from './components/RankingRow';
 import HeaderRF6 from '../../comparison/card/Header-RF6';
 import Spinner from '@/app/components/Spinner';
@@ -24,26 +24,21 @@ import {
   useCategoryRankings,
 } from '@/app/comparison/utils/data-fetching/ranking';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
-import {
-  CollectionProgressStatusEnum,
-  IProjectRanking,
-} from '@/app/comparison/utils/types';
+import { IProjectRanking } from '@/app/comparison/utils/types';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
+import { Info2Icon } from '@/public/assets/icon-components/Info2';
 import { modifyPercentage, RankItem } from '../utils';
 import Modal from '@/app/utils/Modal';
 import AttestationSuccessModal from './attestation/AttestationSuccessModal';
 import AttestationLoading from './attestation/AttestationLoading';
 import AttestationError from './attestation/AttestationError';
-import { attest, AttestationState, VotingHasEnded } from './attestation';
+import { attest, AttestationState } from './attestation';
 import { useSigner } from './utils';
 import {
   useMarkCoi,
   useUnmarkCoi,
 } from '@/app/comparison/utils/data-fetching/coi';
-import AskDelegations from '@/app/delegation/farcaster/AskDelegations';
-import { getJWTData } from '@/app/utils/wallet/agora-login';
-import EmailLoginModal from '../components/EOA/EmailLoginModal';
 
 enum VotingStatus {
   VOTED,
@@ -62,7 +57,6 @@ const votingStatusMap = {
 const RankingPage = () => {
   const params = useParams();
   const router = useRouter();
-  const posthog = usePostHog();
 
   const wallet = useActiveWallet();
   const signer = useSigner();
@@ -82,8 +76,6 @@ const RankingPage = () => {
   const [allocationBudget, setAllocationBudget] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [nonCoIProjects, setNonCoIProjects] = useState<IProjectRanking[]>([]);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [closingDesibled, setClosingDesibled] = useState(false);
 
   const { data: categoryRankings, isLoading: rankingLoading }
     = useCategoryRankings();
@@ -93,12 +85,8 @@ const RankingPage = () => {
   const { mutateAsync: markProjectCoI } = useMarkCoi();
   const { mutateAsync: unmarkProjectCoI } = useUnmarkCoi();
 
-  const { isBadgeholder } = getJWTData();
-
   const handleBulkSelection = () => {
     if (!nonCoIProjects) return;
-
-    setTotalShareError(null);
 
     if (checkedItems.length === nonCoIProjects.length) {
       setCheckedItems([]);
@@ -192,10 +180,7 @@ const RankingPage = () => {
     if (!projects) return;
 
     const unmarkedProjects = projects.filter(
-      project =>
-        project.projectId !== id
-        && !project.coi
-        && !lockedItems.includes(project.projectId)
+      project => project.projectId !== id && !project.coi
     );
 
     const currentProject = projects.find(project => project.projectId === id);
@@ -209,10 +194,9 @@ const RankingPage = () => {
         ? { ...project, coi: true, share: 0 }
         : {
             ...project,
-            share:
-              project.coi || lockedItems.includes(project.projectId)
-                ? project.share
-                : project.share + distributedShare,
+            share: project.coi
+              ? project.share
+              : project.share + distributedShare,
           }
     );
 
@@ -266,7 +250,6 @@ const RankingPage = () => {
     const lockedProjects = checkedItems.filter(
       checkedId => !lockedItems.includes(checkedId)
     );
-    posthog.capture('Lock selection');
 
     setLockedItems([...lockedItems, ...lockedProjects]);
     setCheckedItems([]);
@@ -295,11 +278,6 @@ const RankingPage = () => {
   };
 
   const submitVotes = async () => {
-    if (!wallet) {
-      setShowLoginModal(true);
-      return;
-    }
-
     setIsSubmitting(true);
 
     if (!projects) return;
@@ -315,35 +293,32 @@ const RankingPage = () => {
     });
 
     if (!wallet || !ranking || !signer) {
-      console.error('Requirements not met for attestations', { wallet, ranking, signer });
+      console.error('Requirements not met for attestations');
       setIsSubmitting(false);
       return;
     }
 
-    if (!VotingHasEnded) {
-      await attest({
-        ranking: {
-          id: ranking.id,
-          name: ranking.name,
-          ranking: projects.map(el => ({
-            RF6Id: el.project.RF6Id,
-            share: el.share,
-          })),
-        },
-        setAttestationLink,
-        setAttestationState,
-        signer,
-        wallet,
-      });
-    }
+    await attest({
+      ranking: {
+        id: ranking.id,
+        name: ranking.name,
+        ranking: projects.map(el => ({
+          RF6Id: el.project.RF6Id,
+          share: el.share,
+        })),
+      },
+      setAttestationLink,
+      setAttestationState,
+      signer,
+      wallet,
+    });
 
     setIsSubmitting(false);
   };
 
   const handleAttestationModalClose = () => {
-    if (attestationState === AttestationState.Success || attestationState == AttestationState.FarcasterDelegate) {
+    if (attestationState === AttestationState.Success) {
       router.push('/allocation');
-      setAttestationState(AttestationState.Initial);
     }
     else if (attestationState === AttestationState.Error) {
       setAttestationState(AttestationState.Initial);
@@ -400,8 +375,6 @@ const RankingPage = () => {
   useEffect(() => {
     if (!nonCoIProjects) return;
 
-    if (!nonCoIProjects?.length) return;
-
     if (lockedItems.length > nonCoIProjects?.length - 2) {
       setTotalShareError('At least two projects must be unlocked');
       window.scrollTo(0, document.body.scrollHeight);
@@ -424,33 +397,12 @@ const RankingPage = () => {
       <Modal
         isOpen={attestationState !== AttestationState.Initial}
         onClose={handleAttestationModalClose}
-        showCloseButton={
-          attestationState !== AttestationState.FarcasterDelegate
-        }
+        showCloseButton={true}
       >
-        {attestationState === AttestationState.FarcasterDelegate
-        && attestationLink && (
-          <AskDelegations
-            categoryName={params?.category as string}
-            link={attestationLink}
-            onClose={() => {
-              if (isBadgeholder) {
-                setAttestationState(AttestationState.Success);
-              }
-              else {
-                handleAttestationModalClose();
-                setAttestationState(AttestationState.Initial);
-              }
-            }}
-            isBadgeHolder={isBadgeholder}
-          />
-        )}
         {attestationState === AttestationState.Success && attestationLink && (
           <AttestationSuccessModal
             link={attestationLink}
-            onClose={() => {
-              handleAttestationModalClose();
-            }}
+            onClose={() => setAttestationState(AttestationState.Initial)}
           />
         )}
         {attestationState === AttestationState.Loading && (
@@ -460,29 +412,23 @@ const RankingPage = () => {
           <AttestationError onClick={submitVotes} />
         )}
       </Modal>
-      <Modal
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        showCloseButton={!closingDesibled}
-      >
-        <EmailLoginModal
-          closeModal={() => setShowLoginModal(false)}
-          setCloseModalDisabled={setClosingDesibled}
-          selectedCategoryId={category}
-        />
-      </Modal>
       <HeaderRF6 />
-      <div className="flex flex-col justify-between gap-4 px-6 py-16 lg:px-20 xl:px-52 2xl:px-72">
-        <p className="mb-4 text-2xl font-semibold text-gray-700">
-          Edit your votes
-        </p>
-        <div className="flex flex-col gap-6 rounded-xl border border-gray-200 px-6 py-10">
+      <Link
+        className="text-md flex items-center gap-2 px-12 pt-8 text-gray-700"
+        href="/allocation"
+      >
+        <ArrowLeft2Icon size={16} />
+        Back
+      </Link>
+      <div className="flex flex-col justify-between gap-6 px-6 py-16 lg:px-20 xl:px-52 2xl:px-72">
+        <div className="flex flex-col gap-6 rounded-xl border border-gray-200 p-6">
           <div className="flex items-start justify-between">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-4">
+              <p className="text-lg text-gray-400">Edit your votes</p>
               <p className="text-2xl font-semibold text-gray-700">
                 {categoryIdTitleMap.get(category)}
               </p>
-              <p className="text-sm font-normal text-gray-600">
+              <p className="text-sm text-dark-500">
                 OP calculations in this ballot are based on your budget of
                 {' '}
                 {rankingLoading
@@ -496,12 +442,32 @@ const RankingPage = () => {
                     )}
               </p>
             </div>
-            <div className="flex items-center justify-center gap-2 rounded-2xl border border-voting-border bg-voting-bg px-3 py-1 text-xs text-voting-text">
-              {votingStatusMap[VotingStatus.READY_TO_SUBMIT].text}
-              <CheckIcon size={18} />
+            <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2 rounded-2xl border border-voting-border bg-voting-bg px-3 py-1 text-xs text-voting-text">
+                {votingStatusMap[VotingStatus.READY_TO_SUBMIT].text}
+                <CheckIcon size={18} />
+              </div>
+              {attestationLink && (
+                <Link
+                  className="flex items-center justify-center gap-2 px-3 py-1 text-xs text-gray-600 underline"
+                  href={attestationLink}
+                  target="_blank"
+                >
+                  View attestation
+                  <Info2Icon />
+                </Link>
+              )}
             </div>
           </div>
-          {/* <SearchBar search={search} setSearch={setSearch} /> */}
+          <div className="w-full rounded-lg border border-[#E0F2FE] bg-[#E0F2FE] px-4 py-2">
+            <p className="text-sm text-[#026AA2]">
+              Attested on Nov 11 at 3:20 PM. You can make changes and resubmit
+              until Nov 13 at 12:00 AM UTC. To do so, simply edit and submit
+              again.
+            </p>
+          </div>
+        </div>
+        <div className="flex flex-col gap-6 rounded-xl border border-gray-200 p-6">
           <div className="flex items-center justify-between rounded-lg bg-gray-100 px-4 py-3 lg:px-8">
             <div className="flex items-center gap-4">
               <div className="flex items-center justify-center gap-2">
@@ -510,15 +476,6 @@ const RankingPage = () => {
                   checked={
                     !!nonCoIProjects?.length
                     && checkedItems.length === nonCoIProjects?.length
-                  }
-                  disabled={
-                    (ranking
-                    && ranking.progress
-                    !== CollectionProgressStatusEnum.Finished
-                    && ranking.progress
-                    !== CollectionProgressStatusEnum.Attested)
-                    || !nonCoIProjects?.length
-                    || isLoading
                   }
                 />
                 <p className="text-sm text-gray-600">Select all</p>
@@ -570,71 +527,61 @@ const RankingPage = () => {
             ? (
                 <Spinner />
               )
-            : ranking
-            && ranking.progress !== CollectionProgressStatusEnum.Finished
-            && ranking.progress !== CollectionProgressStatusEnum.Attested
+            : projects?.length
               ? (
-                  <div className="flex h-64 items-center justify-center">
-                    <p className="text-gray-400">
-                      You need to finish with the comparison before you can vote
-                    </p>
+                  <div className="w-full overflow-x-auto">
+                    <table className="w-full min-w-full">
+                      <tbody className="flex flex-col gap-6">
+                        {projects
+                          .filter(project => !project.coi)
+                          .map((project, index) => (
+                            <RankingRow
+                              key={project.projectId}
+                              index={index}
+                              budget={allocationBudget * project.share}
+                              project={project}
+                              selected={checkedItems.includes(project.projectId)}
+                              locked={lockedItems.includes(project.projectId)}
+                              onLock={handleLocck}
+                              onSelect={selectItem}
+                              onVote={handleVote}
+                              coi={project.coi}
+                              onToggleCOI={markCOI}
+                            />
+                          ))}
+                        {projects.some(project => project.coi) && (
+                          <>
+                            <tr>
+                              <th className="text-lg font-bold">
+                                Conflict Of Interest
+                              </th>
+                            </tr>
+                            {projects
+                              .filter(project => project.coi)
+                              .map((project, index) => (
+                                <RankingRow
+                                  key={project.projectId}
+                                  index={index}
+                                  budget={allocationBudget * project.share}
+                                  project={project}
+                                  selected={checkedItems.includes(project.projectId)}
+                                  locked={lockedItems.includes(project.projectId)}
+                                  onLock={handleLocck}
+                                  onSelect={selectItem}
+                                  onVote={handleVote}
+                                  coi={project.coi}
+                                  onToggleCOI={unmarkCOI}
+                                />
+                              ))}
+                          </>
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 )
-              : projects?.length
-                ? (
-                    <div className="w-full overflow-x-auto">
-                      <table className="w-full min-w-full">
-                        <tbody className="flex flex-col gap-6">
-                          {projects
-                            .filter(project => !project.coi)
-                            .map((project, index) => (
-                              <RankingRow
-                                key={project.projectId}
-                                index={index}
-                                budget={allocationBudget * project.share}
-                                project={project}
-                                selected={checkedItems.includes(project.projectId)}
-                                locked={lockedItems.includes(project.projectId)}
-                                onLock={handleLocck}
-                                onSelect={selectItem}
-                                onVote={handleVote}
-                                coi={project.coi}
-                                onToggleCOI={markCOI}
-                              />
-                            ))}
-                          {projects.some(project => project.coi) && (
-                            <>
-                              <tr>
-                                <th className="text-lg font-bold">
-                                  Conflict Of Interest
-                                </th>
-                              </tr>
-                              {projects
-                                .filter(project => project.coi)
-                                .map((project, index) => (
-                                  <RankingRow
-                                    key={project.projectId}
-                                    index={index}
-                                    budget={allocationBudget * project.share}
-                                    project={project}
-                                    selected={checkedItems.includes(project.projectId)}
-                                    locked={lockedItems.includes(project.projectId)}
-                                    onLock={handleLocck}
-                                    onSelect={selectItem}
-                                    onVote={handleVote}
-                                    coi={project.coi}
-                                    onToggleCOI={unmarkCOI}
-                                  />
-                                ))}
-                            </>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  )
-                : (
-                    <p className="text-center text-gray-400">No projects found</p>
-                  )}
+              : (
+                  <p className="text-center text-gray-400">No projects found</p>
+                )}
 
           {totalShareError && (
             <div className="flex justify-end gap-4">
@@ -646,10 +593,7 @@ const RankingPage = () => {
           <div className="flex justify-between">
             <button
               className="flex items-center justify-center gap-3 rounded-lg border bg-gray-50 px-4 py-2 font-semibold text-gray-700"
-              onClick={() => {
-                posthog.capture('Back to categories');
-                router.push('/allocation');
-              }}
+              onClick={() => router.push('/allocation')}
             >
               <ArrowLeft2Icon />
               Back to Categories
@@ -658,18 +602,11 @@ const RankingPage = () => {
               className={`font-semibold" flex items-center justify-center gap-3 rounded-lg px-10 py-2
               ${
     totalShareError
-    || (ranking?.progress !== CollectionProgressStatusEnum.Finished
-    && ranking?.progress !== CollectionProgressStatusEnum.Attested)
       ? 'bg-gray-200 text-gray-400'
       : 'bg-primary text-white'
     }`}
               onClick={submitVotes}
-              disabled={
-                !!totalShareError
-                || isSubmitting
-                || (ranking?.progress !== CollectionProgressStatusEnum.Finished
-                && ranking?.progress !== CollectionProgressStatusEnum.Attested)
-              }
+              disabled={!!totalShareError}
             >
               {isSubmitting
                 ? (
@@ -678,18 +615,7 @@ const RankingPage = () => {
                 : (
                     <>
                       Submit votes
-                      <ArrowRightIcon
-                        color={
-                          !!totalShareError
-                          || isSubmitting
-                          || (ranking?.progress
-                          !== CollectionProgressStatusEnum.Finished
-                          && ranking?.progress
-                          !== CollectionProgressStatusEnum.Attested)
-                            ? 'gray'
-                            : undefined
-                        }
-                      />
+                      <ArrowRightIcon />
                     </>
                   )}
             </button>
