@@ -7,10 +7,10 @@ import React, {
 } from 'react';
 // import { useTwitterSignIn } from './getConnectionStatus';
 
-interface ICheckTwitterArgs {
-  url: string
-  text: string
-}
+// interface ICheckTwitterArgs {
+//   url: string
+//   text: string
+// }
 
 interface ITwitterContext {
   username?: string
@@ -24,7 +24,7 @@ const TwitterContext = createContext<ITwitterContext>({
   username: undefined,
   displayName: undefined,
   // checkSignInVerificationTweet: async (_twitterArgs: ICheckTwitterArgs) => {},
-  analyzeTweetUrl: async (tweetUrl: string) => ({ username: '', displayName: '' }),
+  analyzeTweetUrl: async () => ({ username: '', displayName: '' }),
 });
 
 interface IProviderProps {
