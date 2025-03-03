@@ -4,7 +4,7 @@ import debounce from 'lodash.debounce';
 import Modal from '@/app/utils/Modal';
 import LoadingModalContent from './LoadingModalContent';
 import LoadedModalContent from './LoadedModalContent';
-import { useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
+import { useGetDelegationStatus, useTwitterSignIn } from '@/app/utils/getConnectionStatus';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 import { useTwitter } from '@/app/utils/TwitterProvider';
 interface XModalProps {
@@ -19,24 +19,22 @@ enum TweetStatus {
 
 const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
   const [tweetState, setTweetState] = useState<TweetStatus>(TweetStatus.NotTweeted);
-  const { username, displayName, checkSignInVerificationTweet } = useTwitter();
+  const { username, displayName, analyzeTweetUrl } = useTwitter();
+  const { mutateAsync: connectTwitter } = useTwitterSignIn();
   const { isLoading, data: delegates } = useGetDelegationStatus();
-  const [isVerified, setIsVerified] = useState(false);
+  const [isVerified, setIsVerified] = useState(true);
 
   const [error, setError] = useState<boolean>(false);
   const [url, setUrl] = useState<string | undefined>();
   const verifyTweet = debounce(async () => {
     if (url) {
       try {
-        await checkSignInVerificationTweet({
-          url: url,
-          text: text,
-        });
-        setError(false);
+        const { username: un } = await analyzeTweetUrl(url);
         setTweetState(TweetStatus.Tweeted);
-        setTimeout(() => {
-          setIsVerified(true);
-        }, 5000);
+        console.log('Here, username:', username);
+        if (!un || un.length === 0) return;
+        await connectTwitter({ username: un });
+        setIsVerified(true);
       }
       catch (error) {
         setError(true);
@@ -92,10 +90,8 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
                     <input
                       value={url}
                       onChange={(event) => {
+                        setError(false);
                         setUrl(event.target.value);
-                        if (error) {
-                          setError(false);
-                        }
                       }}
                       className={`flex grow items-center rounded-md border ${(error) ? 'border-status-border-error bg-op-red-100' : 'border-op-neutral-300 bg-gray-50'} px-3.5 py-2.5 text-base text-dark-600 placeholder-[#9195A6]`}
                       placeholder="Paste URL of your verification Tweet"
