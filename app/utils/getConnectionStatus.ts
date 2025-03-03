@@ -34,8 +34,7 @@ const updateFarcaster = async ({ message, signature, custody }: IUpdateFarcaster
   }
 };
 export interface IUpdateTwitterProps {
-  url: string
-  text: string
+  username: string
 }
 
 export interface IReturnTwitterDetails {
@@ -43,21 +42,15 @@ export interface IReturnTwitterDetails {
   displayName: string
 }
 
-const updateTwitter = async ({ url, text }: IUpdateTwitterProps): Promise<IReturnTwitterDetails> => {
+const updateTwitter = async ({ username }: IUpdateTwitterProps): Promise<IReturnTwitterDetails> => {
   try {
-    const response = await fetch('api/verifyTwitter', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ url, text }),
+    const response = await axiosInstance.post('/flow/connect/twitter', {
+      username,
     });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error);
+    if (response.data.error) {
+      throw new Error(response.data.error);
     }
-    const result = await response.json();
-    return result.data;
+    return response.data;
   }
   catch (error: any) {
     if (error.response) {
@@ -128,10 +121,18 @@ interface ISocialNetwork {
   createdAt: string
   updatedAt: string
 }
+
+interface TwitterStatus {
+  userId: string
+  metadata: Record<string, any>
+  createdAt: string
+  updatedAt: string
+  username: string
+}
 export interface IConnectionStatus {
   farcaster: ISocialNetwork | null
   worldId: ISocialNetwork | null
-  twitter: ISocialNetwork | null
+  twitter: TwitterStatus | null
 }
 const getConnectionStatus = async () => {
   const { data } = await axiosInstance.get<IConnectionStatus>('/flow/connect/status');
