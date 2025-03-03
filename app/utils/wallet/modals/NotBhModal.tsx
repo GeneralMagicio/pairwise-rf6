@@ -174,7 +174,7 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
               </div>
             )}
           </div>
-          {(connectionStatus?.farcaster && connectionStatus?.worldId)
+          {(connectionStatus?.farcaster && connectionStatus?.worldId && connectionStatus?.twitter)
             ? (
                 <button
                   onClick={() => {

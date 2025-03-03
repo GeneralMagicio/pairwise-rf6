@@ -121,10 +121,18 @@ interface ISocialNetwork {
   createdAt: string
   updatedAt: string
 }
+
+interface TwitterStatus {
+  userId: string
+  metadata: Record<string, any>
+  createdAt: string
+  updatedAt: string
+  username: string
+}
 export interface IConnectionStatus {
   farcaster: ISocialNetwork | null
   worldId: ISocialNetwork | null
-  twitter: ISocialNetwork | null
+  twitter: TwitterStatus | null
 }
 const getConnectionStatus = async () => {
   const { data } = await axiosInstance.get<IConnectionStatus>('/flow/connect/status');

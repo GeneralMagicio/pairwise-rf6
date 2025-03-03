@@ -54,6 +54,7 @@ import StorageLabel from '../lib/localStorage';
 import { UpdateBallotButton } from './[category]/components/UpdateBallotButton';
 import AskDelegations from '../delegation/farcaster/AskDelegations';
 import XModal from './components/XModal';
+import { TwitterLookup } from '../delegation/farcaster/TwitterLookup';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -66,7 +67,8 @@ const budgetCategory: BudgetCategory = {
 enum DelegationState {
   Initial,
   DelegationMethod,
-  Lookup,
+  FarcasterLookup,
+  TwitterLookup,
   Success,
 }
 
@@ -150,11 +152,33 @@ const AllocationPage = () => {
     });
   };
 
-  const handleDelegate = async (username: string, target: TargetDelegate) => {
+  const handleFarcasterDelegate = async (username: string, target: TargetDelegate) => {
     if (!categoryToDelegate) return;
 
     posthog.capture('Delegating vote power');
     await axiosInstance.post('flow/delegate/farcaster', {
+      collectionId: categoryToDelegate.id,
+      targetUsername: username,
+    });
+
+    queryClient.refetchQueries({
+      queryKey: ['fetch-delegates'],
+    });
+    queryClient.refetchQueries({
+      queryKey: ['category-ranking'],
+    });
+    queryClient.refetchQueries({
+      queryKey: ['categories'],
+    });
+    setTargetDelegate(target);
+    setDelegationState(DelegationState.Success);
+  };
+
+  const handleTwitterDelegate = async (username: string, target: TargetDelegate) => {
+    if (!categoryToDelegate) return;
+
+    posthog.capture('Delegating vote power');
+    await axiosInstance.post('flow/delegate/twitter', {
       collectionId: categoryToDelegate.id,
       targetUsername: username,
     });
@@ -408,15 +432,26 @@ const AllocationPage = () => {
               posthog.capture('Find delegate on Farcaster', {
                 category: categoryToDelegate!.name,
               });
-              setDelegationState(DelegationState.Lookup);
+              setDelegationState(DelegationState.FarcasterLookup);
             }}
-            onFindDelegatesTwitter={() => {}}
+            onFindDelegatesTwitter={() => {
+              posthog.capture('Find delegate on Twitter', {
+                category: categoryToDelegate!.name,
+              });
+              setDelegationState(DelegationState.TwitterLookup);
+            }}
           />
         )}
 
-        {delegationState === DelegationState.Lookup && (
+        {delegationState === DelegationState.FarcasterLookup && (
           <FarcasterLookup
-            handleDelegate={handleDelegate}
+            handleDelegate={handleFarcasterDelegate}
+            categoryName={categoryToDelegate!.name}
+          />
+        )}
+        {delegationState === DelegationState.TwitterLookup && (
+          <TwitterLookup
+            handleDelegate={handleTwitterDelegate}
             categoryName={categoryToDelegate!.name}
           />
         )}
