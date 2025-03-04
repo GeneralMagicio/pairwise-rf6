@@ -119,18 +119,19 @@ const RankingPage = () => {
           percentage: share * 100,
         });
 
-        const sum = newRanking.reduce(
-          (acc, curr) => (acc += curr.percentage),
-          0
-        );
+        const sum = newRanking.reduce((acc, curr) => (acc += curr.percentage), 0);
 
-        setProjects(
-          projects.map(project => ({
-            ...project,
-            share:
-              (newRanking.find(el => el.id === project.projectId)
-                ?.percentage || 0) / 100,
-          }))
+        const newProjects = projects.map(project => ({
+          ...project,
+          share:
+            (newRanking.find(el => el.id === project.projectId)?.percentage
+            || 0) / 100,
+        }));
+
+        setProjects(newProjects);
+
+        setNonCoIProjects(
+          newProjects.filter(project => !project.coi)
         );
 
         if (sum < 99.9) {
@@ -157,7 +158,7 @@ const RankingPage = () => {
         window.scrollTo(0, document.body.scrollHeight);
       }
     }, 300),
-    [projects, lockedItems, categoryRankings]
+    [lockedItems, categoryRankings?.budget, nonCoIProjects]
   );
 
   const handleLocck = (id: number) => {
@@ -221,6 +222,7 @@ const RankingPage = () => {
     });
 
     setProjects(newProjects);
+    setNonCoIProjects(newProjects.filter(project => !project.coi));
   };
 
   const unmarkCOI = async (id: number) => {
@@ -233,6 +235,8 @@ const RankingPage = () => {
         project.projectId === id ? { ...project, coi: false } : project
       )
     );
+
+    setNonCoIProjects(projects.filter(project => !project.coi));
   };
 
   const lockSelection = () => {
@@ -362,6 +366,8 @@ const RankingPage = () => {
   useEffect(() => {
     if (ranking) setProjects(ranking?.ranking);
 
+    setNonCoIProjects(ranking?.ranking?.filter(project => !project.coi) || []);
+
     if (!categoryRankings?.budget) return;
 
     const categoryShare
@@ -373,7 +379,7 @@ const RankingPage = () => {
   }, [ranking]);
 
   useEffect(() => {
-    if (!nonCoIProjects) return;
+    if (!nonCoIProjects.length) return;
 
     if (lockedItems.length > nonCoIProjects?.length - 2) {
       setTotalShareError('At least two projects must be unlocked');
@@ -382,20 +388,17 @@ const RankingPage = () => {
     else {
       setTotalShareError(null);
     }
-  }, [lockedItems]);
-
-  useEffect(() => {
-    if (!projects || !projects.length) return;
-
-    setNonCoIProjects(projects.filter(project => !project.coi));
-  }, [projects]);
+  }, [lockedItems, nonCoIProjects]);
 
   if (!category) return <NotFoundComponent />;
 
   return (
     <div>
       <Modal
-        isOpen={attestationState !== AttestationState.Initial}
+        isOpen={
+          attestationState !== AttestationState.Initial
+          && attestationState !== AttestationState.FarcasterDelegate
+        }
         onClose={handleAttestationModalClose}
         showCloseButton={true}
       >
@@ -414,7 +417,7 @@ const RankingPage = () => {
       </Modal>
       <HeaderRF6 />
       <Link
-        className="flex items-center pt-8 px-12 gap-2 text-md text-gray-700"
+        className="flex items-center gap-2 px-12 pt-8 text-base text-gray-700"
         href="/allocation"
       >
         <ArrowLeft2Icon size={16} />
@@ -610,7 +613,10 @@ const RankingPage = () => {
             <button
               className="flex items-center justify-center gap-3 rounded-lg bg-primary px-10 py-2 font-semibold text-white disabled:bg-gray-200 disabled:text-gray-400"
               onClick={submitVotes}
-              disabled={!!totalShareError}
+              disabled={
+                !!totalShareError
+                && totalShareError !== 'At least two projects must be unlocked'
+              }
             >
               {isSubmitting
                 ? (
