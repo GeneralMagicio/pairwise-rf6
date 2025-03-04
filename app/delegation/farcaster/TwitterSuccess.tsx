@@ -11,8 +11,8 @@ interface Props {
   onClose: () => void
 }
 
-const createWarpcastIntention = (categoryName: string, username: string) => {
-  return `https://warpcast.com/~/compose?text=I just delegated on @pairwise for Retro funding 6 ${categoryName} to @${username}. `;
+const createTwitterIntention = (categoryName: string, username: string) => {
+  return `https://x.com/intent/post?text=I just delegated on @pairwise for Retro funding 6 ${categoryName} to @${username}. `;
 };
 
 const DelegationConfirmation: React.FC<Props> = ({
@@ -86,9 +86,9 @@ const DelegationConfirmation: React.FC<Props> = ({
       <a
         className="w-full"
         target="_blank"
-        href={createWarpcastIntention(categoryName, username)}
+        href={createTwitterIntention(categoryName, username)}
         onClick={() => {
-          posthog.capture('Post of Farcaster');
+          posthog.capture('Post of Twitter');
         }}
       >
         <button className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-op-neutral-300 bg-white py-2 transition-colors duration-200 hover:bg-purple-50">
