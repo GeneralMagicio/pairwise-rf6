@@ -83,33 +83,62 @@ const RankingRow: FC<IRankingRowProps> = ({
             <COI isActive={coi} />
           </button>
           <div
-            className={`m-auto flex items-center justify-center rounded-md border ${coi ? 'border-op-neutral-300' : 'border-gray-200'} px-4 py-2 ${
-              locked && 'bg-gray-100'
-            }`}
+            className={`m-auto flex items-center justify-center rounded-md border ${
+              coi ? 'border-op-neutral-300' : 'border-gray-200'
+            } px-4 py-2 ${locked && 'bg-gray-100'}`}
           >
-            <p className={`${coi ? 'text-dark-500/[.2]' : 'text-dark-500/[1]'}`}>{index + 1}</p>
+            <p
+              className={`${coi ? 'text-dark-500/[.2]' : 'text-dark-500/[1]'}`}
+            >
+              {index + 1}
+            </p>
           </div>
           <div className="relative">
-            <NumericFormat
-              suffix="%"
-              decimalScale={2}
-              value={project.share * 100}
-              onValueChange={(values) => {
-                onVote(
-                  project.projectId,
-                  values?.floatValue ? values.floatValue / 100 : 0
-                );
-              }}
-              className={`w-24 rounded-md border border-gray-200 px-4 py-2 ${coi ? 'border-op-neutral-300 text-dark-500/[.2]' : 'border-gray-200 text-dark-500/[1]'} text-center focus:outline-none focus:ring-1 ${
-                locked && 'bg-gray-100'
-              }`}
-              placeholder="0.00%"
-              isAllowed={values => handleAllowdValue(values)}
-              disabled={locked || coi}
-            />
-            <span className={`absolute ${coi ? 'text-op-neutral-300' : 'text-gray-400'} bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs `}>
-              {formatBudget(budget)}
-            </span>
+            {project.share}
+            <div className="flex gap-2 rounded-md border px-6 py-1">
+              <button
+                onClick={() => onVote(project.projectId, project.share - 0.01)}
+                className="font-bold text-gray-600"
+                disabled={locked || coi}
+              >
+                -
+              </button>
+              <NumericFormat
+                suffix="%"
+                decimalScale={2}
+                value={project.share * 100}
+                onValueChange={(values) => {
+                  onVote(
+                    project.projectId,
+                    values?.floatValue ? values.floatValue / 100 : 0
+                  );
+                }}
+                className={`w-24 px-4 py-1 text-center focus:outline-none ${
+                  coi
+                    ? 'border-op-neutral-300 text-dark-500/[.2]'
+                    : 'border-gray-200 text-dark-500/[1]'
+                } text-center focus:outline-none focus:ring-1 ${
+                  locked && 'bg-gray-100'
+                }`}
+                placeholder="0.00%"
+                isAllowed={values => handleAllowdValue(values)}
+                disabled={locked || coi}
+              />
+              <span
+                className={`absolute ${
+                  coi ? 'text-op-neutral-300' : 'text-gray-400'
+                } bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs `}
+              >
+                {formatBudget(budget)}
+              </span>
+              <button
+                onClick={() => onVote(project.projectId, project.share + 0.01)}
+                className="font-bold text-gray-600"
+                disabled={locked || coi}
+              >
+                +
+              </button>
+            </div>
           </div>
           <button
             className={`flex size-9 items-center justify-center rounded-md border p-2

@@ -119,18 +119,19 @@ const RankingPage = () => {
           percentage: share * 100,
         });
 
-        const sum = newRanking.reduce(
-          (acc, curr) => (acc += curr.percentage),
-          0
-        );
+        const sum = newRanking.reduce((acc, curr) => (acc += curr.percentage), 0);
 
-        setProjects(
-          projects.map(project => ({
-            ...project,
-            share:
-              (newRanking.find(el => el.id === project.projectId)
-                ?.percentage || 0) / 100,
-          }))
+        const newProjects = projects.map(project => ({
+          ...project,
+          share:
+            (newRanking.find(el => el.id === project.projectId)?.percentage
+            || 0) / 100,
+        }));
+
+        setProjects(newProjects);
+
+        setNonCoIProjects(
+          newProjects.filter(project => !project.coi)
         );
 
         if (sum < 99.9) {
@@ -157,7 +158,7 @@ const RankingPage = () => {
         window.scrollTo(0, document.body.scrollHeight);
       }
     }, 300),
-    [projects, lockedItems, categoryRankings]
+    [lockedItems, categoryRankings?.budget, nonCoIProjects]
   );
 
   const handleLocck = (id: number) => {
@@ -221,6 +222,7 @@ const RankingPage = () => {
     });
 
     setProjects(newProjects);
+    setNonCoIProjects(newProjects.filter(project => !project.coi));
   };
 
   const unmarkCOI = async (id: number) => {
@@ -233,6 +235,8 @@ const RankingPage = () => {
         project.projectId === id ? { ...project, coi: false } : project
       )
     );
+
+    setNonCoIProjects(projects.filter(project => !project.coi));
   };
 
   const lockSelection = () => {
@@ -362,6 +366,8 @@ const RankingPage = () => {
   useEffect(() => {
     if (ranking) setProjects(ranking?.ranking);
 
+    setNonCoIProjects(ranking?.ranking?.filter(project => !project.coi) || []);
+
     if (!categoryRankings?.budget) return;
 
     const categoryShare
@@ -373,7 +379,7 @@ const RankingPage = () => {
   }, [ranking]);
 
   useEffect(() => {
-    if (!nonCoIProjects) return;
+    if (!nonCoIProjects.length) return;
 
     if (lockedItems.length > nonCoIProjects?.length - 2) {
       setTotalShareError('At least two projects must be unlocked');
@@ -382,20 +388,17 @@ const RankingPage = () => {
     else {
       setTotalShareError(null);
     }
-  }, [lockedItems]);
-
-  useEffect(() => {
-    if (!projects || !projects.length) return;
-
-    setNonCoIProjects(projects.filter(project => !project.coi));
-  }, [projects]);
+  }, [lockedItems, nonCoIProjects]);
 
   if (!category) return <NotFoundComponent />;
 
   return (
     <div>
       <Modal
-        isOpen={attestationState !== AttestationState.Initial}
+        isOpen={
+          attestationState !== AttestationState.Initial
+          && attestationState !== AttestationState.FarcasterDelegate
+        }
         onClose={handleAttestationModalClose}
         showCloseButton={true}
       >
@@ -414,7 +417,7 @@ const RankingPage = () => {
       </Modal>
       <HeaderRF6 />
       <Link
-        className="text-md flex items-center gap-2 px-12 pt-8 text-gray-700"
+        className="flex items-center gap-2 px-12 pt-8 text-base text-gray-700"
         href="/allocation"
       >
         <ArrowLeft2Icon size={16} />
@@ -443,10 +446,19 @@ const RankingPage = () => {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center gap-2 rounded-2xl border border-voting-border bg-voting-bg px-3 py-1 text-xs text-voting-text">
-                {votingStatusMap[VotingStatus.READY_TO_SUBMIT].text}
-                <CheckIcon size={18} />
-              </div>
+              {attestationLink
+                ? (
+                    <div className="flex items-center justify-center gap-2 rounded-2xl border border-voting-border bg-voting-bg px-3 py-1 text-xs text-voting-text">
+                      {votingStatusMap[VotingStatus.VOTED].text}
+                      <CheckIcon size={18} />
+                    </div>
+                  )
+                : (
+                    <div className="flex items-center justify-center gap-2 rounded-2xl border border-voting-border bg-voting-bg px-3 py-1 text-xs text-voting-text">
+                      {votingStatusMap[VotingStatus.READY_TO_SUBMIT].text}
+                      <CheckIcon size={18} />
+                    </div>
+                  )}
               {attestationLink && (
                 <Link
                   className="flex items-center justify-center gap-2 px-3 py-1 text-xs text-gray-600 underline"
@@ -461,8 +473,8 @@ const RankingPage = () => {
           </div>
           <div className="w-full rounded-lg border border-[#E0F2FE] bg-[#E0F2FE] px-4 py-2">
             <p className="text-sm text-[#026AA2]">
-              Attested on Nov 11 at 3:20 PM. You can make changes and resubmit
-              until Nov 13 at 12:00 AM UTC. To do so, simply edit and submit
+              Attested on Nov 11 at 3:20 PM. You can make changes and resubmit
+              until Nov 13 at 12:00 AM UTC. To do so, simply edit and submit
               again.
             </p>
           </div>
@@ -497,7 +509,7 @@ const RankingPage = () => {
                       onClick={unlockSelection}
                     >
                       <UnlockIcon />
-                      <p className="text-sm text-gray-600">Unlock selection</p>
+                      <p className="text-sm text-gray-600">Unlock allocation</p>
                     </button>
                   )}
                   {isLocked && isUnlocked && (
@@ -509,7 +521,7 @@ const RankingPage = () => {
                       onClick={lockSelection}
                     >
                       <LockIcon />
-                      <p className="text-sm text-gray-600">Lock selection</p>
+                      <p className="text-sm text-gray-600">Lock allocation</p>
                     </button>
                   )}
                 </>
@@ -599,14 +611,12 @@ const RankingPage = () => {
               Back to Categories
             </button>
             <button
-              className={`font-semibold" flex items-center justify-center gap-3 rounded-lg px-10 py-2
-              ${
-    totalShareError
-      ? 'bg-gray-200 text-gray-400'
-      : 'bg-primary text-white'
-    }`}
+              className="flex items-center justify-center gap-3 rounded-lg bg-primary px-10 py-2 font-semibold text-white disabled:bg-gray-200 disabled:text-gray-400"
               onClick={submitVotes}
-              disabled={!!totalShareError}
+              disabled={
+                !!totalShareError
+                && totalShareError !== 'At least two projects must be unlocked'
+              }
             >
               {isSubmitting
                 ? (
