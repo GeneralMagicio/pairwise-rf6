@@ -76,7 +76,7 @@ export const TwitterLookup: React.FC<Props> = ({ categoryName, handleDelegate })
   const onDelegate = () => {
     if (!isValid) return;
     handleDelegate(extractTwitterUsername(username), { displayName: isValid.username,
-      profilePicture: '/assets/images/X.svg',
+      profilePicture: '/assets/images/x.svg',
       username: isValid.username });
   };
 
@@ -84,7 +84,7 @@ export const TwitterLookup: React.FC<Props> = ({ categoryName, handleDelegate })
     <div className="mx-auto flex max-w-[500px] flex-col items-center justify-center gap-2 rounded-lg bg-white px-6 py-8">
       <div className="flex flex-col items-center justify-center">
         <Image
-          src="/assets/images/X.svg"
+          src="/assets/images/x.svg"
           alt="X icon"
           width={35}
           height={15}

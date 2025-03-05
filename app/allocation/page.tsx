@@ -55,6 +55,7 @@ import { UpdateBallotButton } from './[category]/components/UpdateBallotButton';
 import AskDelegations from '../delegation/farcaster/AskDelegations';
 import XModal from './components/XModal';
 import { TwitterLookup } from '../delegation/farcaster/TwitterLookup';
+import TwitterSuccess from '../delegation/farcaster/TwitterSuccess';
 
 const budgetCategory: BudgetCategory = {
   id: -1,
@@ -69,7 +70,8 @@ enum DelegationState {
   DelegationMethod,
   FarcasterLookup,
   TwitterLookup,
-  Success,
+  FarcasterSuccess,
+  TwitterSuccess,
 }
 
 const AllocationPage = () => {
@@ -171,7 +173,7 @@ const AllocationPage = () => {
       queryKey: ['categories'],
     });
     setTargetDelegate(target);
-    setDelegationState(DelegationState.Success);
+    setDelegationState(DelegationState.FarcasterSuccess);
   };
 
   const handleTwitterDelegate = async (username: string, target: TargetDelegate) => {
@@ -193,7 +195,7 @@ const AllocationPage = () => {
       queryKey: ['categories'],
     });
     setTargetDelegate(target);
-    setDelegationState(DelegationState.Success);
+    setDelegationState(DelegationState.TwitterSuccess);
   };
 
   const handleAttestationModalClose = () => {
@@ -455,8 +457,17 @@ const AllocationPage = () => {
             categoryName={categoryToDelegate!.name}
           />
         )}
-        {delegationState === DelegationState.Success && targetDelegate && (
+        {delegationState === DelegationState.FarcasterSuccess && targetDelegate && (
           <FarcasterSuccess
+            categoryName={categoryToDelegate!.name}
+            displayName={targetDelegate.displayName}
+            username={targetDelegate.username}
+            profilePicture={targetDelegate.profilePicture}
+            onClose={resetDelegateState}
+          />
+        )}
+        {delegationState === DelegationState.TwitterSuccess && targetDelegate && (
+          <TwitterSuccess
             categoryName={categoryToDelegate!.name}
             displayName={targetDelegate.displayName}
             username={targetDelegate.username}
