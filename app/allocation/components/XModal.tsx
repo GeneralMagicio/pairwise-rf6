@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import debounce from 'lodash.debounce';
 import Modal from '@/app/utils/Modal';
-import LoadingModalContent from './LoadingModalContent';
 import LoadedModalContent from './LoadedModalContent';
 import { useGetDelegationStatus, useTwitterSignIn } from '@/app/utils/getConnectionStatus';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
@@ -59,15 +58,21 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
   const text = 'I\'m using @Pairwisevote to participate in the #LiquidDemocracy experiment.\n\nYou can try it out too!\n\nhttps://app.pairvise.vote';
 
   if (isVerified) return (
-    <LoadedModalContent
-      numDelegates={delegates?.toYou?.budget.length ?? 0}
-      onClose={onClose}
-      displayName={displayName!}
-      username={username!}
-    />
+    <Modal isOpen={isOpen} onClose={handleClose} showCloseButton>
+      <LoadedModalContent
+        numDelegates={delegates?.toYou?.budget.length ?? 0}
+        onClose={onClose}
+        displayName={displayName!}
+        username={username!}
+      />
+    </Modal>
   );
 
-  if (isLoading) return (<LoadingModalContent />);
+  // if (isLoading || loading) return (
+  //   <Modal isOpen={isOpen} onClose={handleClose} showCloseButton>
+  //     <LoadingModalContent />
+  //   </Modal>
+  // );
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} showCloseButton>
