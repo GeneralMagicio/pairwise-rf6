@@ -20,7 +20,7 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
   const [tweetState, setTweetState] = useState<TweetStatus>(TweetStatus.NotTweeted);
   const { username, displayName, analyzeTweetUrl } = useTwitter();
   const { mutateAsync: connectTwitter } = useTwitterSignIn();
-  const { isLoading, data: delegates } = useGetDelegationStatus();
+  const { data: delegates } = useGetDelegationStatus();
   const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(false);
 
