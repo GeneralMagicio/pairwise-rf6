@@ -39,8 +39,8 @@ const RankingRow: FC<IRankingRowProps> = ({
   };
   return (
     <tr
-      className={`flex w-full items-center justify-around rounded-lg border border-gray-200 p-3 ${
-        locked && 'bg-gray-100'
+      className={`flex w-full items-center justify-around rounded-lg border border-op-neutral-300 p-3 ${
+        locked ? 'bg-gray-100' : 'bg-gray-50'
       }`}
     >
       <td className="pb-8 pl-1 pt-4 lg:pl-4">
@@ -75,17 +75,15 @@ const RankingRow: FC<IRankingRowProps> = ({
       </td> */}
 
       <td>
-        <div className="flex flex-row justify-center gap-1">
+        <div className="flex flex-row items-center justify-center gap-1">
           <button
-            className="m-auto flex size-9 items-center justify-center"
+            className={`m-auto flex size-10 items-center justify-center ${coi && 'rounded-md bg-[#FF042029]'}`}
             onClick={() => onToggleCOI(project.projectId)}
           >
             <COI isActive={coi} />
           </button>
           <div
-            className={`m-auto flex items-center justify-center rounded-md border ${
-              coi ? 'border-op-neutral-300' : 'border-gray-200'
-            } px-4 py-2 ${locked && 'bg-gray-100'}`}
+            className="m-auto flex items-center justify-center rounded-md border border-op-neutral-300 bg-white px-4 py-2"
           >
             <p
               className={`${coi ? 'text-dark-500/[.2]' : 'text-dark-500/[1]'}`}
@@ -94,11 +92,12 @@ const RankingRow: FC<IRankingRowProps> = ({
             </p>
           </div>
           <div className="relative">
-            {project.share}
-            <div className="flex gap-2 rounded-md border px-6 py-1">
+            <div className={`flex gap-2 rounded-md border border-op-neutral-300 px-6 py-1 ${locked ? 'bg-gray-200' : 'bg-white'}`}>
               <button
                 onClick={() => onVote(project.projectId, project.share - 0.01)}
-                className="font-bold text-gray-600"
+                className={`font-bold ${
+                  coi ? 'text-dark-500/[.2]' : 'text-gray-600'
+                }`}
                 disabled={locked || coi}
               >
                 -
@@ -118,33 +117,35 @@ const RankingRow: FC<IRankingRowProps> = ({
                     ? 'border-op-neutral-300 text-dark-500/[.2]'
                     : 'border-gray-200 text-dark-500/[1]'
                 } text-center focus:outline-none focus:ring-1 ${
-                  locked && 'bg-gray-100'
+                  locked ? 'bg-gray-200' : 'bg-white'
                 }`}
                 placeholder="0.00%"
                 isAllowed={values => handleAllowdValue(values)}
                 disabled={locked || coi}
               />
-              <span
-                className={`absolute ${
-                  coi ? 'text-op-neutral-300' : 'text-gray-400'
-                } bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs `}
-              >
-                {formatBudget(budget)}
-              </span>
               <button
                 onClick={() => onVote(project.projectId, project.share + 0.01)}
-                className="font-bold text-gray-600"
+                className={`font-bold ${
+                  coi ? 'text-dark-500/[.2]' : 'text-gray-600'
+                }`}
                 disabled={locked || coi}
               >
                 +
               </button>
+              <span
+                className={`absolute ${
+                  coi ? 'text-op-neutral-300' : 'text-gray-400'
+                } -bottom-2 left-1/2 -translate-x-1/2 translate-y-full text-xs `}
+              >
+                {formatBudget(budget)}
+              </span>
             </div>
           </div>
           <button
-            className={`flex size-9 items-center justify-center rounded-md border p-2
+            className={`flex size-9 items-center justify-center rounded-md p-2
               ${coi ? 'opacity-20' : 'opacity-100'}
         ${
-    locked ? 'rounded-md border-[#232634] bg-[#232634]' : 'border-gray-50'
+    locked && 'rounded-md border border-[#232634] bg-[#232634]'
     }`}
             onClick={() => onLock(project.projectId)}
           >
