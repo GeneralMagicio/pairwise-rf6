@@ -10,13 +10,15 @@ import { WarpcastIcon } from '@/public/assets/icon-components/WarpcastIcon';
 import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
 import { useGetConnectionStatus, useGetDelegationStatus } from '../../getConnectionStatus';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
+import { XIcon } from '@/public/assets/icon-components/XIcon';
 
 interface BhModalProps {
   onConnectFarcaster: () => void
+  onConnectTwitter: () => void
   open: () => void
 }
 
-const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) => {
+const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open, onConnectTwitter }) => {
   const { address } = useAccount();
   const router = useRouter();
   const { data: badges } = useGetPublicBadges();
@@ -161,6 +163,37 @@ const BadgeHolderModal: React.FC<BhModalProps> = ({ onConnectFarcaster, open }) 
               {connectionStatus?.farcaster && <CheckIcon />}
             </button>
             {connectionStatus?.farcaster && (
+              <div className="flex w-full items-center justify-center">
+                <p className="text-center text-sm font-medium text-[#079455]">
+                  <span className="font-semibold">
+                    {delegates?.toYou?.uniqueDelegators
+                      ? delegates?.toYou?.uniqueDelegators <= 1
+                        ? 'someone delegated to you'
+                        : `${delegates?.toYou?.uniqueDelegators} people delegated to you`
+                      : 'You have no delegations'}
+                  </span>
+                </p>
+              </div>
+            )}
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                posthog.capture('Welcome - Connect with X(Twitter)', { address: address });
+                onConnectTwitter();
+              }}
+              className={`flex w-full items-center ${
+                connectionStatus?.twitter
+                  ? 'border-[#079455] bg-[#DCFAE6] text-[#079455]'
+                  : 'border-[#CBD5E0] bg-gray-100 text-gray-700'
+              } justify-center gap-2 rounded-lg border px-4 py-2 font-semibold`}
+              disabled={!!connectionStatus?.twitter}
+            >
+              <XIcon />
+              Connect with X
+              {connectionStatus?.twitter && <CheckIcon />}
+            </button>
+            {connectionStatus?.twitter && (
               <div className="flex w-full items-center justify-center">
                 <p className="text-center text-sm font-medium text-[#079455]">
                   <span className="font-semibold">

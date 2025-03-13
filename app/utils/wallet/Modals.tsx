@@ -14,12 +14,14 @@ import WorldIdSignInSuccessModal from '@/app/allocation/components/WorldIdSignIn
 import FarcasterModal from '@/app/allocation/components/FarcasterModal';
 import { useWorldSignIn } from '../getConnectionStatus';
 import { actionId, appId } from '@/app/lib/constants';
+import XModal from '@/app/allocation/components/XModal';
 
 export default function Modals() {
   const path = usePathname();
   const router = useRouter();
   const { address } = useAccount();
   const [isOpenFarcasterModal, setIsOpenFarcasterModal] = useState(false);
+  const [isTwitterModalOpen, setIsTwitterModalOpen] = useState(false);
   const [isWorldIdSignSuccessModal, setIsWorldIdSignSuccessModal]
     = useState(false);
   const [isWorldIdSignErrorModal, setIsWorldIdSignErrorModal] = useState(false);
@@ -42,7 +44,7 @@ export default function Modals() {
   };
 
   const bhOpen = typeof loggedToAgora === 'object'
-    && loggedToPw === LogginToPwBackendState.LoggedIn && path === '/' && !isOpenFarcasterModal && !isWorldIdSignSuccessModal && !isOpen && !isWorldIdSignErrorModal;
+    && loggedToPw === LogginToPwBackendState.LoggedIn && path === '/' && !isOpenFarcasterModal && !isTwitterModalOpen && !isWorldIdSignSuccessModal && !isOpen && !isWorldIdSignErrorModal;
 
   const signInModalOpen
     = !!address && (loggedToAgora === 'error' || loggedToPw === LogginToPwBackendState.Error);
@@ -110,6 +112,9 @@ export default function Modals() {
                   onConnectFarcaster={() => {
                     setIsOpenFarcasterModal(true);
                   }}
+                  onConnectTwitter={() => {
+                    setIsTwitterModalOpen(true);
+                  }}
 
                 />
               )}
@@ -122,6 +127,14 @@ export default function Modals() {
           isOpen={isOpenFarcasterModal}
           onClose={() => {
             setIsOpenFarcasterModal(false);
+          }}
+        />
+      )}
+      {isTwitterModalOpen && (
+        <XModal
+          isOpen={isTwitterModalOpen}
+          onClose={() => {
+            setIsTwitterModalOpen(false);
           }}
         />
       )}
