@@ -2,7 +2,8 @@ import { FC, useState } from 'react';
 import { ArrowDownIcon } from '@/public/assets/icon-components/ArrowDown';
 import { ArrowUpIcon } from '@/public/assets/icon-components/ArrowUp';
 import { PowerIcon } from '@/public/assets/icon-components/Power';
-import { shortenWalletAddress } from '@/app/comparison/utils/helpers';
+import { ENSResolver } from '@/app/utils/addressUtils';
+
 interface Props {
   wallet: string
   onLogout: () => void
@@ -27,10 +28,10 @@ const ConnectedButton: FC<Props> = ({ wallet, onLogout }) => {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex h-fit w-44 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white py-2 font-semibold"
+        className="flex size-fit items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-2 font-semibold"
       >
         <span className="text-sm text-gray-800">
-          {shortenWalletAddress(wallet)}
+          {ENSResolver(wallet)}
         </span>
         {open ? <ArrowUpIcon /> : <ArrowDownIcon />}
       </button>
