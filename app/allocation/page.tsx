@@ -297,7 +297,10 @@ const AllocationPage = () => {
     const colDelegation = colDelegationToYou?.filter(
       el => el.collectionId === id
     );
-    return colDelegation?.length || 0;
+
+    if (!colDelegation || colDelegation.length === 0) return 0;
+
+    return colDelegation[0].delegators?.length || 0;
   };
 
   const isBGCategoryVoted = () => {
@@ -658,7 +661,9 @@ const AllocationPage = () => {
                             username={
                               colDelegationFromYou?.find(
                                 el => el.collectionId === cat.id
-                              )?.metadata?.username
+                              )?.metadata?.username || colDelegationFromYou?.find(
+                                el => el.collectionId === cat.id
+                              )?.target
                             }
                           />
                         );

@@ -76,6 +76,11 @@ interface IBudget {
 interface ICollection {
   collectionId: number
   metadata: IDelegateMetadata
+  target: string
+}
+interface ToYouCollection {
+  collectionId: number
+  delegators: object[]
 }
 export interface ISocialDelegateResponse {
   fromYou?: {
@@ -87,7 +92,7 @@ export interface ISocialDelegateResponse {
     uniqueBudgetDelegators: number
     uniqueCollectionDelegators: number
     budget: IBudget[]
-    collections: ICollection[]
+    collections: ToYouCollection[]
   }
 }
 
