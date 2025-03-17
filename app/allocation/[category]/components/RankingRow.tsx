@@ -98,7 +98,7 @@ const RankingRow: FC<IRankingRowProps> = ({
                 className={`font-bold ${
                   coi ? 'text-dark-500/[.2]' : 'text-gray-600'
                 }`}
-                disabled={locked || coi}
+                disabled={locked || coi || project.share === 0}
               >
                 -
               </button>
@@ -122,13 +122,14 @@ const RankingRow: FC<IRankingRowProps> = ({
                 placeholder="0.00%"
                 isAllowed={values => handleAllowdValue(values)}
                 disabled={locked || coi}
+                allowNegative={false}
               />
               <button
                 onClick={() => onVote(project.projectId, project.share + 0.01)}
                 className={`font-bold ${
                   coi ? 'text-dark-500/[.2]' : 'text-gray-600'
                 }`}
-                disabled={locked || coi}
+                disabled={locked || coi || project.share >= 1}
               >
                 +
               </button>

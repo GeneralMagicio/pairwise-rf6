@@ -159,6 +159,7 @@ const CategoryAllocation: FC<CategoryAllocationProps> = ({
                       <button
                         onClick={handleMinus}
                         className="font-bold text-gray-600"
+                        disabled={allocationPercentage === 0}
                       >
                         -
                       </button>
