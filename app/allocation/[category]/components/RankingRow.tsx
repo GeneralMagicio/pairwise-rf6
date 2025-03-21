@@ -94,11 +94,11 @@ const RankingRow: FC<IRankingRowProps> = ({
           <div className="relative">
             <div className={`flex gap-2 rounded-md border border-op-neutral-300 px-6 py-1 ${locked ? 'bg-gray-200' : 'bg-white'}`}>
               <button
-                onClick={() => onVote(project.projectId, project.share - 0.01)}
+                onClick={() => onVote(project.projectId, Math.max(project.share - 0.01, 0))}
                 className={`font-bold ${
                   coi ? 'text-dark-500/[.2]' : 'text-gray-600'
                 }`}
-                disabled={locked || coi || project.share === 0}
+                disabled={locked || coi || project.share <= 0}
               >
                 -
               </button>
@@ -125,7 +125,7 @@ const RankingRow: FC<IRankingRowProps> = ({
                 allowNegative={false}
               />
               <button
-                onClick={() => onVote(project.projectId, project.share + 0.01)}
+                onClick={() => onVote(project.projectId, Math.min(project.share + 0.01, 1))}
                 className={`font-bold ${
                   coi ? 'text-dark-500/[.2]' : 'text-gray-600'
                 }`}
