@@ -11,9 +11,17 @@ interface Props {
   onClose: () => void
 }
 
-const createTwitterIntention = (categoryName: string, username: string) => {
-  return `https://x.com/intent/post?text=I just delegated on @pairwise for Retro funding 6 ${categoryName} to @${username}. `;
-};
+function createDelegationShareLink(username: string, categoryName: string): string {
+  const shareText = `I just delegated on @pairwise's Liquid Democracy Experiment.
+
+I chose @${username} to vote (or delegate) for me in the ${categoryName} category of @optimism's RF6.
+
+You can try it out too!
+
+https://app.pairwise.vote/`;
+
+  return `https://x.com/intent/post?text=${encodeURIComponent(shareText)}`;
+}
 
 const DelegationConfirmation: React.FC<Props> = ({
   profilePicture,
@@ -86,7 +94,7 @@ const DelegationConfirmation: React.FC<Props> = ({
       <a
         className="w-full"
         target="_blank"
-        href={createTwitterIntention(categoryName, username)}
+        href={createDelegationShareLink(username, categoryName)}
         onClick={() => {
           posthog.capture('Post of Twitter');
         }}
