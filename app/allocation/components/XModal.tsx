@@ -1,11 +1,14 @@
 'use client';
 import React, { useState } from 'react';
 import debounce from 'lodash.debounce';
+import { useQueryClient } from '@tanstack/react-query';
 import Modal from '@/app/utils/Modal';
 import LoadedModalContent from './LoadedModalContent';
-import { useGetDelegationStatus, useTwitterSignIn } from '@/app/utils/getConnectionStatus';
+import { useGetTwitterDelegationStatus, useTwitterSignIn } from '@/app/utils/getConnectionStatus';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 import { useTwitter } from '@/app/utils/TwitterProvider';
+// import LoadingModalContent from './LoadingModalContent';
+// import SmallSpinner from '@/app/components/SmallSpinner';
 interface XModalProps {
   isOpen: boolean
   onClose: () => void
@@ -20,7 +23,8 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
   const [tweetState, setTweetState] = useState<TweetStatus>(TweetStatus.NotTweeted);
   const { username, displayName, analyzeTweetUrl } = useTwitter();
   const { mutateAsync: connectTwitter } = useTwitterSignIn();
-  const { data: delegates } = useGetDelegationStatus();
+  const qc = useQueryClient();
+  const { data: delegates, isFetching: statusFetching } = useGetTwitterDelegationStatus();
   const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -34,6 +38,7 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
         if (!un || un.length === 0) return;
         setLoading(true);
         await connectTwitter({ username: un });
+        qc.refetchQueries({ queryKey: ['twitter-delegates-status'] });
         setIsVerified(true);
       }
       catch (error) {
@@ -57,20 +62,22 @@ const XModal: React.FC<XModalProps> = ({ isOpen, onClose }) => {
 
   const text = 'I\'m using @Pairwisevote to participate in the #LiquidDemocracy experiment.\n\nYou can try it out too!\n\nhttps://app.pairvise.vote';
 
-  if (isVerified) return (
-    <Modal isOpen={isOpen} onClose={handleClose} showCloseButton>
-      <LoadedModalContent
-        numDelegates={delegates?.toYou?.budget.length ?? 0}
-        onClose={onClose}
-        displayName={displayName!}
-        username={username!}
-      />
-    </Modal>
-  );
+  if (!statusFetching && delegates && isVerified) {
+    return (
+      <Modal isOpen={isOpen} onClose={handleClose} showCloseButton>
+        <LoadedModalContent
+          numDelegates={delegates.toYou?.uniqueDelegators ?? 0}
+          onClose={onClose}
+          displayName={displayName!}
+          username={username!}
+        />
+      </Modal>
+    );
+  }
 
-  // if (isLoading || loading) return (
+  // if (statusLoading || loading) return (
   //   <Modal isOpen={isOpen} onClose={handleClose} showCloseButton>
-  //     <LoadingModalContent />
+  //     <SmallSpinner />
   //   </Modal>
   // );
 

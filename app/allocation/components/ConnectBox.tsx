@@ -8,7 +8,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { WorldIdIcon } from '@/public/assets/icon-components/WorldIdIcon';
 import { actionId, appId } from '@/app/lib/constants';
-import { useGetConnectionStatus, useWorldSignIn, useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
+import { useGetConnectionStatus, useWorldSignIn, useGetTwitterDelegationStatus, useGetFarcasterDelegationStatus, useGetDelegationStatus } from '@/app/utils/getConnectionStatus';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
 import ActiveBadges, {
   BadgesEnum,
@@ -89,7 +89,10 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
 
   const { mutateAsync: worldIdSignIn } = useWorldSignIn();
   const { data: connectionStatus } = useGetConnectionStatus();
-  const { isLoading: isFarcasterLoading, data: delegates } = useGetDelegationStatus();
+  // const { isLoading: isFarcasterLoading, data: farcasterDelegates } = useGetFarcasterDelegationStatus();
+  const { data: delegates } = useGetDelegationStatus();
+  const { isLoading: isFarcasterLoading, data: farcasterDelegates } = useGetFarcasterDelegationStatus();
+  const { isLoading: isTwitterLoading, data: twitterDelegates } = useGetTwitterDelegationStatus();
 
   const handleVerify = async (proof: ISuccessResult) => {
     return (await worldIdSignIn(proof));
@@ -163,7 +166,7 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
 
       <div className="flex w-full flex-col items-center justify-center gap-6 rounded-xl bg-voting-power bg-cover bg-no-repeat p-4">
         <p className="text-4xl font-bold text-[#2C6074]">
-          {connectionStatus?.farcaster && delegates?.toYou?.uniqueDelegators ? 'You have extra powers now!' : 'Claim more voting power'}
+          {(connectionStatus?.farcaster || connectionStatus?.twitter) && delegates?.toYou?.uniqueDelegators ? 'You have extra powers now!' : 'Claim more voting power'}
         </p>
         <p className="text-wrap font-medium text-gray-600">
           {connectionStatus?.farcaster
@@ -186,10 +189,10 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                   <div className="flex items-center justify-center gap-2 rounded-full border border-[#079455] bg-[#17B26A] px-4 py-1 sl:px-2">
                     <p className="text-sm text-gray-50 sl:text-xs">
                       <span className="font-semibold">
-                        {delegates?.toYou?.uniqueDelegators
-                          ? `${(delegates?.toYou?.uniqueDelegators <= 1)
+                        {twitterDelegates?.toYou?.uniqueDelegators
+                          ? `${(twitterDelegates?.toYou?.uniqueDelegators <= 1)
                             ? 'someone delegated to you'
-                            : `${delegates?.toYou?.uniqueDelegators} people delegated to you`}`
+                            : `${twitterDelegates?.toYou?.uniqueDelegators} people delegated to you`}`
                           : 'You have no delegations'}
                       </span>
                     </p>
@@ -238,16 +241,16 @@ const ConnectBox: React.FC<ConnectBoxProps> = ({
                   <div className="flex items-center justify-center gap-2 rounded-full border border-[#079455] bg-[#17B26A] px-4 py-1 sl:px-2">
                     <p className="text-sm text-gray-50 sl:text-xs">
                       <span className="font-semibold">
-                        {delegates?.toYou?.uniqueDelegators
-                          ? `${(delegates?.toYou?.uniqueDelegators <= 1)
+                        {farcasterDelegates?.toYou?.uniqueDelegators
+                          ? `${(farcasterDelegates?.toYou?.uniqueDelegators <= 1)
                             ? 'someone delegated to you'
-                            : `${delegates?.toYou?.uniqueDelegators} people delegated to you`}`
+                            : `${farcasterDelegates?.toYou?.uniqueDelegators} people delegated to you`}`
                           : 'You have no delegations'}
                       </span>
                     </p>
                   </div>
                   <button onClick={refreshFarcaster} className="px-1 text-xs text-gray-600">
-                    {(isFarcasterLoading || isFarcasterRefreshing)
+                    {(isTwitterLoading || isFarcasterRefreshing)
                       ? (
                           <span>
                             Refreshing ...

@@ -148,6 +148,16 @@ const getDelegationStatus = async () => {
   return data;
 };
 
+const getTwitterDelegationStatus = async () => {
+  const { data } = await axiosInstance.get<ISocialDelegateResponse>('/flow/delegate/status/twitter');
+  return data;
+};
+
+const getFarcasterDelegationStatus = async () => {
+  const { data } = await axiosInstance.get<ISocialDelegateResponse>('/flow/delegate/status/farcaster');
+  return data;
+};
+
 export const useTwitterSignIn = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -216,5 +226,19 @@ export const useGetDelegationStatus = () => {
   return useQuery({
     queryKey: ['fetch-delegates'],
     queryFn: () => getDelegationStatus(),
+  });
+};
+
+export const useGetTwitterDelegationStatus = () => {
+  return useQuery({
+    queryKey: ['twitter-delegates-status'],
+    queryFn: () => getTwitterDelegationStatus(),
+  });
+};
+
+export const useGetFarcasterDelegationStatus = () => {
+  return useQuery({
+    queryKey: ['farcaster-delegates-status'],
+    queryFn: () => getFarcasterDelegationStatus(),
   });
 };
