@@ -219,7 +219,7 @@ export const useAuth = () => {
       }
     }
     catch (e) {
-      console.log('agora err');
+      console.log('agora err', e);
       setLoggedToAgora('error');
       setLoginInProgress(false);
       return;

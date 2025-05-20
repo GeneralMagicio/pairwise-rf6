@@ -49,7 +49,7 @@ export const getMessageAndSignature = async (address: `0x${string}`, chainId: nu
 const getNonce = async () => {
   const res = await axiosInstance.get(`${BASE_URL}${API_PREFIX}/auth/nonce`);
 
-  return res.data;
+  return res.data.nonce;
 };
 
 const createMessage: SIWEConfig['createMessage'] = ({ nonce, address, chainId }) =>
