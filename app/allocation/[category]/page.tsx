@@ -24,7 +24,10 @@ import {
   useCategoryRankings,
 } from '@/app/comparison/utils/data-fetching/ranking';
 import { CheckIcon } from '@/public/assets/icon-components/Check';
-import { IProjectRanking } from '@/app/comparison/utils/types';
+import {
+  IProjectRanking,
+  CollectionProgressStatusEnum,
+} from '@/app/comparison/utils/types';
 import { ArrowLeft2Icon } from '@/public/assets/icon-components/ArrowLeft2';
 import { ArrowRightIcon } from '@/public/assets/icon-components/ArrowRight';
 import { Info2Icon } from '@/public/assets/icon-components/Info2';
@@ -119,7 +122,10 @@ const RankingPage = () => {
           percentage: share * 100,
         });
 
-        const sum = newRanking.reduce((acc, curr) => (acc += curr.percentage), 0);
+        const sum = newRanking.reduce(
+          (acc, curr) => (acc += curr.percentage),
+          0
+        );
 
         const newProjects = projects.map(project => ({
           ...project,
@@ -130,9 +136,7 @@ const RankingPage = () => {
 
         setProjects(newProjects);
 
-        setNonCoIProjects(
-          newProjects.filter(project => !project.coi)
-        );
+        setNonCoIProjects(newProjects.filter(project => !project.coi));
 
         if (sum < 99.9) {
           const deficit = 100 - sum;
@@ -366,7 +370,13 @@ const RankingPage = () => {
   useEffect(() => {
     if (ranking) setProjects(ranking?.ranking);
 
-    setNonCoIProjects(ranking?.ranking?.filter(project => !project.coi) || []);
+    setNonCoIProjects(
+      ranking?.ranking?.filter(project => !project.coi) || []
+    );
+
+    if (categoryRankings?.progress === CollectionProgressStatusEnum.Attested) {
+      setAttestationLink(categoryRankings?.attestationLink);
+    }
 
     if (!categoryRankings?.budget) return;
 
