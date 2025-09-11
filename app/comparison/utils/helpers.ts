@@ -59,7 +59,7 @@ export function shortenWalletAddress(
 ): string {
   // Check if the address is valid (starts with '0x' and has 42 characters)
   if (!address.startsWith('0x') || address.length !== 42) {
-    throw new Error('Invalid wallet address format');
+    throw new Error(`Invalid wallet address format. Address=${address}`,);
   }
 
   // Ensure start and end lengths are not greater than half the remaining address length

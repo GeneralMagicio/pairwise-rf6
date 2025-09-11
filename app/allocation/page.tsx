@@ -51,7 +51,7 @@ import AttestationSuccessModal from './[category]/attestation/AttestationSuccess
 import { useSigner } from './[category]/utils';
 import BadgeholderModal from './components/BadgeholderModal';
 import StorageLabel from '../lib/localStorage';
-import { UpdateBallotButton } from './[category]/components/UpdateBallotButton';
+// import { UpdateBallotButton } from './[category]/components/UpdateBallotButton';
 import AskDelegations from '../delegation/farcaster/AskDelegations';
 import XModal from './components/XModal';
 import { TwitterLookup } from '../delegation/farcaster/TwitterLookup';
@@ -709,7 +709,8 @@ const AllocationPage = () => {
                   //     To do so, simply edit and submit again.
                   //   </div>
                   //   <div className="h-full grow">
-                  <UpdateBallotButton isBadgeHolderAndNotVoted={(isBadgeholder && !isBGCategoryVoted())} />
+                  <div></div>
+                  // <UpdateBallotButton isBadgeHolderAndNotVoted={(isBadgeholder && !isBGCategoryVoted())} />
                   //   </div>
                   // </div>
                 )}

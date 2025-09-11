@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
-import { UpdateBallotButton } from '../components/UpdateBallotButton';
+// import { UpdateBallotButton } from '../components/UpdateBallotButton';
 import Modal from '@/app/utils/Modal';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
-  const [hideAttestation, setHideAttestation] = useState(false);
+  const [hideAttestation, _setHideAttestation] = useState(false);
   const posthog = usePostHog();
 
   useEffect(() => {
@@ -39,11 +39,11 @@ const AttestationSuccessModal: React.FC<Props> = ({ link, onClose }) => {
             You can update your ballot on Optimism.
           </p>
         </div>
-        <div>
+        {/* <div>
           <div onClick={() => setHideAttestation(true)}>
             <UpdateBallotButton closeAttestationModal={() => onClose()} />
           </div>
-        </div>
+        </div> */}
         <a href={link} className="w-full" target="_blank">
           <button className="text-primary underline">
             View Transaction

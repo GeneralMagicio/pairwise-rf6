@@ -32,7 +32,7 @@ export default function Modals() {
     setLoginAddress,
     doLoginFlow,
     signOut,
-    loggedToAgora,
+    // loggedToAgora,
   } = useAuth();
 
   const { open: isOpen } = useIDKit();
@@ -43,11 +43,10 @@ export default function Modals() {
     return (await worldIdSignIn(proof));
   };
 
-  const bhOpen = typeof loggedToAgora === 'object'
-    && loggedToPw === LogginToPwBackendState.LoggedIn && path === '/' && !isOpenFarcasterModal && !isTwitterModalOpen && !isWorldIdSignSuccessModal && !isOpen && !isWorldIdSignErrorModal;
+  const bhOpen = loggedToPw === LogginToPwBackendState.LoggedIn && path === '/' && !isOpenFarcasterModal && !isTwitterModalOpen && !isWorldIdSignSuccessModal && !isOpen && !isWorldIdSignErrorModal;
 
   const signInModalOpen
-    = !!address && (loggedToAgora === 'error' || loggedToPw === LogginToPwBackendState.Error);
+    = !!address && (loggedToPw === LogginToPwBackendState.Error);
 
   const handleNewWalletCancel = () => {
     setLoginAddress({ ...loginAddress, confirmed: true });
